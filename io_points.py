@@ -62,17 +62,22 @@ def main(args):
             split = line.split(indent)
             current = {'call': split[-1], 'level': len(split) - 1}
 
-            if current['level'] < previous['level']:
+            if current['level'] > previous['level']:
                 parent.append(previous)
-            elif current['level'] > previous['level']:
+            elif current['level'] < previous['level']:
                 for i in range(current['level'] - previous['level']):
                     parent.pop()
 
             if is_input_function(current):
-                entry_points.append(parent[0])
+                entry_points.append(parent[-1])
 
             if is_output_function(current):
-                exit_points.append(parent[0])
+                exit_points.append(parent[-1])
+
+            previous = current
+
+    print(entry_points)
+    print(exit_points)
 
 if __name__ == '__main__':
     main(sys.argv)
