@@ -8,6 +8,22 @@ indent = "    "
 file_patterns = ["*.c", "*.h"]
 cflow_exec = "cflow"
 
+input_functions = ['canonicalize_file_name', 'catgets', 'confstr', 'ctermid', 'ctermid', 'cuserid', 'dgettext',
+                   'dngettext', 'fgetc', 'fgetc_unlocked', 'fgets', 'fgets_unlocked', 'fpathconf', 'fread',
+                   'fread_unlocked', 'fscanf', 'getc', 'getchar', 'getchar_unlocked', 'getc_unlocked',
+                   'get_current_dir_name', 'getcwd', 'getdelim', '__getdelim', 'getdelim', 'getdents', 'getenv',
+                   'gethostbyaddr', 'gethostbyname', 'gethostbyname2', 'gethostent', 'gethostid', 'getline', 'getline',
+                   'getlogin', 'getlogin_r', 'getmsg', 'getopt', '_getopt_internal', 'getopt_long', 'getopt_long_only',
+                   'getpass', 'getpmsg', 'gets', 'gettext', 'getw', 'getwd', 'ngettext', 'pathconf', 'pread', 'pread64',
+                   'ptsname', 'ptsname_r', 'read', 'readdir', 'readlink', 'readv', 'realpath', 'recv', 'recv_from',
+                   'recvmesg', 'scanf', '__secure_getenv', 'signal', 'sysconf', 'ttyname', 'ttyname_r', 'vfscanf',
+                   'vscanf']
+
+output_functions = ['dprintf', 'fprintf', 'fputc', 'fputchar_unlocked', 'fputc_unlocked', 'fputs', 'fputs_unlocked',
+                    'fwrite', 'fwrite_unlocked', 'perror', 'printf', 'psignal', 'putc', 'putchar', 'putc_unlocked',
+                    'putenv', 'putmsg', 'putpmsg', 'puts', 'putw', 'pwrite', 'pwrite64', 'send', 'sendmsg', 'sendto',
+                    'setenv', 'sethostid', 'setlogin', 'ungetc', 'vdprintf', 'vfprintf', 'vsyslog', 'write', 'writev']
+
 
 def get_cflow_args(root):
 
@@ -28,11 +44,22 @@ def build_cflow_command(source_dir):
 
 
 def is_input_function(call):
-    return True
+
+    is_input = False
+
+    if call['call'].endswith("()"):  # i.e. if is_leaf
+        is_input = call['call'][:-2] in input_functions
+
+    return is_input
 
 
 def is_output_function(call):
-    return True
+    is_output = False
+
+    if call['call'].endswith("()"):  # i.e. if is_leaf
+        is_output = call['call'][:-2] in output_functions
+
+    return is_output
 
 
 class FunctionCall():
