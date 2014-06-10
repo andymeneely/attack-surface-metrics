@@ -27,7 +27,7 @@ class Call():
     def __init__(self, clfow_line):
         split_line = clfow_line.split(Cflow.indent)
 
-        self.function_info = split_line[-1]
+        self.function_info = split_line[-1].strip()
         self.level = len(split_line) - 1
 
     def __str__(self):
