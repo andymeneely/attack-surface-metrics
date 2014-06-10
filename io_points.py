@@ -1,7 +1,7 @@
 __author__ = 'kevin'
 
 import sys
-from subprocess import check_output
+import subprocess
 import os
 
 
@@ -113,38 +113,49 @@ class Stack():
 
 
 def main(args):
-    call_graph_file = args[1]
+    source_dir = args[1]
 
-    entry_points = list()
-    exit_points = list()
+    entry_points_count = 0
+    exit_points_count = 0
+    # entry_points = list()
+    # exit_points = list()
 
-    with open(call_graph_file) as call_graph_file:
-        for i, line in enumerate(call_graph_file):
-            if i == 0:
-                main_call = Call(line)
+    parent = Stack()
+    line = "INITIAL"
+    i = 0
 
-                parent = Stack()
-                parent.push(main_call)
-                previous = main_call
-            else:
-                current = Call(line)
+    # os.chdir(source_dir)
+    proc = subprocess.Popen(['sh', 'run_cflow.sh'], stdout=subprocess.PIPE)
 
-                if current.level > previous.level:
-                    parent.push(previous)
-                elif current.level < previous.level:
-                    for i in range(current.level - previous.level):
-                        parent.pop()
+    while line != '':
+        line = proc.stdout.readline().decode(encoding='UTF-8')
+        print("test:", line.rstrip())
 
-                if current.is_input_function():
-                    entry_points.append(parent.top)
+        current = Call(line)
 
-                if current.is_output_function():
-                    exit_points.append(parent.top)
+        if i != 0:
+            if current.level > previous.level:
+                parent.push(previous)
+            elif current.level < previous.level:
+                for i in range(current.level - previous.level):
+                    parent.pop()
 
-                previous = current
+            if current.is_input_function():
+                # entry_points.append(parent.top)
+                entry_points_count += 1
 
-    print("entry points: " + str(len(entry_points)))
-    print("exit points: " + str(len(exit_points)))
+            if current.is_output_function():
+                # exit_points.append(parent.top)
+                exit_points_count += 1
+
+        previous = current
+        i += 1
+
+    # print("entry points: " + str(len(entry_points)))
+    # print("exit points: " + str(len(exit_points)))
+    print("entry points: " + str(entry_points_count))
+    print("exit points: " + str(exit_points_count))
+
 
 if __name__ == '__main__':
     main(sys.argv)
