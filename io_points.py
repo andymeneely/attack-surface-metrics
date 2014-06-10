@@ -113,37 +113,35 @@ class Stack():
 
 
 def main(args):
-    source_dir = args[1]
-
-    cflow = Cflow(source_dir)
-    text_call_graph = cflow.get_text_call_graph()
-
-    main_call = Call(text_call_graph.splitlines()[0])
-
-    parent = Stack()
-    parent.push(main_call)
-    previous = main_call
+    call_graph_file = args[1]
 
     entry_points = list()
     exit_points = list()
 
-    for i, line in enumerate(text_call_graph.splitlines()):
-        if i != 0:
-            current = Call(line)
+    with open(call_graph_file) as call_graph_file:
+        for i, line in enumerate(call_graph_file):
+            if i == 0:
+                main_call = Call(line)
 
-            if current.level > previous.level:
-                parent.push(previous)
-            elif current.level < previous.level:
-                for i in range(current.level - previous.level):
-                    parent.pop()
+                parent = Stack()
+                parent.push(main_call)
+                previous = main_call
+            else:
+                current = Call(line)
 
-            if current.is_input_function():
-                entry_points.append(parent.top)
+                if current.level > previous.level:
+                    parent.push(previous)
+                elif current.level < previous.level:
+                    for i in range(current.level - previous.level):
+                        parent.pop()
 
-            if current.is_output_function():
-                exit_points.append(parent.top)
+                if current.is_input_function():
+                    entry_points.append(parent.top)
 
-            previous = current
+                if current.is_output_function():
+                    exit_points.append(parent.top)
+
+                previous = current
 
     print("entry points: " + str(len(entry_points)))
     print("exit points: " + str(len(exit_points)))
