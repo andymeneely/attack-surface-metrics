@@ -125,11 +125,12 @@ def main(args):
     i = 0
 
     # os.chdir(source_dir)
-    proc = subprocess.Popen(['sh', 'run_cflow.sh'], stdout=subprocess.PIPE)
+    proc = subprocess.Popen(['sh', 'run_cflow.sh', source_dir], stdout=subprocess.PIPE)
 
     while line != '':
         line = proc.stdout.readline().decode(encoding='UTF-8')
-        print("test:", line.rstrip())
+
+        print(str(i) + ": ", line.rstrip())
 
         current = Call(line)
 
