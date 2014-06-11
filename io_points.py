@@ -24,8 +24,10 @@ class Call():
                         'sendto', 'setenv', 'sethostid', 'setlogin', 'ungetc', 'vdprintf', 'vfprintf', 'vsyslog',
                         'write', 'writev']
 
+    indent = "    "
+
     def __init__(self, clfow_line):
-        split_line = clfow_line.split(Cflow.indent)
+        split_line = clfow_line.split(Call.indent)
 
         self.function_info = split_line[-1].strip()
         self.level = len(split_line) - 1
@@ -60,40 +62,6 @@ class Call():
         return self.function_info[:-2]
 
 
-class Cflow():
-    """Wraps around some of cflow's command line interface"""
-
-    indent = "    "
-
-    _file_patterns = ["*.c", "*.h"]
-    _cflow_exec = "cflow"
-    
-    def __init__(self, source_dir):
-        self.source_dir = source_dir
-
-    def _get_cflow_args(self):
-        dirs_found = []
-
-        for path, dirs, files in os.walk(os.path.abspath(self.source_dir)):
-            for dir in dirs:
-                for pattern in Cflow._file_patterns:
-                    dirs_found.append(os.path.join(path, dir, pattern))
-
-        return dirs_found
-
-    def _build_cflow_command(self):
-        cflow_args = self._get_cflow_args()
-        command = "cd {0}; ".format(self.source_dir) + Cflow._cflow_exec + ' ' + ' '.join(cflow_args) + ";"
-
-        return command
-
-    def get_text_call_graph(self):
-        cmd_cflow = self._build_cflow_command()
-        cflow_output = check_output(cmd_cflow, shell=True).decode("utf-8")
-
-        return cflow_output
-
-
 class Stack():
 
     _collection = list()
@@ -124,7 +92,6 @@ def main(args):
     line = "INITIAL"
     i = 0
 
-    # os.chdir(source_dir)
     proc = subprocess.Popen(['sh', 'run_cflow.sh', source_dir], stdout=subprocess.PIPE)
 
     while line != '':
