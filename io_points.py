@@ -3,7 +3,7 @@ __author__ = 'kevin'
 import sys
 import subprocess
 import networkx as nx
-
+import matplotlib.pyplot as plt
 
 class Call():
 
@@ -131,6 +131,9 @@ def main(args):
 
     print("entry points: " + str(entry_points_count))
     print("exit points: " + str(exit_points_count))
+
+    nx.draw(call_graph)
+    plt.savefig("plot.png")
 
 
 if __name__ == '__main__':
