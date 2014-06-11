@@ -39,7 +39,7 @@ class Call():
         return hash(self.function_name)
 
     def __eq__(self, other):
-        return self.function_name == other.function_name
+        return hash(self) == hash(other)
 
     def is_input_function(self):
         is_input = self._leaf_belongs_to(Call.input_functions)
@@ -129,8 +129,6 @@ def main(args):
         previous = current
         i += 1
 
-    # print("entry points: " + str(len(entry_points)))
-    # print("exit points: " + str(len(exit_points)))
     print("entry points: " + str(entry_points_count))
     print("exit points: " + str(exit_points_count))
 
