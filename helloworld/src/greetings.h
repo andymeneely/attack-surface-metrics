@@ -31,7 +31,7 @@ void recursive_a(int i)
 
 void recursive_b(int i)
 {
-	if(1 > 0)
+	if(i > 0)
 	{
 		recursive_a(i--);
 	}
