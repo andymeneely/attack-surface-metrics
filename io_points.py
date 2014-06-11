@@ -130,7 +130,7 @@ def main(args):
     while line != '':
         line = proc.stdout.readline().decode(encoding='UTF-8')
 
-        print(str(i) + ": ", line.rstrip())
+        print(str(i) + ":\t" + line.rstrip())
 
         current = Call(line)
 
