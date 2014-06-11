@@ -2,7 +2,7 @@ __author__ = 'kevin'
 
 import sys
 import subprocess
-import os
+import networkx as nx
 
 
 class Call():
@@ -35,6 +35,12 @@ class Call():
     def __str__(self):
         return "Level: " + str(self.level) + " - " + self.function_info
 
+    def __hash__(self):
+        return hash(self.function_name)
+
+    def __eq__(self, other):
+        return self.function_name == other.function_name
+
     def is_input_function(self):
         is_input = self._leaf_belongs_to(Call.input_functions)
         return is_input
@@ -61,6 +67,10 @@ class Call():
     def leaf_function_name(self):
         return self.function_info[:-2]
 
+    @property
+    def function_name(self):
+        return self.function_info[:self.function_info.index(')') + 1]
+
 
 class Stack():
 
@@ -85,20 +95,20 @@ def main(args):
 
     entry_points_count = 0
     exit_points_count = 0
-    # entry_points = list()
-    # exit_points = list()
 
+    call_graph = nx.DiGraph()
     parent = Stack()
-    line = "INITIAL"
     i = 0
 
     proc = subprocess.Popen(['sh', 'run_cflow.sh', source_dir], stdout=subprocess.PIPE)
 
-    while line != '':
+    while True:
         line = proc.stdout.readline().decode(encoding='UTF-8')
 
-        print(str(i) + ":\t" + line.rstrip())
+        if line == '':
+            break
 
+        print(str(i) + ":\t" + line.rstrip())
         current = Call(line)
 
         if i != 0:
@@ -108,12 +118,12 @@ def main(args):
                 for i in range(current.level - previous.level):
                     parent.pop()
 
+            call_graph.add_edge(parent.top, current)
+
             if current.is_input_function():
-                # entry_points.append(parent.top)
                 entry_points_count += 1
 
             if current.is_output_function():
-                # exit_points.append(parent.top)
                 exit_points_count += 1
 
         previous = current
