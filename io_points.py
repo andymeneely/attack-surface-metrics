@@ -136,7 +136,7 @@ def main(args):
             if current.level > previous.level:
                 parent.push(previous)
             elif current.level < previous.level:
-                for i in range(previous.level - current.level):
+                for t in range(previous.level - current.level):
                     parent.pop()
 
             call_graph.add_edge(parent.top, current)
