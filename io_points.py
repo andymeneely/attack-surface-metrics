@@ -2,9 +2,10 @@ __author__ = 'kevin'
 
 import sys
 import subprocess
+import re
+import os
 import networkx as nx
 import matplotlib.pyplot as plt
-import re
 
 class Call():
 
@@ -40,12 +41,12 @@ class Call():
         return self.function_name
 
     def __hash__(self):
-        hash_seed = self.function_name
+        seed = self.function_name
 
         if self.function_signature:
-            hash_seed += self.function_signature
+            seed += self.function_signature
 
-        return hash(hash_seed)
+        return hash(seed)
 
     def __eq__(self, other):
         return hash(self) == hash(other)
@@ -111,8 +112,10 @@ class Stack():
 def main(args):
     source_dir = args[1]
 
-    # entry_points_count = 0
-    # exit_points_count = 0
+    # entry_points = list()
+    # exit_points = list()
+    entry_points_count = 0
+    exit_points_count = 0
 
     call_graph = nx.DiGraph()
     parent = Stack()
@@ -138,20 +141,21 @@ def main(args):
 
             call_graph.add_edge(parent.top, current)
 
-            # if current.is_input_function():
-            #     entry_points_count += 1
-            #
-            # if current.is_output_function():
-            #     exit_points_count += 1
+            if current.is_input_function():
+                # entry_points.append(parent.top)
+                entry_points_count += 1
+            if current.is_output_function():
+                # exit_points.append(parent.top)
+                exit_points_count += 1
 
         previous = current
         i += 1
 
-    # print("entry points: " + str(entry_points_count))
-    # print("exit points: " + str(exit_points_count))
+    print("entry points: " + str(entry_points_count))
+    print("exit points: " + str(exit_points_count))
 
     nx.draw(call_graph)
-    plt.savefig("plot.png")
+    plt.savefig(os.path.basename(os.path.normpath(source_dir)) + ".png")
 
 
 if __name__ == '__main__':
