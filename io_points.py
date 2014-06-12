@@ -4,6 +4,7 @@ import sys
 import subprocess
 import networkx as nx
 import matplotlib.pyplot as plt
+import re
 
 class Call():
 
@@ -26,20 +27,45 @@ class Call():
 
     indent = "    "
 
-    def __init__(self, clfow_line):
-        split_line = clfow_line.split(Call.indent)
+    def __init__(self, cflow_line):
+        split_line = cflow_line.split(Call.indent)
 
         self.function_info = split_line[-1].strip()
         self.level = len(split_line) - 1
 
+        self._function_name = None
+        self._function_signature = None
+
     def __str__(self):
-        return "Level: " + str(self.level) + " - " + self.function_info
+        return self.function_name
 
     def __hash__(self):
-        return hash(self.function_name)
+        hash_seed = self.function_name
+
+        if self.function_signature:
+            hash_seed += self.function_signature
+
+        return hash(hash_seed)
 
     def __eq__(self, other):
         return hash(self) == hash(other)
+
+    @property
+    def function_name(self):
+        if not self._function_name:
+            self._function_name = re.search(r"(\w+\(\))", self.function_info).group(0)
+
+        return self._function_name
+
+    @property
+    def function_signature(self):
+        if not self._function_signature:
+            match = re.search(r"(<.+>)", self.function_info)
+
+            if match:
+                self._function_signature = match.group(0)
+
+        return self._function_signature
 
     def is_input_function(self):
         is_input = self._leaf_belongs_to(Call.input_functions)
@@ -53,7 +79,7 @@ class Call():
         belongs = False
 
         if self.is_leaf():
-            belongs = self.leaf_function_name in function_set
+            belongs = self.function_name[:-2] in function_set
 
         return belongs
 
@@ -62,14 +88,6 @@ class Call():
         Being a leaf means that the function is not defined in the files given to cflow as arguments to analyze.
         """
         return self.function_info.endswith("()")
-
-    @property
-    def leaf_function_name(self):
-        return self.function_info[:-2]
-
-    @property
-    def function_name(self):
-        return self.function_info[:self.function_info.index(')') + 1]
 
 
 class Stack():
@@ -93,8 +111,8 @@ class Stack():
 def main(args):
     source_dir = args[1]
 
-    entry_points_count = 0
-    exit_points_count = 0
+    # entry_points_count = 0
+    # exit_points_count = 0
 
     call_graph = nx.DiGraph()
     parent = Stack()
@@ -115,22 +133,22 @@ def main(args):
             if current.level > previous.level:
                 parent.push(previous)
             elif current.level < previous.level:
-                for i in range(current.level - previous.level):
+                for i in range(previous.level - current.level):
                     parent.pop()
 
             call_graph.add_edge(parent.top, current)
 
-            if current.is_input_function():
-                entry_points_count += 1
-
-            if current.is_output_function():
-                exit_points_count += 1
+            # if current.is_input_function():
+            #     entry_points_count += 1
+            #
+            # if current.is_output_function():
+            #     exit_points_count += 1
 
         previous = current
         i += 1
 
-    print("entry points: " + str(entry_points_count))
-    print("exit points: " + str(exit_points_count))
+    # print("entry points: " + str(entry_points_count))
+    # print("exit points: " + str(exit_points_count))
 
     nx.draw(call_graph)
     plt.savefig("plot.png")
