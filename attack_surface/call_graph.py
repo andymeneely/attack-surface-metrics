@@ -6,8 +6,8 @@ import os
 import networkx as nx
 import matplotlib.pyplot as plt
 
-from attack_surface.stack import Stack
-from attack_surface.call import Call
+from stack import Stack
+from call import Call
 
 
 class CallGraph():
@@ -16,8 +16,8 @@ class CallGraph():
         self.source_dir = source_dir
         self.call_graph = nx.DiGraph()
 
-        self.entry_points = set()
-        self.exit_points = set()
+        self._entry_points = set()
+        self._exit_points = set()
 
         self.generate()
 
@@ -46,14 +46,26 @@ class CallGraph():
 
                 self.call_graph.add_edge(parent.top, current)
 
-                if current.is_input_function():
-                    self.entry_points.add(parent.top)
-                if current.is_output_function():
-                    self.exit_points.add(parent.top)
-
             previous = current
             i += 1
 
     def save_png(self):
         nx.draw(self.call_graph)
         plt.savefig(os.path.basename(os.path.normpath(self.source_dir)) + ".png")
+
+    @property
+    def entry_points(self):
+        if not self._entry_points:
+            self._entry_points = self._select_nodes(lambda n: any([s.is_input_function() for s
+                                                                   in self.call_graph.successors(n)]))
+        return self._entry_points
+
+    @property
+    def exit_points(self):
+        if not self._exit_points:
+            self._exit_points = self._select_nodes(lambda n: any([s.is_output_function() for s
+                                                                  in self.call_graph.successors(n)]))
+        return self._exit_points
+
+    def _select_nodes(self, predicate):
+        return [n for n in self.call_graph.nodes() if predicate(n)]

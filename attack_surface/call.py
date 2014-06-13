@@ -43,6 +43,9 @@ class Call():
         # return hash(self) == hash(other)
         return self.identity == other.identity
 
+    def __ne__(self, other):
+        return self.identity != other.identity
+
     @property
     def identity(self):
         value = self.function_name
