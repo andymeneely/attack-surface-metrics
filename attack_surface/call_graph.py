@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 from stack import Stack
 from call import Call
 
-
 class CallGraph():
 
     def __init__(self, source_dir):
@@ -24,7 +23,10 @@ class CallGraph():
     def generate(self):
         i = 0
         parent = Stack()
-        proc = subprocess.Popen(['sh', 'run_cflow.sh', self.source_dir], stdout=subprocess.PIPE)
+
+        dirname = os.path.dirname(os.path.realpath(__file__))
+        proc = subprocess.Popen(['sh', os.path.join(dirname, 'run_cflow.sh'), self.source_dir],
+                                stdout=subprocess.PIPE)
 
         while True:
             line = proc.stdout.readline().decode(encoding='UTF-8')

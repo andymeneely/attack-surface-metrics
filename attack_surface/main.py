@@ -4,7 +4,6 @@ import sys
 
 from call_graph import CallGraph
 
-
 def main(args):
     source_dir = args[1]
 
