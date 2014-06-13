@@ -1,4 +1,4 @@
 attack-surface-metrics
 ======================
 
-Scripts for collecting metrics of the attack surface
+Scripts for collecting metrics of the attack surface.
