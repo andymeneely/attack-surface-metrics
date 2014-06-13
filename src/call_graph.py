@@ -54,4 +54,3 @@ class CallGraph():
     def save_png(self):
         nx.draw(self.call_graph)
         plt.savefig(os.path.basename(os.path.normpath(self.source_dir)) + ".png")
-
