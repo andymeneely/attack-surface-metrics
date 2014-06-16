@@ -180,11 +180,26 @@ class CallTestCase(unittest.TestCase):
 
 
 class CallGraphTestCase(unittest.TestCase):
-    # Arrange
-    test_call_graph = CallGraph("asdasd")
 
-    # Act
-    # Assert
+    def test_entry_points(self):
+        # Arrange
+        test_call_graph = CallGraph("./helloworld")
+
+        # Act
+        entry_points_count = len(test_call_graph.entry_points)
+
+        # Assert
+        self.assertEqual(entry_points_count, 1)
+
+    def test_exit_points(self):
+        # Arrange
+        test_call_graph = CallGraph("./helloworld/")
+
+        # Act
+        exit_points_count = len(test_call_graph.exit_points)
+
+        # Assert
+        self.assertEqual(exit_points_count, 4)
 
 
 
