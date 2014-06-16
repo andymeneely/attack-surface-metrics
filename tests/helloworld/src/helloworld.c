@@ -27,12 +27,15 @@ int main(void)
 
 void greet_a(int i)
 {
-	greet(CASUAL);
+	greet(0);
 	recursive_a(i);
 }
 
 void greet_b(int i)
 {
-	greet(CASUAL);
+	char c;
+	gets(c);
+
+	greet(0);
 	recursive_b(i);
 }
