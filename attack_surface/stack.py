@@ -6,6 +6,9 @@ class Stack():
     def __init__(self):
         self._collection = list()
 
+    def __len__(self):
+        return len(self._collection)
+
     def push(self, data):
         self._collection.append(data)
 
