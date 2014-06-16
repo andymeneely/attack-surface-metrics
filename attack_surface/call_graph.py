@@ -19,9 +19,9 @@ class CallGraph():
         self._entry_points = set()
         self._exit_points = set()
 
-        self.generate()
+        self._generate()
 
-    def generate(self):
+    def _generate(self):
         i = 0
         parent = Stack()
 
