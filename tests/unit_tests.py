@@ -181,7 +181,7 @@ class CallTestCase(unittest.TestCase):
 
 class CallGraphTestCase(unittest.TestCase):
 
-    def test_entry_points(self):
+    def test_entry_points_count(self):
         # Arrange
         test_call_graph = CallGraph("./helloworld")
 
@@ -191,7 +191,7 @@ class CallGraphTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(entry_points_count, 1)
 
-    def test_exit_points(self):
+    def test_exit_points_count(self):
         # Arrange
         test_call_graph = CallGraph("./helloworld/")
 
@@ -201,6 +201,31 @@ class CallGraphTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(exit_points_count, 4)
 
+    def test_entry_points_content(self):
+        # Arrange
+        test_call_graph = CallGraph("./helloworld")
+        expected_content = [Call("    greet_b() <void greet_b (int i) at ./src/helloworld.c:34>:")]
+
+        # Act
+        all_entry_points_encountered = all([c in test_call_graph.entry_points for c in expected_content])
+
+        # Assert
+        self.assertTrue(all_entry_points_encountered)
+
+
+    def test_exit_points_content(self):
+        # Arrange
+        test_call_graph = CallGraph("./helloworld")
+        expected_content = [Call("            recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"),
+                            Call("        recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"),
+                            Call("main() <int main (void) at ./src/helloworld.c:18>:"),
+                            Call("        greet() <void greet (int greeting_code) at ./src/greetings.c:14>:")]
+
+        # Act
+        all_exit_points_encountered = all([c in test_call_graph.exit_points for c in expected_content])
+
+        # Assert
+        self.assertTrue(all_exit_points_encountered)
 
 
 if __name__ == '__main__':
