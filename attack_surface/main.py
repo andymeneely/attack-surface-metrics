@@ -2,7 +2,7 @@ __author__ = 'kevin'
 
 import sys
 
-from call_graph import CallGraph
+from attack_surface.call_graph import CallGraph
 
 
 def main(args):
