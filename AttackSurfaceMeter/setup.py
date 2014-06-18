@@ -4,6 +4,7 @@ from distutils.core import setup
 
 setup(
     name='AttackSurfaceMeter',
+    description='Scripts for collecting metrics of the attack surface.',
     version='0.0.1',
     packages=['attacksurfacemeter',],
     requires=['networkx', 'matplotlib'],
