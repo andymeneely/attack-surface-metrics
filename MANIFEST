@@ -5,6 +5,5 @@ setup.py
 attack_surface/__init__.py
 attack_surface/call.py
 attack_surface/call_graph.py
-attack_surface/main.py
-attack_surface/run_cflow.sh
+attack_surface/run_cflow.py
 attack_surface/stack.py

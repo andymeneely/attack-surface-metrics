@@ -26,7 +26,7 @@ class CallGraph():
         parent = Stack()
 
         dirname = os.path.dirname(os.path.realpath(__file__))
-        proc = subprocess.Popen(['sh', os.path.join(dirname, 'run_cflow.sh'), self.source_dir],
+        proc = subprocess.Popen(['sh', os.path.join(dirname, 'run_cflow.py'), self.source_dir],
                                 stdout=subprocess.PIPE)
 
         while True:

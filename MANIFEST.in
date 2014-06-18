@@ -2,4 +2,3 @@ include README.md
 include LICENSE
 include setup.py
 include attack_surface/*.py
-include attack_surface/*.sh
