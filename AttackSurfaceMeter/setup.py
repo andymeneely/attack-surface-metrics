@@ -5,7 +5,7 @@ from distutils.core import setup
 setup(
     name='AttackSurfaceMeter',
     version='0.0.1',
-    packages=['attack_surface',],
+    packages=['attacksurfacemeter',],
     requires=['networkx', 'matplotlib'],
     license='The MIT License (MIT) Copyright (c) 2014 Andy Meneely',
     long_description=open('README.md').read(),

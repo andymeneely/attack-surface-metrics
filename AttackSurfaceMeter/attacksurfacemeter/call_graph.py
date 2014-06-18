@@ -6,8 +6,8 @@ import os
 import networkx as nx
 import matplotlib.pyplot as plt
 
-from attack_surface.stack import Stack
-from attack_surface.call import Call
+from attacksurfacemeter.stack import Stack
+from attacksurfacemeter.call import Call
 
 
 class CallGraph():
