@@ -182,18 +182,18 @@ class CallTestCase(unittest.TestCase):
 class CallGraphTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.test_call_graph = CallGraph("./helloworld")
+        self.call_graph = CallGraph("./helloworld")
 
     def test_entry_points_count(self):
         # Act
-        entry_points_count = len(self.test_call_graph.entry_points)
+        entry_points_count = len(self.call_graph.entry_points)
 
         # Assert
         self.assertEqual(entry_points_count, 1)
 
     def test_exit_points_count(self):
         # Act
-        exit_points_count = len(self.test_call_graph.exit_points)
+        exit_points_count = len(self.call_graph.exit_points)
 
         # Assert
         self.assertEqual(exit_points_count, 4)
@@ -203,7 +203,7 @@ class CallGraphTestCase(unittest.TestCase):
         expected_content = [Call("    greet_b() <void greet_b (int i) at ./src/helloworld.c:34>:")]
 
         # Act
-        all_entry_points_encountered = all([c in self.test_call_graph.entry_points for c in expected_content])
+        all_entry_points_encountered = all([c in self.call_graph.entry_points for c in expected_content])
 
         # Assert
         self.assertTrue(all_entry_points_encountered)
@@ -216,7 +216,7 @@ class CallGraphTestCase(unittest.TestCase):
                             Call("        greet() <void greet (int greeting_code) at ./src/greetings.c:14>:")]
 
         # Act
-        all_exit_points_encountered = all([c in self.test_call_graph.exit_points for c in expected_content])
+        all_exit_points_encountered = all([c in self.call_graph.exit_points for c in expected_content])
 
         # Assert
         self.assertTrue(all_exit_points_encountered)
@@ -231,7 +231,7 @@ class CallGraphTestCase(unittest.TestCase):
                             Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")]
 
         # Act
-        call_path = self.test_call_graph.shortest_path(n1, n2)
+        call_path = self.call_graph.shortest_path(n1, n2)
         all_calls_found = all([c in call_path for c in expected_content])
 
         # Assert
@@ -251,7 +251,7 @@ class CallGraphTestCase(unittest.TestCase):
                             Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):")]
 
         # Act
-        nodes = self.test_call_graph.nodes
+        nodes = self.call_graph.nodes
         all_calls_found = all([c in nodes for c in expected_content])
 
         # Assert
@@ -300,12 +300,58 @@ class CallGraphTestCase(unittest.TestCase):
                              Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"))]
 
         # Act
-        edges = self.test_call_graph.edges
+        edges = self.call_graph.edges
         all_calls_found = all([c in edges for c in expected_content])
 
         # Assert
         self.assertEqual(len(edges), 13)
         self.assertTrue(all_calls_found)
+
+    def test_execution_paths(self):
+        # Arrange
+        expected_content = [[Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:34>:"),
+                             Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"),
+                             Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")],
+                            [Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:34>:"),
+                             Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R): [see 7]")],
+                            [Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:34>:"),
+                             Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>: [see 3]")]]
+
+        # Act
+        paths = self.call_graph.execution_paths
+        all_paths_found = all([p in paths for p in expected_content])
+
+        # Assert
+        self.assertEqual(len(paths), 3)
+        self.assertTrue(all_paths_found)
+
+    def test_avg_execution_path(self):
+        # Act
+        average = self.call_graph.avg_execution_path_length
+
+        # Assert
+        self.assertEqual(average, 2.3333333333333335)
+
+    def test_median_execution_path(self):
+        # Act
+        median = self.call_graph.median_execution_path_length
+
+        # Assert
+        self.assertEqual(median, 2)
+
+    # def test_entry_clustering_coefficient(self):
+    #     # Act
+    #     coefficient = self.call_graph.calculate_clustering_coefficient(self.call_graph.entry_points)
+    #
+    #     # Assert
+    #     self.assertEqual(coefficient, 2)
+    #
+    # def test_exit_clustering_coefficient(self):
+    #     # Act
+    #     coefficient = self.call_graph.calculate_clustering_coefficient(self.call_graph.exit_points)
+    #
+    #     # Assert
+    #     self.assertEqual(coefficient, 2)
 
 
 if __name__ == '__main__':
