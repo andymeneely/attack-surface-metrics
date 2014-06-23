@@ -181,51 +181,131 @@ class CallTestCase(unittest.TestCase):
 
 class CallGraphTestCase(unittest.TestCase):
 
-    def test_entry_points_count(self):
-        # Arrange
-        test_call_graph = CallGraph("./helloworld")
+    def setUp(self):
+        self.test_call_graph = CallGraph("./helloworld")
 
+    def test_entry_points_count(self):
         # Act
-        entry_points_count = len(test_call_graph.entry_points)
+        entry_points_count = len(self.test_call_graph.entry_points)
 
         # Assert
         self.assertEqual(entry_points_count, 1)
 
     def test_exit_points_count(self):
-        # Arrange
-        test_call_graph = CallGraph("./helloworld/")
-
         # Act
-        exit_points_count = len(test_call_graph.exit_points)
+        exit_points_count = len(self.test_call_graph.exit_points)
 
         # Assert
         self.assertEqual(exit_points_count, 4)
 
     def test_entry_points_content(self):
         # Arrange
-        test_call_graph = CallGraph("./helloworld")
         expected_content = [Call("    greet_b() <void greet_b (int i) at ./src/helloworld.c:34>:")]
 
         # Act
-        all_entry_points_encountered = all([c in test_call_graph.entry_points for c in expected_content])
+        all_entry_points_encountered = all([c in self.test_call_graph.entry_points for c in expected_content])
 
         # Assert
         self.assertTrue(all_entry_points_encountered)
 
-
     def test_exit_points_content(self):
         # Arrange
-        test_call_graph = CallGraph("./helloworld")
         expected_content = [Call("            recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"),
                             Call("        recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"),
                             Call("main() <int main (void) at ./src/helloworld.c:18>:"),
                             Call("        greet() <void greet (int greeting_code) at ./src/greetings.c:14>:")]
 
         # Act
-        all_exit_points_encountered = all([c in test_call_graph.exit_points for c in expected_content])
+        all_exit_points_encountered = all([c in self.test_call_graph.exit_points for c in expected_content])
 
         # Assert
         self.assertTrue(all_exit_points_encountered)
+
+    def test_shortest_path(self):
+        # Arrange
+        n1 = Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:34>:")
+        n2 = Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")
+
+        expected_content = [Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:34>:"),
+                            Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"),
+                            Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")]
+
+        # Act
+        call_path = self.test_call_graph.shortest_path(n1, n2)
+        all_calls_found = all([c in call_path for c in expected_content])
+
+        # Assert
+        self.assertEqual(len(call_path), 3)
+        self.assertTrue(all_calls_found)
+
+    def test_nodes(self):
+        # Arrange
+        expected_content = [Call("main() <int main (void) at ./src/helloworld.c:18>:"),
+                            Call("gets()"),
+                            Call("printf()"),
+                            Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"),
+                            Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:28>:"),
+                            Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"),
+                            Call("puts()"),
+                            Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:34>:"),
+                            Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):")]
+
+        # Act
+        nodes = self.test_call_graph.nodes
+        all_calls_found = all([c in nodes for c in expected_content])
+
+        # Assert
+        self.assertEqual(len(nodes), 9)
+        self.assertTrue(all_calls_found)
+
+    def test_edges(self):
+        # Arrange
+        expected_content = [(Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:34>:"),
+                             Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>: [see 3]")),
+
+                            (Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:34>:"),
+                             Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R): [see 7]")),
+
+                            (Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:34>:"),
+                             Call("gets()")),
+
+                            (Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"),
+                             Call("puts()")),
+
+                            (Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"),
+                             Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (recursive: see 5) [see 5]")),
+
+                            (Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"),
+                             Call("printf()")),
+
+                            (Call("main() <int main (void) at ./src/helloworld.c:18>:"),
+                             Call("puts()")),
+
+                            (Call("main() <int main (void) at ./src/helloworld.c:18>:"),
+                             Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:34>:")),
+
+                            (Call("main() <int main (void) at ./src/helloworld.c:18>:"),
+                             Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:28>:")),
+
+                            (Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"),
+                             Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):")),
+
+                            (Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"),
+                             Call("printf()")),
+
+                            (Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:28>:"),
+                             Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:")),
+
+                            (Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:28>:"),
+                             Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"))]
+
+        # Act
+        edges = self.test_call_graph.edges
+        all_calls_found = all([c in edges for c in expected_content])
+
+        # Assert
+        self.assertEqual(len(edges), 13)
+        self.assertTrue(all_calls_found)
 
 
 if __name__ == '__main__':
