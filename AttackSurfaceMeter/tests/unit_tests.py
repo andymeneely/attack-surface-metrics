@@ -1,9 +1,9 @@
 __author__ = 'kevin'
 
 import unittest
-from attack_surface.stack import Stack
-from attack_surface.call import Call
-from attack_surface.call_graph import CallGraph
+from attacksurfacemeter.stack import Stack
+from attacksurfacemeter.call import Call
+from attacksurfacemeter.call_graph import CallGraph
 
 
 class StackTestCase(unittest.TestCase):
