@@ -26,7 +26,7 @@ class CallGraph():
         parent = Stack()
 
         dirname = os.path.dirname(os.path.realpath(__file__))
-        proc = subprocess.Popen(['sh', os.path.join(dirname, 'run_cflow.py'), self.source_dir],
+        proc = subprocess.Popen(['sh', os.path.join(dirname, 'run_cflow.sh'), self.source_dir],
                                 stdout=subprocess.PIPE)
 
         while True:
@@ -49,9 +49,8 @@ class CallGraph():
             previous = current
             i += 1
 
-    def save_png(self):
-        nx.draw(self.call_graph)
-        plt.savefig(os.path.basename(os.path.normpath(self.source_dir)) + ".png")
+    def _select_nodes(self, predicate):
+        return [n for n in self.call_graph.nodes() if predicate(n)]
 
     @property
     def entry_points(self):
@@ -67,5 +66,18 @@ class CallGraph():
                                                                   in self.call_graph.successors(n)]))
         return self._exit_points
 
-    def _select_nodes(self, predicate):
-        return [n for n in self.call_graph.nodes() if predicate(n)]
+    @property
+    def nodes(self):
+        return self.call_graph.nodes()
+
+    @property
+    def edges(self):
+        return self.call_graph.edges()
+
+    def save_png(self):
+        nx.draw(self.call_graph)
+        plt.savefig(os.path.basename(os.path.normpath(self.source_dir)) + ".png")
+    
+    def shortest_path(self, source, target):
+        return nx.shortest_path(self.call_graph, source, target)
+
