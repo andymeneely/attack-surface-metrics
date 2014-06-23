@@ -2,7 +2,7 @@ __author__ = 'kevin'
 
 import subprocess
 import os
-
+import statistics as stat
 import networkx as nx
 import matplotlib.pyplot as plt
 
@@ -81,3 +81,24 @@ class CallGraph():
     def shortest_path(self, source, target):
         return nx.shortest_path(self.call_graph, source, target)
 
+    @property
+    def execution_paths(self):
+        paths = []
+
+        for entry_point in self.entry_points:
+            for exit_point in self.exit_points:
+                if nx.has_path(self.call_graph, entry_point, exit_point):
+                    paths.append(nx.shortest_path(self.call_graph, entry_point, exit_point))
+
+        return paths
+
+    @property
+    def avg_execution_path_length(self):
+        return stat.mean([len(p) for p in self.execution_paths])
+
+    @property
+    def median_execution_path_length(self):
+        return stat.median([len(p) for p in self.execution_paths])
+
+    # def calculate_clustering_coefficient(self, nodes):
+    #     return nx.clustering(self.call_graph, nodes, "min")
