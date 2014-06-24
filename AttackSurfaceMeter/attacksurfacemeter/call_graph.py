@@ -100,5 +100,13 @@ class CallGraph():
     def median_execution_path_length(self):
         return stat.median([len(p) for p in self.execution_paths])
 
-    # def calculate_clustering_coefficient(self, nodes):
-    #     return nx.clustering(self.call_graph, nodes, "min")
+    def average_clustering(self, nodes):
+        return nx.average_clustering(self.call_graph.to_undirected(), nodes)
+
+    @property
+    def entry_points_clustering(self):
+        return self.average_clustering(self.entry_points)
+
+    @property
+    def exit_points_clustering(self):
+        return self.average_clustering(self.exit_points)
