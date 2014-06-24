@@ -339,19 +339,19 @@ class CallGraphTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(median, 2)
 
-    # def test_entry_clustering_coefficient(self):
-    #     # Act
-    #     coefficient = self.call_graph.calculate_clustering_coefficient(self.call_graph.entry_points)
-    #
-    #     # Assert
-    #     self.assertEqual(coefficient, 2)
-    #
-    # def test_exit_clustering_coefficient(self):
-    #     # Act
-    #     coefficient = self.call_graph.calculate_clustering_coefficient(self.call_graph.exit_points)
-    #
-    #     # Assert
-    #     self.assertEqual(coefficient, 2)
+    def test_entry_clustering_coefficient(self):
+        # Act
+        coefficient = self.call_graph.entry_points_clustering
+
+        # Assert
+        self.assertEqual(coefficient, 0.0)
+
+    def test_exit_clustering_coefficient(self):
+        # Act
+        coefficient = self.call_graph.exit_points_clustering
+
+        # Assert
+        self.assertEqual(coefficient, 0.16666666666666666)
 
 
 if __name__ == '__main__':
