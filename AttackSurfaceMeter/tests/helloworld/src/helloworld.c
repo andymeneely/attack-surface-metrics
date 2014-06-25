@@ -63,7 +63,7 @@ int main(void)
 
 	puts("lol");
 
-	functionPtr = &addInt;
+	functionPtr = addInt;
 	int sum = (*functionPtr)(2, 3); // sum == 5
 
 	Greeter g = new_Greeter();
@@ -84,7 +84,7 @@ void greet_a(int i)
 void greet_b(int i)
 {
 	char c;
-	gets(c);
+	//gets(c);
 
 	greet(0);
 	recursive_b(i);
