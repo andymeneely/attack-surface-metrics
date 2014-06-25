@@ -84,7 +84,7 @@ void greet_a(int i)
 void greet_b(int i)
 {
 	char c;
-	//gets(c);
+	gets(c);
 
 	greet(0);
 	recursive_b(i);
