@@ -8,8 +8,14 @@ from attacksurfacemeter import CallGraph
 def main(args):
     source_dir = args[1]
 
-    call_graph = CallGraph(source_dir)
+    print("Call Graph\n")
+    calculate_metrics(CallGraph(source_dir))
 
+    print("Reversed Call Graph\n")
+    calculate_metrics(CallGraph(source_dir, True))
+
+
+def calculate_metrics(call_graph):
     print("nodes: " + str(len(call_graph.nodes)))
     print("edges: " + str(len(call_graph.edges)))
 
@@ -22,6 +28,7 @@ def main(args):
 
     print("average entry point clustering: " + str(call_graph.entry_points_clustering))
     print("average exit point clustering: " + str(call_graph.exit_points_clustering))
+
 
 if __name__ == '__main__':
     main(sys.argv)

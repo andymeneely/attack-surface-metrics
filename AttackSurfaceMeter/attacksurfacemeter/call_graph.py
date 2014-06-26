@@ -12,22 +12,20 @@ from attacksurfacemeter.call import Call
 
 class CallGraph():
 
-    def __init__(self, source_dir):
+    def __init__(self, source_dir, reverse=False):
         self.source_dir = source_dir
         self.call_graph = nx.DiGraph()
 
         self._entry_points = set()
         self._exit_points = set()
 
-        self._generate()
+        self._generate(reverse)
 
-    def _generate(self):
-        i = 0
+    def _generate(self, is_reverse):
+        is_first_line = True
         parent = Stack()
 
-        dirname = os.path.dirname(os.path.realpath(__file__))
-        proc = subprocess.Popen(['sh', os.path.join(dirname, 'run_cflow.sh'), self.source_dir],
-                                stdout=subprocess.PIPE)
+        proc = self._exec_cflow(is_reverse)
 
         while True:
             line = proc.stdout.readline().decode(encoding='UTF-8')
@@ -37,17 +35,35 @@ class CallGraph():
 
             current = Call(line)
 
-            if i != 0:
+            if not is_first_line:
                 if current.level > previous.level:
                     parent.push(previous)
                 elif current.level < previous.level:
                     for t in range(previous.level - current.level):
                         parent.pop()
 
-                self.call_graph.add_edge(parent.top, current)
+                if parent.top:
+                    if not is_reverse:
+                        self.call_graph.add_edge(parent.top, current)
+                    else:
+                        self.call_graph.add_edge(current, parent.top)
 
             previous = current
-            i += 1
+            is_first_line = False
+
+    def _exec_cflow(self, is_reverse):
+        dirname = os.path.dirname(os.path.realpath(__file__))
+
+        if is_reverse:
+            cflow_exe = 'run_cflow_r.sh'
+        else:
+            cflow_exe = 'run_cflow.sh'
+
+        proc = subprocess.Popen(['sh', os.path.join(dirname, cflow_exe), self.source_dir],
+                                stdout=subprocess.PIPE)
+
+        return proc
+
 
     def _select_nodes(self, predicate):
         return [n for n in self.call_graph.nodes() if predicate(n)]
@@ -77,6 +93,7 @@ class CallGraph():
     def save_png(self):
         nx.draw(self.call_graph)
         plt.savefig(os.path.basename(os.path.normpath(self.source_dir)) + ".png")
+        plt.clf()
     
     def shortest_path(self, source, target):
         return nx.shortest_path(self.call_graph, source, target)
