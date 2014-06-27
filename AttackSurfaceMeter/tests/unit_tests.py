@@ -347,6 +347,24 @@ class CallGraphTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(coefficient, 0.1111111111111111)
 
+    def test_execution_paths_for_call(self):
+        # Arrange
+        call = Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")
+
+        expected_content = [[Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"),
+                             Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"),
+                             Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")]]
+
+        # Act
+        paths = self.call_graph.get_execution_paths_for(call)
+        all_paths_found = all([p in paths for p in expected_content])
+        call_in_all_paths = all([call in p for p in paths])
+
+        # Assert
+        self.assertEqual(len(paths), 1)
+        self.assertTrue(all_paths_found)
+        self.assertTrue(call_in_all_paths)
+
 
 class CallGraphReverseTestCase(CallGraphTestCase):
     def setUp(self):
