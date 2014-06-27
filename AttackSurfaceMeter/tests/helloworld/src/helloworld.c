@@ -22,7 +22,6 @@ int addInt(int n, int m)
 
 int (*functionPtr)(int,int);
 
-
 typedef struct Greeter_Struct* Greeter;
 
 struct Greeter_Struct
@@ -65,12 +64,11 @@ int main(void)
 
 	functionPtr = addInt;
 	int sum = (*functionPtr)(2, 3); // sum == 5
+	printf("---> %d", sum);
 
 	Greeter g = new_Greeter();
 	g->SayHi();
 	g->SayHiTo(100);
-
-	printf("---> %d", sum);
 
 	return EXIT_SUCCESS;
 }
