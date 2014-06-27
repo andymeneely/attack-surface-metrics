@@ -63,7 +63,6 @@ class CallGraph():
 
         return proc
 
-
     def _select_nodes(self, predicate):
         return [n for n in self.call_graph.nodes() if predicate(n)]
 
