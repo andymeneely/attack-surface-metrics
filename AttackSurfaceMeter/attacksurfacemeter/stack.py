@@ -17,4 +17,7 @@ class Stack():
 
     @property
     def top(self):
-        return self._collection[-1]
+        if self._collection:
+            return self._collection[-1]
+        else:
+            return None
