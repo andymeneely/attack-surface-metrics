@@ -52,13 +52,12 @@ class CallGraph():
             is_first_line = False
 
     def _exec_cflow(self, is_reverse):
-        dirname = os.path.dirname(os.path.realpath(__file__))
-
         if is_reverse:
             cflow_exe = 'run_cflow_r.sh'
         else:
             cflow_exe = 'run_cflow.sh'
 
+        dirname = os.path.dirname(os.path.realpath(__file__))
         proc = subprocess.Popen(['sh', os.path.join(dirname, cflow_exe), self.source_dir],
                                 stdout=subprocess.PIPE)
 
@@ -97,6 +96,9 @@ class CallGraph():
     
     def shortest_path(self, source, target):
         return nx.shortest_path(self.call_graph, source, target)
+
+    def get_execution_paths_for(self, call):
+        return [path for path in self.execution_paths if call in path]
 
     @property
     def execution_paths(self):
