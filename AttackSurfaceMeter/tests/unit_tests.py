@@ -95,22 +95,6 @@ class CallTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(test_call.function_signature, "<char *xstrdup (const char *str) at ./cyrus/lib/xmalloc.c:89>")
 
-    def test_is_leaf(self):
-        # Arrange
-        cflow_line = "printf()"
-        test_call = Call(cflow_line)
-
-        # Assert
-        self.assertTrue(test_call.is_leaf())
-
-    def test_is_not_leaf(self):
-        # Arrange
-        cflow_line = "xstrdup() <char *xstrdup (const char *str) at ./cyrus/lib/xmalloc.c:89> (R):"
-        test_call = Call(cflow_line)
-
-        # Assert
-        self.assertFalse(test_call.is_leaf())
-
     def test_is_input_function(self):
         # Arrange
         cflow_line = "getchar()"
@@ -200,10 +184,11 @@ class CallGraphTestCase(unittest.TestCase):
 
     def test_entry_points_content(self):
         # Arrange
-        expected_content = [Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:84>:")]
+        expected_content = [Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")]
 
         # Act
-        all_entry_points_encountered = all([c in self.call_graph.entry_points for c in expected_content])
+        entry_points = self.call_graph.entry_points
+        all_entry_points_encountered = all([c in entry_points for c in expected_content])
 
         # Assert
         self.assertTrue(all_entry_points_encountered)
@@ -211,11 +196,11 @@ class CallGraphTestCase(unittest.TestCase):
     def test_exit_points_content(self):
         # Arrange
         expected_content = [Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"),
+                            Call("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"),
+                            Call("main() <int main (void) at ./src/helloworld.c:58>:"),
                             Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"),
-                            Call("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:54>:"),
-                            Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"),
-                            Call("main() <int main (void) at ./src/helloworld.c:59>:"),
-                            Call("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:49>:")]
+                            Call("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"),
+                            Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):")]
 
         # Act
         exit_points = self.call_graph.exit_points
@@ -229,10 +214,10 @@ class CallGraphTestCase(unittest.TestCase):
 
     def test_shortest_path(self):
         # Arrange
-        n1 = Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:84>:")
+        n1 = Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")
         n2 = Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")
 
-        expected_content = [Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:84>:"),
+        expected_content = [Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"),
                             Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"),
                             Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")]
 
@@ -240,8 +225,8 @@ class CallGraphTestCase(unittest.TestCase):
         call_path = self.call_graph.shortest_path(n1, n2)
         all_calls_found = all([c in call_path for c in expected_content])
 
-        for c in call_path:
-            print('Call("' + c.function_info + '"),')
+        # for c in call_path:
+        #     print('Call("' + c.function_info + '"),')
 
         # Assert
         self.assertEqual(len(call_path), 3)
@@ -249,19 +234,19 @@ class CallGraphTestCase(unittest.TestCase):
 
     def test_nodes(self):
         # Arrange
-        expected_content = [Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"),
-                            Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:84>:"),
-                            Call("gets()"),
-                            Call("printf()"),
-                            Call("malloc()"),
-                            Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"),
-                            Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"),
-                            Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:78>:"),
-                            Call("main() <int main (void) at ./src/helloworld.c:59>:"),
+        expected_content = [Call("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"),
                             Call("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"),
-                            Call("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:54>:"),
-                            Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:39>:"),
-                            Call("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:49>:"),
+                            Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"),
+                            Call("main() <int main (void) at ./src/helloworld.c:58>:"),
+                            Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"),
+                            Call("gets()"),
+                            Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"),
+                            Call("printf()"),
+                            Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"),
+                            Call("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"),
+                            Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"),
+                            Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"),
+                            Call("malloc()"),
                             Call("puts()")]
 
         # Act
@@ -277,27 +262,27 @@ class CallGraphTestCase(unittest.TestCase):
 
     def test_edges(self):
         # Arrange
-        expected_content = [(Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"), Call("printf()")),
-                            (Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"), Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):")),
-                            (Call("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:54>:"), Call("printf()")),
-                            (Call("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:49>:"), Call("printf()")),
-                            (Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:39>:"), Call("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:54>:")),
-                            (Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:39>:"), Call("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:49>:")),
-                            (Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:39>:"), Call("malloc()")),
-                            (Call("main() <int main (void) at ./src/helloworld.c:59>:"), Call("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>")),
-                            (Call("main() <int main (void) at ./src/helloworld.c:59>:"), Call("puts()")),
-                            (Call("main() <int main (void) at ./src/helloworld.c:59>:"), Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:78>:")),
-                            (Call("main() <int main (void) at ./src/helloworld.c:59>:"), Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:84>:")),
-                            (Call("main() <int main (void) at ./src/helloworld.c:59>:"), Call("printf()")),
-                            (Call("main() <int main (void) at ./src/helloworld.c:59>:"), Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:39>:")),
-                            (Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"), Call("printf()")),
+        expected_content = [(Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"), Call("printf()")),
                             (Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"), Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (recursive: see 5) [see 5]")),
+                            (Call("main() <int main (void) at ./src/helloworld.c:58>:"), Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")),
+                            (Call("main() <int main (void) at ./src/helloworld.c:58>:"), Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:")),
+                            (Call("main() <int main (void) at ./src/helloworld.c:58>:"), Call("printf()")),
+                            (Call("main() <int main (void) at ./src/helloworld.c:58>:"), Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")),
+                            (Call("main() <int main (void) at ./src/helloworld.c:58>:"), Call("puts()")),
+                            (Call("main() <int main (void) at ./src/helloworld.c:58>:"), Call("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>")),
+                            (Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"), Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):")),
+                            (Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"), Call("printf()")),
                             (Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"), Call("puts()")),
-                            (Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:78>:"), Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")),
-                            (Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:78>:"), Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:")),
-                            (Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:84>:"), Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R): [see 7]")),
-                            (Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:84>:"), Call("gets()")),
-                            (Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:84>:"), Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>: [see 3]"))]
+                            (Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), Call("gets()")),
+                            (Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>: [see 3]")),
+                            (Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R): [see 7]")),
+                            (Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), Call("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:")),
+                            (Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), Call("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:")),
+                            (Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), Call("malloc()")),
+                            (Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"), Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:")),
+                            (Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"), Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")),
+                            (Call("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"), Call("printf()")),
+                            (Call("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"), Call("printf()"))]
 
         # Act
         edges = self.call_graph.edges
@@ -312,13 +297,13 @@ class CallGraphTestCase(unittest.TestCase):
 
     def test_execution_paths(self):
         # Arrange
-        expected_content = [[Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:84>:"),
-                             Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R): [see 7]")],
-                            [Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:84>:"),
-                             Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>: [see 3]")],
-                            [Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:84>:"),
+        expected_content = [[Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"),
                              Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"),
-                             Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")]]
+                             Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")],
+                            [Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"),
+                             Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R): [see 7]")],
+                            [Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"),
+                             Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>: [see 3]")]]
 
         # Act
         paths = self.call_graph.execution_paths
@@ -327,8 +312,8 @@ class CallGraphTestCase(unittest.TestCase):
         # for p in paths:
         #     print("[")
         #     for c in p:
-        #         print('Call("' + c.function_info + '")')
-        #     print("]")
+        #         print('Call("' + c.function_info + '"),')
+        #     print("],")
 
         # Assert
         self.assertEqual(len(paths), 3)
@@ -361,6 +346,11 @@ class CallGraphTestCase(unittest.TestCase):
 
         # Assert
         self.assertEqual(coefficient, 0.1111111111111111)
+
+
+class CallGraphReverseTestCase(CallGraphTestCase):
+    def setUp(self):
+        self.call_graph = CallGraph("./helloworld", True)
 
 
 if __name__ == '__main__':
