@@ -19,6 +19,8 @@ class CallGraph():
         self._entry_points = set()
         self._exit_points = set()
 
+        self._execution_paths = list()
+
         self._generate(reverse)
 
     def _generate(self, is_reverse):
@@ -101,14 +103,17 @@ class CallGraph():
 
     @property
     def execution_paths(self):
-        paths = []
+        if not self._execution_paths:
+            paths = []
 
-        for entry_point in self.entry_points:
-            for exit_point in self.exit_points:
-                if nx.has_path(self.call_graph, entry_point, exit_point):
-                    paths.append(nx.shortest_path(self.call_graph, entry_point, exit_point))
+            for entry_point in self.entry_points:
+                for exit_point in self.exit_points:
+                    if nx.has_path(self.call_graph, entry_point, exit_point):
+                        paths.append(nx.shortest_path(self.call_graph, entry_point, exit_point))
 
-        return paths
+            self._execution_paths = paths
+
+        return self._execution_paths
 
     @property
     def avg_execution_path_length(self):
