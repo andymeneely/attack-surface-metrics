@@ -63,7 +63,7 @@ int main(void)
 	puts("lol");
 
 	functionPtr = addInt;
-	int sum = (*functionPtr)(2, 3); // sum == 5
+	int sum = functionPtr(2, 3); // sum == 5
 	printf("---> %d", sum);
 
 	Greeter g = new_Greeter();
