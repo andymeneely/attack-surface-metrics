@@ -101,6 +101,36 @@ class CallGraph():
     def get_execution_paths_for(self, call):
         return [path for path in self.execution_paths if call in path]
 
+    def get_distance_to_exit_point(self, call, paths=None):
+        distances = list()
+
+        if paths:
+            paths_to_search = paths
+        else:
+            paths_to_search = self.execution_paths
+
+        for path in paths_to_search:
+            distance_to_exit_point = len(path) - path.index(call) - 1
+
+            distances.append({'path': path, 'distance': distance_to_exit_point})
+
+        return distances
+
+    def get_distance_to_entry_point(self, call, paths=None):
+        distances = list()
+
+        if paths:
+            paths_to_search = paths
+        else:
+            paths_to_search = self.execution_paths
+
+        for path in paths_to_search:
+            distance_to_entry_point = path.index(call)
+
+            distances.append({'path': path, 'distance': distance_to_entry_point})
+
+        return distances
+
     @property
     def execution_paths(self):
         if not self._execution_paths:
