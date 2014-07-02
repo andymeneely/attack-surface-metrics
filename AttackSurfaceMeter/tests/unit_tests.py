@@ -367,6 +367,51 @@ class CallGraphTestCase(unittest.TestCase):
         self.assertTrue(all_paths_found)
         self.assertTrue(call_in_all_paths)
 
+    # def _arrange_test_distance(self):
+    #     path = [p for p in self.call_graph.execution_paths if len(p) == 3][0]
+    #     first_call = path[0]
+    #     second_call = path[1]
+    #     third_call = path[2]
+    #
+    #     return path, first_call, second_call, third_call
+
+
+    def test_distance_to_entry_point(self):
+        # Arrange
+        # path, first_call, second_call, third_call = self._arrange_test_distance()
+
+        path = [p for p in self.call_graph.execution_paths if len(p) == 3][0]
+        first_call = path[0]
+        second_call = path[1]
+        third_call = path[2]
+
+        # Act
+        first_distance = self.call_graph.get_distance_to_entry_point(first_call, [path])
+        second_distance = self.call_graph.get_distance_to_entry_point(second_call, [path])
+        third_distance = self.call_graph.get_distance_to_entry_point(third_call, [path])
+
+        # Assert
+        self.assertEqual(first_distance[0]['distance'], 0)
+        self.assertEqual(second_distance[0]['distance'], 1)
+        self.assertEqual(third_distance[0]['distance'], 2)
+
+    def test_distance_to_exit_point(self):
+        # Arrange
+        path = [p for p in self.call_graph.execution_paths if len(p) == 3][0]
+        first_call = path[0]
+        second_call = path[1]
+        third_call = path[2]
+
+        # Act
+        first_distance = self.call_graph.get_distance_to_exit_point(first_call, [path])
+        second_distance = self.call_graph.get_distance_to_exit_point(second_call, [path])
+        third_distance = self.call_graph.get_distance_to_exit_point(third_call, [path])
+
+        # Assert
+        self.assertEqual(first_distance[0]['distance'], 2)
+        self.assertEqual(second_distance[0]['distance'], 1)
+        self.assertEqual(third_distance[0]['distance'], 0)
+
 
 class CallGraphReverseTestCase(CallGraphTestCase):
     def setUp(self):
