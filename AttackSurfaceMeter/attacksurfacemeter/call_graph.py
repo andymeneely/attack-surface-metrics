@@ -174,7 +174,7 @@ class CallGraph():
         if call:
             return degrees[call]
         else:
-            return nx.degree_centrality(self.call_graph)
+            return degrees
 
     def get_in_degree_centrality(self, call=None):
         degrees = nx.in_degree_centrality(self.call_graph)
@@ -182,15 +182,15 @@ class CallGraph():
         if call:
             return degrees[call]
         else:
-            return nx.degree_centrality(self.call_graph)
+            return degrees
 
     def get_out_degree_centrality(self, call=None):
-        degrees = nx.degree_out_degree_centrality(self.call_graph)
+        degrees = nx.out_degree_centrality(self.call_graph)
 
         if call:
             return degrees[call]
         else:
-            return nx.degree_centrality(self.call_graph.degree)
+            return degrees
         
     def get_degree(self, call=None):
         if call:
