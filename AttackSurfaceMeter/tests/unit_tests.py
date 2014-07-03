@@ -375,7 +375,6 @@ class CallGraphTestCase(unittest.TestCase):
     #
     #     return path, first_call, second_call, third_call
 
-
     def test_distance_to_entry_point(self):
         # Arrange
         # path, first_call, second_call, third_call = self._arrange_test_distance()
@@ -412,6 +411,86 @@ class CallGraphTestCase(unittest.TestCase):
         self.assertEqual(second_distance[0]['distance'], 1)
         self.assertEqual(third_distance[0]['distance'], 0)
 
+    def test_all_betweenness(self):
+        # Arrange
+        expected_content = {Call("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"): 0.0,
+                            Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"): 0.016483516483516484,
+                            Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"): 0.01098901098901099,
+                            Call("gets()"): 0.0,
+                            Call("puts()"): 0.0,
+                            Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"): 0.008241758241758242,
+                            Call("printf()"): 0.0,
+                            Call("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"): 0.0027472527472527475,
+                            Call("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 0.0,
+                            Call("main() <int main (void) at ./src/helloworld.c:58>:"): 0.0,
+                            Call("malloc()"): 0.0,
+                            Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 0.01098901098901099,
+                            Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"): 0.013736263736263738,
+                            Call("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"): 0.0027472527472527475,
+                            Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"): 0.01098901098901099}
+
+        # Act
+        betweennesses = self.call_graph.get_betweenness()
+        all_values_correct = all([betweennesses[c] == expected_content[c] for c in betweennesses])
+
+        # for c in betweennesses:
+        #     print('Call("' + c.function_info + '"): ' + str(g.get_betweenness()[c]) + ',')
+
+        # Assert
+        self.assertTrue(all_values_correct)
+        self.assertEqual(len(betweennesses), 15)
+
+    def test_node_specific_betweenness(self):
+        # Arrange
+        expected_value = 0.016483516483516484
+        call = Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
+
+        # Act
+        betweenness = self.call_graph.get_betweenness(call)
+
+        # Assert
+        self.assertEqual(betweenness, expected_value)
+
+    def test_all_closeness(self):
+        # Arrange
+        expected_content = {Call("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"): 0.0,
+                            Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"): 0.22857142857142856,
+                            Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"): 0.14285714285714285,
+                            Call("gets()"): 0.0,
+                            Call("puts()"): 0.0,
+                            Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"): 0.22321428571428573,
+                            Call("printf()"): 0.0,
+                            Call("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"): 0.07142857142857142,
+                            Call("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 0.0,
+                            Call("main() <int main (void) at ./src/helloworld.c:58>:"): 0.6666666666666666,
+                            Call("malloc()"): 0.0,
+                            Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 0.07142857142857142,
+                            Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"): 0.2857142857142857,
+                            Call("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"): 0.07142857142857142,
+                            Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"): 0.14285714285714285}
+
+        # Act
+        closenesses = self.call_graph.get_closeness()
+        all_values_correct = all([closenesses[c] == expected_content[c] for c in closenesses])
+
+        # for c in closenesses:
+        #     print('Call("' + c.function_info + '"): ' + str(g.get_closeness()[c]) + ',')
+
+        # Assert
+        self.assertTrue(all_values_correct)
+        self.assertEqual(len(closenesses), 15)
+
+    def test_node_specific_closeness(self):
+        # Arrange
+        expected_value = 0.22857142857142856
+        call = Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
+
+        # Act
+        closeness = self.call_graph.get_closeness(call)
+
+        # Assert
+        self.assertEqual(closeness, expected_value)
+
 
 class CallGraphReverseTestCase(CallGraphTestCase):
     def setUp(self):
@@ -420,4 +499,3 @@ class CallGraphReverseTestCase(CallGraphTestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
