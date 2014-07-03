@@ -491,6 +491,246 @@ class CallGraphTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(closeness, expected_value)
 
+    def test_all_degree_centrality(self):
+        # Arrange
+        expected_content = {Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"): 0.21428571428571427,
+                            Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"): 0.2857142857142857,
+                            Call("puts()"): 0.14285714285714285,
+                            Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"): 0.2857142857142857,
+                            Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 0.21428571428571427,
+                            Call("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"): 0.14285714285714285,
+                            Call("main() <int main (void) at ./src/helloworld.c:58>:"): 0.5,
+                            Call("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 0.07142857142857142,
+                            Call("printf()"): 0.3571428571428571,
+                            Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"): 0.2857142857142857,
+                            Call("gets()"): 0.07142857142857142,
+                            Call("malloc()"): 0.07142857142857142,
+                            Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"): 0.2857142857142857,
+                            Call("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"): 0.14285714285714285,
+                            Call("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"): 0.07142857142857142}
+
+        # Act
+        degrees = self.call_graph.get_degree_centrality()
+        all_values_correct = all([degrees[c] == expected_content[c] for c in degrees])
+
+        # for c in degrees:
+        #     print('Call("' + c.function_info + '"): ' + str(g.get_degree_centrality()[c]) + ',')
+
+        # Assert
+        self.assertTrue(all_values_correct)
+        self.assertEqual(len(degrees), 15)
+
+    def test_all_in_degree_centrality(self):
+        # Arrange
+        expected_content = {Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 0.14285714285714285,
+                            Call("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"): 0.07142857142857142,
+                            Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"): 0.07142857142857142,
+                            Call("puts()"): 0.14285714285714285,
+                            Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"): 0.14285714285714285,
+                            Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"): 0.07142857142857142,
+                            Call("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"): 0.07142857142857142,
+                            Call("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 0.07142857142857142,
+                            Call("gets()"): 0.07142857142857142,
+                            Call("printf()"): 0.3571428571428571,
+                            Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"): 0.14285714285714285,
+                            Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"): 0.07142857142857142,
+                            Call("malloc()"): 0.07142857142857142,
+                            Call("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"): 0.07142857142857142,
+                            Call("main() <int main (void) at ./src/helloworld.c:58>:"): 0.0}
+
+        # Act
+        degrees = self.call_graph.get_in_degree_centrality()
+        all_values_correct = all([degrees[c] == expected_content[c] for c in degrees])
+
+        # for c in degrees:
+        #     print('Call("' + c.function_info + '"): ' + str(g.get_degree_centrality()[c]) + ',')
+
+        # Assert
+        self.assertTrue(all_values_correct)
+        self.assertEqual(len(degrees), 15)
+
+    def test_all_out_degree_centrality(self):
+        # Arrange
+        expected_content = {Call("malloc()"): 0.0,
+                            Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"): 0.21428571428571427,
+                            Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"): 0.14285714285714285,
+                            Call("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"): 0.07142857142857142,
+                            Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"): 0.21428571428571427,
+                            Call("puts()"): 0.0,
+                            Call("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"): 0.0,
+                            Call("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 0.0,
+                            Call("gets()"): 0.0,
+                            Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"): 0.14285714285714285,
+                            Call("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"): 0.07142857142857142,
+                            Call("printf()"): 0.0,
+                            Call("main() <int main (void) at ./src/helloworld.c:58>:"): 0.5,
+                            Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"): 0.14285714285714285,
+                            Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 0.07142857142857142}
+
+        # Act
+        degrees = self.call_graph.get_out_degree_centrality()
+        all_values_correct = all([degrees[c] == expected_content[c] for c in degrees])
+
+        # for c in degrees:
+        #     print('Call("' + c.function_info + '"): ' + str(g.get_degree_centrality()[c]) + ',')
+
+        # Assert
+        self.assertTrue(all_values_correct)
+        self.assertEqual(len(degrees), 15)
+
+    def test_node_specific_degree_centrality(self):
+        # Arrange
+        expected_value = 0.2857142857142857
+        call = Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
+
+        # Act
+        degree = self.call_graph.get_degree_centrality(call)
+
+        # Assert
+        self.assertEqual(degree, expected_value)
+
+    def test_node_specific_in_degree_centrality(self):
+        # Arrange
+        expected_value = 0.07142857142857142
+        call = Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
+
+        # Act
+        degree = self.call_graph.get_in_degree_centrality(call)
+
+        # Assert
+        self.assertEqual(degree, expected_value)
+
+    def test_node_specific_out_degree_centrality(self):
+        # Arrange
+        expected_value = 0.21428571428571427
+        call = Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
+
+        # Act
+        degree = self.call_graph.get_out_degree_centrality(call)
+
+        # Assert
+        self.assertEqual(degree, expected_value)
+    
+    def test_all_degree(self):
+        # Arrange
+        expected_content = {Call("malloc()"): 1,
+                            Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"): 4,
+                            Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"): 3,
+                            Call("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"): 2,
+                            Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"): 4,
+                            Call("puts()"): 2,
+                            Call("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"): 1,
+                            Call("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 1,
+                            Call("gets()"): 1,
+                            Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"): 4,
+                            Call("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"): 2,
+                            Call("printf()"): 5,
+                            Call("main() <int main (void) at ./src/helloworld.c:58>:"): 7,
+                            Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"): 4,
+                            Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 3}
+
+        # Act
+        degrees = self.call_graph.get_degree()
+        all_values_correct = all([degrees[c] == expected_content[c] for c in degrees])
+
+        # for c in degrees:
+        #     print('Call("' + c.function_info + '"): ' + str(g.get_degree_centrality()[c]) + ',')
+
+        # Assert
+        self.assertTrue(all_values_correct)
+        self.assertEqual(len(degrees), 15)
+
+    def test_all_in_degree(self):
+        # Arrange
+        expected_content = {Call("malloc()"): 1,
+                            Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"): 1,
+                            Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"): 1,
+                            Call("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"): 1,
+                            Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"): 1,
+                            Call("puts()"): 2,
+                            Call("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"): 1,
+                            Call("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 1,
+                            Call("gets()"): 1,
+                            Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"): 2,
+                            Call("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"): 1,
+                            Call("printf()"): 5,
+                            Call("main() <int main (void) at ./src/helloworld.c:58>:"): 0,
+                            Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"): 2,
+                            Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 2}
+
+        # Act
+        degrees = self.call_graph.get_in_degree()
+        all_values_correct = all([degrees[c] == expected_content[c] for c in degrees])
+
+        # for c in degrees:
+        #     print('Call("' + c.function_info + '"): ' + str(g.get_degree_centrality()[c]) + ',')
+
+        # Assert
+        self.assertTrue(all_values_correct)
+        self.assertEqual(len(degrees), 15)
+
+    def test_all_out_degree(self):
+        # Arrange
+        expected_content = {Call("malloc()"): 0,
+                            Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"): 3,
+                            Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"): 2,
+                            Call("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"): 1,
+                            Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"): 3,
+                            Call("puts()"): 0,
+                            Call("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"): 0,
+                            Call("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 0,
+                            Call("gets()"): 0,
+                            Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"): 2,
+                            Call("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"): 1,
+                            Call("printf()"): 0,
+                            Call("main() <int main (void) at ./src/helloworld.c:58>:"): 7,
+                            Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"): 2,
+                            Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 1}
+
+        # Act
+        degrees = self.call_graph.get_out_degree()
+        all_values_correct = all([degrees[c] == expected_content[c] for c in degrees])
+
+        # for c in degrees:
+        #     print('Call("' + c.function_info + '"): ' + str(g.get_degree_centrality()[c]) + ',')
+
+        # Assert
+        self.assertTrue(all_values_correct)
+        self.assertEqual(len(degrees), 15)
+
+    def test_node_specific_degree(self):
+        # Arrange
+        expected_value = 4
+        call = Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
+
+        # Act
+        degree = self.call_graph.get_degree(call)
+
+        # Assert
+        self.assertEqual(degree, expected_value)
+
+    def test_node_specific_in_degree(self):
+        # Arrange
+        expected_value = 1
+        call = Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
+
+        # Act
+        degree = self.call_graph.get_in_degree(call)
+
+        # Assert
+        self.assertEqual(degree, expected_value)
+
+    def test_node_specific_out_degree(self):
+        # Arrange
+        expected_value = 3
+        call = Call("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
+
+        # Act
+        degree = self.call_graph.get_out_degree(call)
+
+        # Assert
+        self.assertEqual(degree, expected_value)
+
 
 class CallGraphReverseTestCase(CallGraphTestCase):
     def setUp(self):
