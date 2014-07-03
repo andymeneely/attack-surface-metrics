@@ -167,3 +167,45 @@ class CallGraph():
     @property
     def exit_points_clustering(self):
         return self.average_clustering(self.exit_points)
+    
+    def get_degree_centrality(self, call=None):
+        degrees = nx.degree_centrality(self.call_graph)
+
+        if call:
+            return degrees[call]
+        else:
+            return nx.degree_centrality(self.call_graph)
+
+    def get_in_degree_centrality(self, call=None):
+        degrees = nx.in_degree_centrality(self.call_graph)
+
+        if call:
+            return degrees[call]
+        else:
+            return nx.degree_centrality(self.call_graph)
+
+    def get_out_degree_centrality(self, call=None):
+        degrees = nx.degree_out_degree_centrality(self.call_graph)
+
+        if call:
+            return degrees[call]
+        else:
+            return nx.degree_centrality(self.call_graph.degree)
+        
+    def get_degree(self, call=None):
+        if call:
+            return self.call_graph.degree([call])[call]
+        else:
+            return self.call_graph.degree()
+
+    def get_in_degree(self, call=None):
+        if call:
+            return self.call_graph.in_degree([call])[call]
+        else:
+            return self.call_graph.in_degree()
+
+    def get_out_degree(self, call=None):
+        if call:
+            return self.call_graph.out_degree([call])[call]
+        else:
+            return self.call_graph.out_degree()
