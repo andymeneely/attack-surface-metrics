@@ -98,16 +98,30 @@ class CallGraph():
     def shortest_path(self, source, target):
         return nx.shortest_path(self.call_graph, source, target)
 
+    @property
+    def execution_paths(self):
+        if not self._execution_paths:
+            paths = []
+
+            for entry_point in self.entry_points:
+                for exit_point in self.exit_points:
+                    if nx.has_path(self.call_graph, entry_point, exit_point):
+                        paths.append(nx.shortest_path(self.call_graph, entry_point, exit_point))
+
+            self._execution_paths = paths
+
+        return self._execution_paths
+
     def get_execution_paths_for(self, call):
         return [path for path in self.execution_paths if call in path]
 
-    def get_distance_to_entry_point(self, call, paths=None):
-        calculator = lambda c, p: p.index(c)
-        return self._get_distances(calculator, call, paths)
+    @property
+    def avg_execution_path_length(self):
+        return stat.mean([len(p) for p in self.execution_paths])
 
-    def get_distance_to_exit_point(self, call, paths=None):
-        calculator = lambda c, p: len(p) - p.index(c) - 1
-        return self._get_distances(calculator, call, paths)
+    @property
+    def median_execution_path_length(self):
+        return stat.median([len(p) for p in self.execution_paths])
 
     def _get_distances(self, distance_calculator, call, paths=None):
         distances = list()
@@ -124,28 +138,24 @@ class CallGraph():
 
         return distances
 
+    def get_distance_to_entry_point(self, call, paths=None):
+        calculator = lambda c, p: p.index(c)
+        return self._get_distances(calculator, call, paths)
 
-    @property
-    def execution_paths(self):
-        if not self._execution_paths:
-            paths = []
+    def get_distance_to_exit_point(self, call, paths=None):
+        calculator = lambda c, p: len(p) - p.index(c) - 1
+        return self._get_distances(calculator, call, paths)
 
-            for entry_point in self.entry_points:
-                for exit_point in self.exit_points:
-                    if nx.has_path(self.call_graph, entry_point, exit_point):
-                        paths.append(nx.shortest_path(self.call_graph, entry_point, exit_point))
+    def get_closeness(self, call=None):
+        return nx.closeness_centrality(self.call_graph, call)
+    
+    def get_betweenness(self, call=None):
+        betweennesses = nx.betweenness_centrality(self.call_graph)
 
-            self._execution_paths = paths
-
-        return self._execution_paths
-
-    @property
-    def avg_execution_path_length(self):
-        return stat.mean([len(p) for p in self.execution_paths])
-
-    @property
-    def median_execution_path_length(self):
-        return stat.median([len(p) for p in self.execution_paths])
+        if call:
+            return betweennesses[call]
+        else:
+            return nx.betweenness_centrality(self.call_graph)
 
     def average_clustering(self, nodes):
         return nx.average_clustering(self.call_graph.to_undirected(), nodes)
