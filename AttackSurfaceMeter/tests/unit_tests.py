@@ -731,6 +731,51 @@ class CallGraphTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(degree, expected_value)
 
+    def test_get_descendants(self):
+        # Arrange
+        expected_count = 5
+        expected_content = [Call("printf():"),
+                            Call("puts():"),
+                            Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"),
+                            Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"),
+                            Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"),
+                            Call("printf()"),
+                            Call("puts()"),
+                            Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"),
+                            Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"),
+                            Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")]
+        call = Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:")
+
+        # Act
+        descendants = self.call_graph.get_descendants(call)
+        all_descendants_found = all([c in descendants for c in expected_content])
+
+        # for c in descendants:
+        #     print('Call("' + c.function_info + '"),')
+
+        # Assert
+        self.assertEqual(len(descendants), expected_count)
+        self.assertTrue(all_descendants_found)
+
+    def test_get_ancestors(self):
+        # Arrange
+        expected_count = 1
+        expected_content = [Call("main() <int main (void) at ./src/helloworld.c:58>:")]
+        call = Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:")
+
+        # Act
+        ancestors = self.call_graph.get_ancestors(call)
+        all_ancestors_found = all([c in ancestors for c in expected_content])
+
+        # for c in ancestors:
+        #     print('Call("' + c.function_info + '"),')
+
+        # Assert
+        self.assertEqual(len(ancestors), expected_count)
+        self.assertTrue(all_ancestors_found)
+
+
+
 
 class CallGraphReverseTestCase(CallGraphTestCase):
     def setUp(self):
