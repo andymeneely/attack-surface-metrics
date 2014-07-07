@@ -209,3 +209,9 @@ class CallGraph():
             return self.call_graph.out_degree([call])[call]
         else:
             return self.call_graph.out_degree()
+
+    def get_descendants(self, call):
+        return list(nx.descendants(self.call_graph, call))
+
+    def get_ancestors(self, call):
+        return list(nx.ancestors(self.call_graph, call))
