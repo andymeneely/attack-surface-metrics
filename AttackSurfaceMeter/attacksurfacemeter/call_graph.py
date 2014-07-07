@@ -210,6 +210,14 @@ class CallGraph():
         else:
             return self.call_graph.out_degree()
 
+    def get_eccentricity(self, call=None):
+        if call:
+            return nx.eccentricity(self.call_graph.to_undirected())[call]
+        else:
+            return nx.eccentricity(self.call_graph.to_undirected())
+
+
+
     def get_descendants(self, call):
         return list(nx.descendants(self.call_graph, call))
 
