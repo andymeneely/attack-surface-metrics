@@ -216,10 +216,45 @@ class CallGraph():
         else:
             return nx.eccentricity(self.call_graph.to_undirected())
 
-
-
     def get_descendants(self, call):
         return list(nx.descendants(self.call_graph, call))
 
     def get_ancestors(self, call):
         return list(nx.ancestors(self.call_graph, call))
+
+    def _ratio_of_containment(self, contained, container):
+        numerator = len(self._contained_in(contained, container))
+        denominator = len(contained)
+
+        return numerator/denominator
+
+    def _contained_in(self, contained, container):
+        return [c for c in contained if c in container]
+
+    def get_descendant_entry_points(self, call):
+        return self._contained_in(self.get_descendants(call), self.entry_points)
+
+    def get_descendant_exit_points(self, call):
+        return self._contained_in(self.get_descendants(call), self.exit_points)
+
+    def get_ancestor_entry_points(self, call):
+        return self._contained_in(self.get_ancestors(call), self.entry_points)
+
+    def get_ancestor_exit_points(self, call):
+        return self._contained_in(self.get_ancestors(call), self.entry_points)
+
+    def get_descendants_entry_point_ratio(self, call):
+        return self._ratio_of_containment(self.get_descendants(call),
+                                          self.entry_points)
+
+    def get_descendants_exit_point_ratio(self, call):
+        return self._ratio_of_containment(self.get_descendants(call),
+                                          self.exit_points)
+
+    def get_ancestors_entry_point_ratio(self, call):
+        return self._ratio_of_containment(self.get_ancestors(call),
+                                          self.entry_points)
+
+    def get_ancestors_exit_point_ratio(self, call):
+        return self._ratio_of_containment(self.get_ancestors(call),
+                                          self.exit_points)
