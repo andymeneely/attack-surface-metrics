@@ -241,7 +241,7 @@ class CallGraph():
         return self._contained_in(self.get_ancestors(call), self.entry_points)
 
     def get_ancestor_exit_points(self, call):
-        return self._contained_in(self.get_ancestors(call), self.entry_points)
+        return self._contained_in(self.get_ancestors(call), self.exit_points)
 
     def get_descendants_entry_point_ratio(self, call):
         return self._ratio_of_containment(self.get_descendants(call),
