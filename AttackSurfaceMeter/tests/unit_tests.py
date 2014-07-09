@@ -774,7 +774,114 @@ class CallGraphTestCase(unittest.TestCase):
         self.assertEqual(len(ancestors), expected_count)
         self.assertTrue(all_ancestors_found)
 
+    def test_descendant_entry_points(self):
+        # Arrange
+        call = Call("main() <int main (void) at ./src/helloworld.c:58>:")
+        expected_count = 1
+        expected_content = [Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")]
 
+        # Act
+        descendant_entry_points = self.call_graph.get_descendant_entry_points(call)
+        all_found = all([c in descendant_entry_points for c in expected_content])
+
+        # [print(n.function_info) for n in self.call_graph.get_descendant_entry_points(call)]
+
+        # Assert
+        self.assertEqual(len(descendant_entry_points), expected_count)
+        self.assertTrue(all_found)
+
+    def test_descendant_exit_points(self):
+        # Arrange
+        call = Call("main() <int main (void) at ./src/helloworld.c:58>:")
+        expected_count = 5
+        expected_content = [Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"),
+                            Call("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"),
+                            Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"),
+                            Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"),
+                            Call("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:")]
+
+        # Act
+        descendant_exit_points = self.call_graph.get_descendant_exit_points(call)
+        all_found = all([c in descendant_exit_points for c in expected_content])
+
+        # [print('Call("' + n.function_info + '"),') for n in self.call_graph.get_descendant_exit_points(call)]
+
+        # Assert
+        self.assertEqual(len(descendant_exit_points), expected_count)
+        self.assertTrue(all_found)
+
+    def test_descendants_entry_point_ratio(self):
+        # Arrange
+        call = Call("main() <int main (void) at ./src/helloworld.c:58>:")
+        expected_value = 0.07142857142857142
+
+        # Act
+        ratio = self.call_graph.get_descendants_entry_point_ratio(call)
+
+        # Assert
+        self.assertEqual(ratio, expected_value)
+
+    def test_descendants_exit_point_ratio(self):
+        # Arrange
+        call = Call("main() <int main (void) at ./src/helloworld.c:58>:")
+        expected_value = 0.35714285714285715
+
+        # Act
+        ratio = self.call_graph.get_descendants_exit_point_ratio(call)
+
+        # Assert
+        self.assertEqual(ratio, expected_value)
+
+    def test_ancestor_entry_points(self):
+        # Arrange
+        call = Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:")
+        expected_count = 1
+        expected_content = [Call("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")]
+
+        # Act
+        ancestor_entry_points = self.call_graph.get_ancestor_entry_points(call)
+        all_found = all([c in ancestor_entry_points for c in expected_content])
+
+        # Assert
+        self.assertEqual(len(ancestor_entry_points), expected_count)
+        self.assertTrue(all_found)
+
+    def test_ancestor_exit_points(self):
+        # Arrange
+        call = Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):")
+        expected_count = 2
+        expected_content = [Call("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"),
+                            Call("main() <int main (void) at ./src/helloworld.c:58>:")]
+
+        # Act
+        ancestor_exit_points = self.call_graph.get_ancestor_exit_points(call)
+        all_found = all([c in ancestor_exit_points for c in expected_content])
+
+        # Assert
+        self.assertEqual(len(ancestor_exit_points), expected_count)
+        self.assertTrue(all_found)
+
+    def test_ancestors_entry_point_ratio(self):
+        # Arrange
+        call = Call("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:")
+        expected_value = 0.3333333333333333
+
+        # Act
+        ratio = self.call_graph.get_ancestors_entry_point_ratio(call)
+
+        # Assert
+        self.assertEqual(ratio, expected_value)
+
+    def test_ancestors_exit_point_ratio(self):
+        # Arrange
+        call = Call("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):")
+        expected_value = 0.5
+
+        # Act
+        ratio = self.call_graph.get_ancestors_exit_point_ratio(call)
+
+        # Assert
+        self.assertEqual(ratio, expected_value)
 
 
 class CallGraphReverseTestCase(CallGraphTestCase):
