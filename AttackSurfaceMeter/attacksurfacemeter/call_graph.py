@@ -12,7 +12,7 @@ from attacksurfacemeter.call import Call
 
 class CallGraph():
     """
-        Represents a the Call Graph of a software system.
+        Represents the Call Graph of a software system.
 
         Encapsulates a graph data structure where each node is a method/function call.
 
