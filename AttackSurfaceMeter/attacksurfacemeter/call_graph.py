@@ -402,18 +402,55 @@ class CallGraph():
         else:
             return betweennesses
 
+    # Reconsider this. Maybe clustering is not all that useful in terms of call graph.
     def average_clustering(self, nodes):
+        """
+            Returns the average clustering coefficient of the given nodes.
+        
+            Args:
+                nodes: A List of Calls whose average clustering coefficient will be calculated.
+                
+            Returns:
+                An Int that represents the average clustering coefficient of the given nodes.
+        """
         return nx.average_clustering(self.call_graph.to_undirected(), nodes)
 
+    # Reconsider this. Maybe clustering is not all that useful in terms of call graph.
     @property
     def entry_points_clustering(self):
+        """
+            Returns the average clustering coefficient of the Entry Points.
+
+            Returns:
+                An Int that represents the average clustering coefficient of the Entry Points.
+        """
         return self.average_clustering(self.entry_points)
 
+    # Reconsider this. Maybe clustering is not all that useful in terms of call graph.
     @property
     def exit_points_clustering(self):
+        """
+            Returns the average clustering coefficient of the Exit Points.
+
+            Returns:
+                An Int that represents the average clustering coefficient of the Exit Points.
+        """
         return self.average_clustering(self.exit_points)
     
     def get_degree_centrality(self, call=None):
+        """
+            Returns the degree centrality of a given Call
+
+            The degree centrality is the fraction of other nodes that a specific node is connected to.
+
+            Args:
+                call: An optional Call instance for which the degree centrality will be calculated. If call is not
+                    provided, degree centrality will be calculated for every Call in the Call Graph.
+
+            Returns:
+                If call is provided, returns a Float that represents the degree centrality of call. If not, returns a
+                dictionary with every Call in the Call Graph with their respective degree centrality.
+        """
         degrees = nx.degree_centrality(self.call_graph)
 
         if call:
@@ -422,6 +459,20 @@ class CallGraph():
             return degrees
 
     def get_in_degree_centrality(self, call=None):
+        """
+            Returns the in degree centrality of a given Call
+
+            The in degree centrality is the fraction of other nodes that a specific node's incoming edges
+            are connected to.
+
+            Args:
+                call: An optional Call instance for which the in degree centrality will be calculated. If call is not
+                    provided, in degree centrality will be calculated for every Call in the Call Graph.
+
+            Returns:
+                If call is provided, returns a Float that represents the in degree centrality of call. If not, returns
+                a dictionary with every Call in the Call Graph with their respective in degree centrality.
+        """
         degrees = nx.in_degree_centrality(self.call_graph)
 
         if call:
@@ -430,6 +481,20 @@ class CallGraph():
             return degrees
 
     def get_out_degree_centrality(self, call=None):
+        """
+            Returns the out degree centrality of a given Call
+
+            The out degree centrality is the fraction of other nodes that a specific node's outgoing edges
+            are connected to.
+
+            Args:
+                call: An optional Call instance for which the out degree centrality will be calculated. If call is not
+                    provided, out degree centrality will be calculated for every Call in the Call Graph.
+
+            Returns:
+                If call is provided, returns a Float that represents the out degree centrality of call. If not, returns
+                a dictionary with every Call in the Call Graph with their respective out degree centrality.
+        """
         degrees = nx.out_degree_centrality(self.call_graph)
 
         if call:
@@ -438,18 +503,57 @@ class CallGraph():
             return degrees
         
     def get_degree(self, call=None):
+        """
+            Returns the degree of a given Call.
+
+            The degree of a node is the number of edges it has.
+
+            Args:
+                call: An optional Call instance for which the degree will be calculated. If call is not
+                    provided, degree will be calculated for every Call in the Call Graph.
+
+            Returns:
+                If call is provided, returns an Int that represents the degree of call. If not, returns
+                a dictionary with every Call in the Call Graph with their respective degree.
+        """
         if call:
             return self.call_graph.degree([call])[call]
         else:
             return self.call_graph.degree()
 
     def get_in_degree(self, call=None):
+        """
+            Returns the in degree of a given Call.
+
+            The in degree of a node is the number of incoming edges it has.
+
+            Args:
+                call: An optional Call instance for which the in degree will be calculated. If call is not
+                    provided, in degree will be calculated for every Call in the Call Graph.
+
+            Returns:
+                If call is provided, returns an Int that represents the in degree of call. If not, returns
+                a dictionary with every Call in the Call Graph with their respective in degree.
+        """
         if call:
             return self.call_graph.in_degree([call])[call]
         else:
             return self.call_graph.in_degree()
 
     def get_out_degree(self, call=None):
+        """
+            Returns the out degree of a given Call.
+
+            The out degree of a node is the number of incoming edges it has.
+
+            Args:
+                call: An optional Call instance for which the out degree will be calculated. If call is not
+                    provided, out degree will be calculated for every Call in the Call Graph.
+
+            Returns:
+                If call is provided, returns an Int that represents the out degree of call. If not, returns
+                a dictionary with every Call in the Call Graph with their respective out degree.
+        """
         if call:
             return self.call_graph.out_degree([call])[call]
         else:
@@ -463,44 +567,158 @@ class CallGraph():
     #         return nx.eccentricity(self.call_graph.to_undirected())
 
     def get_descendants(self, call):
+        """
+            Returns all the descendants of a given Call.
+
+            The descendants are all the nodes that can be reached from a specific node.
+
+            Args:
+                call: A Call instance whose descendants will be returned.
+
+            Returns:
+                A List of Call objects that represent all of call's descendants.
+        """
         return list(nx.descendants(self.call_graph, call))
 
     def get_ancestors(self, call):
+        """
+            Returns all the ancestors of a given Call.
+
+            The ancestors are all the nodes that can reach a specific node.
+
+            Args:
+                call: A Call instance whose ancestors will be returned.
+
+            Returns:
+                A List of Call objects that represent all of call's ancestors.
+        """
         return list(nx.ancestors(self.call_graph, call))
 
     def _ratio_of_containment(self, contained, container):
+        """
+            Calculates the ratio of how many elements of contained are present in contained.
+
+            Args:
+                contained: List of Call objects that will be tested for presence in container.
+                container: List of Call objects that will be tested to contain the elements of contained.
+
+            Returns:
+                A Float representing the calculated ratio of contained that are present in container.
+        """
         numerator = len(self._contained_in(contained, container))
         denominator = len(contained)
 
         return numerator/denominator
 
     def _contained_in(self, contained, container):
+        """
+            Returns all the elements of contained that are present in container.
+            
+            Args:
+                contained: List of Call objects that will be tested for presence in container.
+                container: List of Call objects that will be tested to contain the elements of contained.
+
+            Returns:
+                A List of Call call objects that represent a the subset of contained that is present in container.
+        """
         return [c for c in contained if c in container]
 
     def get_descendant_entry_points(self, call):
+        """
+            Returns the descendants of call that are Entry Points.
+
+            Args:
+                call: A Call object whose descendants are going to be searched for Entry Points.
+                
+            Returns:
+                A List of Call objects that contain all the descendants of call that are Entry Points.
+        """
         return self._contained_in(self.get_descendants(call), self.entry_points)
 
     def get_descendant_exit_points(self, call):
+        """
+            Returns the descendants of call that are Exit Points.
+
+            Args:
+                call: A Call object whose descendants are going to be searched for Exit Points.
+
+            Returns:
+                A List of Call objects that contain all the descendants of call that are Exit Points.
+        """
         return self._contained_in(self.get_descendants(call), self.exit_points)
 
     def get_ancestor_entry_points(self, call):
+        """
+            Returns the ancestors of call that are Entry Points.
+
+            Args:
+                call: A Call object whose ancestors are going to be searched for Entry Points.
+
+            Returns:
+                A List of Call objects that contain all the ancestors of call that are Entry Points.
+        """
         return self._contained_in(self.get_ancestors(call), self.entry_points)
 
     def get_ancestor_exit_points(self, call):
+        """
+            Returns the ancestors of call that are Exit Points.
+
+            Args:
+                call: A Call object whose ancestors are going to be searched for Exit Points.
+
+            Returns:
+                A List of Call objects that contain all the ancestors of call that are Exit Points.
+        """
         return self._contained_in(self.get_ancestors(call), self.exit_points)
 
     def get_descendants_entry_point_ratio(self, call):
+        """
+            Returns the ratio of descendants of call that are Entry Points.
+
+            Args:
+                call: A Call object whose descendants are going to be searched for Entry Points.
+
+            Returns:
+                A Float that represents the calculated ratio.
+        """
         return self._ratio_of_containment(self.get_descendants(call),
                                           self.entry_points)
 
     def get_descendants_exit_point_ratio(self, call):
+        """
+            Returns the ratio of descendants of call that are Exit Points.
+
+            Args:
+                call: A Call object whose descendants are going to be searched for Exit Points.
+
+            Returns:
+                A Float that represents the calculated ratio.
+        """
         return self._ratio_of_containment(self.get_descendants(call),
                                           self.exit_points)
 
     def get_ancestors_entry_point_ratio(self, call):
+        """
+            Returns the ratio of ancestors of call that are Entry Points.
+
+            Args:
+                call: A Call object whose ancestors are going to be searched for Entry Points.
+
+            Returns:
+                A Float that represents the calculated ratio.
+        """
         return self._ratio_of_containment(self.get_ancestors(call),
                                           self.entry_points)
 
     def get_ancestors_exit_point_ratio(self, call):
+        """
+            Returns the ratio of ancestors of call that are Exit Points.
+
+            Args:
+                call: A Call object whose ancestors are going to be searched for Exit Points.
+
+            Returns:
+                A Float that represents the calculated ratio.
+        """
         return self._ratio_of_containment(self.get_ancestors(call),
                                           self.exit_points)
