@@ -17,7 +17,7 @@ class Stack():
 
     def __len__(self):
         """
-            Returns the number of objects contained in the sSack.
+            Returns the number of objects contained in the Stack.
 
             Returns:
                 An Int representing the number of objects contained in the Stack.
