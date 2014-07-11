@@ -23,14 +23,15 @@ def main():
 
 
 def parse_args():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        description="Analyzes a software's source code and reports various metrics related to it's attack surface.")
 
-    parser.add_argument("source_dir", help="root directory of the source code to analyze")
-    parser.add_argument("-f", "--format", choices=["html", "xml", "json"],
-                        help="output format of the calculated metrics")
-    parser.add_argument("-o", "--output", help="output file")
+    parser.add_argument("source_dir", help="Root directory of the source code to analyze.")
+    parser.add_argument("-f", "--format", choices=["txt", "html", "xml", "json"], default="txt",
+                        help="Output format of the calculated metrics.")
+    parser.add_argument("-o", "--output", help="Output file.", default="output.metrics")
     parser.add_argument("-r", "--reverse", action="store_true",
-                        help="when using cflow for call graph generation, use the reverse algorithm")
+                        help="When using cflow for call graph generation, use the reverse algorithm.")
 
     return parser.parse_args()
 
