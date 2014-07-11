@@ -7,12 +7,15 @@ class Call():
     """
         Represents a function/method call in a source code.
     
-        Encapsulates parsing logic for cflow's output. For each line of cflow's output, an instance of this 
-        class is potentially created.
-    
+        Encapsulates parsing logic for the call graph generation software's (cflow) output.
+        For each new line of output, an instance of this class is created.
+
         Attributes:
-            function_info: A String containing one single line of cflow's output as is.
-            level: The level of indentation the line represented by this instance has in cflow's output.
+            function_info: A String containing one single line of raw information output from the call
+                graph generation software.
+            level: The level of indentation the line represented by this instance has in the call
+                graph generation software's output. Used to determine the caller/callee relationship
+                between two calls.
     """
 
     input_functions = ['canonicalize_file_name', 'catgets', 'confstr', 'ctermid', 'ctermid', 'cuserid', 'dgettext',
@@ -165,7 +168,7 @@ class Call():
     def _belongs_to(self, function_set):
         """
             Determines whether the function represented by this object is contained in a given function set.
-                    
+
             Args:
                 function_set: A List of Strings that contain the names of the functions to test if this object is
                     present in.
