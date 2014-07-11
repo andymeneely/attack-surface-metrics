@@ -1,18 +1,38 @@
 __author__ = 'kevin'
 
 import sys
-
 from attacksurfacemeter import CallGraph
+import argparse
 
 
-def main(args):
-    source_dir = args[1]
+def main():
+    args = parse_args()
+
+    source_dir = args.source_dir
+
+    print(args.source_dir)
+    print(args.format)
+    print(args.output)
+    print(args.reverse)
 
     print("Call Graph\n")
     calculate_metrics(CallGraph(source_dir))
 
     print("Reversed Call Graph\n")
     calculate_metrics(CallGraph(source_dir, True))
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("source_dir", help="root directory of the source code to analyze")
+    parser.add_argument("-f", "--format", choices=["html", "xml", "json"],
+                        help="output format of the calculated metrics")
+    parser.add_argument("-o", "--output", help="output file")
+    parser.add_argument("-r", "--reverse", action="store_true",
+                        help="when using cflow for call graph generation, use the reverse algorithm")
+
+    return parser.parse_args()
 
 
 def calculate_metrics(call_graph):
@@ -31,4 +51,4 @@ def calculate_metrics(call_graph):
 
 
 if __name__ == '__main__':
-    main(sys.argv)
+    main()
