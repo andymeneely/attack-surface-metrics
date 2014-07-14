@@ -605,6 +605,9 @@ class CallGraph():
             Returns:
                 A Float representing the calculated ratio of contained that are present in container.
         """
+        if len(contained) == 0:
+            return 0.0
+
         numerator = len(self._contained_in(contained, container))
         denominator = len(contained)
 
