@@ -8,18 +8,12 @@ import argparse
 def main():
     args = parse_args()
 
-    source_dir = args.source_dir
+    call_graph = CallGraph(args.source_dir, args.reverse)
 
-    print(args.source_dir)
-    print(args.format)
-    print(args.output)
-    print(args.reverse)
+    if args.format == "txt":
+        output_as_txt(call_graph)
 
-    print("Call Graph\n")
-    calculate_metrics(CallGraph(source_dir))
 
-    print("Reversed Call Graph\n")
-    calculate_metrics(CallGraph(source_dir, True))
 
 
 def parse_args():
@@ -34,6 +28,70 @@ def parse_args():
                         help="When using cflow for call graph generation, use the reverse algorithm.")
 
     return parser.parse_args()
+
+
+def output_as_txt(call_graph):
+    print("Attack surface report")
+    print("=====================")
+    print()
+    print("Source code directory: " + call_graph.source_dir)
+    print()
+
+    print("Nodes")
+    print("=====================")
+    print()
+    print("Number of nodes: " + str(len(call_graph.nodes)))
+    nodes = ', '.join([c.function_name for c in call_graph.nodes])
+    print("Nodes:")
+    print(nodes)
+    print()
+
+    print("Edges")
+    print("=====================")
+    print()
+    print("Number of edges: " + str(len(call_graph.edges)))
+    edges = '\n'.join([f.function_name + " ---> " + t.function_name for (f, t) in call_graph.edges])
+    print("Edges:")
+    print(edges)
+    print()
+
+    print("Entry Points")
+    print("=====================")
+    print()
+    print("Number of Entry Points: " + str(len(call_graph.entry_points)))
+    print()
+    entry_points = ', '.join([c.function_name for c in call_graph.entry_points])
+    print("Entry Points:")
+    print(entry_points)
+    print()
+
+    print("Exit Points")
+    print("=====================")
+    print()
+    print("Number of Exit Points: " + str(len(call_graph.exit_points)))
+    print()
+    exit_points = ', '.join([c.function_name for c in call_graph.exit_points])
+    print("Exit Points:")
+    print(exit_points)
+    print()
+
+    print("Execution Paths")
+    print("=====================")
+    print()
+    print("Number of Execution Paths: " + str(len(call_graph.execution_paths)))
+    print()
+    execution_paths = '\n'.join([' ---> '.join(c.function_name for c in p) for p in call_graph.execution_paths])
+    print("Execution Paths:")
+    print(execution_paths)
+    print()
+    print("Average Execution Path Length: " + str(call_graph.avg_execution_path_length))
+    print("Median Execution Path Length: " + str(call_graph.median_execution_path_length))
+
+    print("Clustering")
+    print("=====================")
+    print()
+    print("Average Entry Point Clustering: " + str(call_graph.entry_points_clustering))
+    print("Average Exit Point Clustering: " + str(call_graph.exit_points_clustering))
 
 
 def calculate_metrics(call_graph):
