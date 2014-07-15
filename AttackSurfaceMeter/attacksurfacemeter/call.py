@@ -112,7 +112,7 @@ class Call():
         value = self.function_name
 
         if self.function_signature:
-            value += self.function_signature
+            value += ' ' + self.function_signature
 
         return value
 
@@ -126,6 +126,7 @@ class Call():
         """
         if not self._function_name:
             self._function_name = re.search(r"(\w+\(\))", self.function_info).group(0)
+            self._function_name = self._function_name[:self._function_name.index('(')]
 
         return self._function_name
 
@@ -177,4 +178,4 @@ class Call():
                 A Boolean that states whether the function represented by this object is contained in a given
                 function set.
         """
-        return self.function_name[:self.function_name.index('(')] in function_set
+        return self.function_name in function_set
