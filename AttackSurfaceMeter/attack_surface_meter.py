@@ -1,8 +1,10 @@
 __author__ = 'kevin'
 
-import sys
-from attacksurfacemeter import CallGraph
 import argparse
+import xml.etree.ElementTree as Xml
+from xml.dom.minidom import parseString
+
+from attacksurfacemeter import CallGraph
 
 
 def main():
@@ -10,9 +12,7 @@ def main():
 
     call_graph = CallGraph(args.source_dir, args.reverse)
 
-    if args.format == "txt":
-        formatter = TxtFormatter(call_graph)
-
+    formatter = formatters[args.format](call_graph)
     formatter.write_output()
 
 
@@ -36,107 +36,8 @@ class BaseFormatter(object):
         """Constructor for BaseFormatter"""
         self.call_graph = call_graph
 
-    # def write_output(self, call_graph):
-    #     """
-    #
-    #     Args:
-    #         call_graph
-    #
-    #     Returns:
-    #
-    #     """
-    #     self.write_header(call_graph)
-    #     self.write_nodes(call_graph)
-    #     self.write_edges(call_graph)
-    #     self.write_entry_points(call_graph)
-    #     self.write_exit_points(call_graph)
-    #     self.write_execution_paths(call_graph)
-    #     self.write_closeness(call_graph)
-    #     self.write_betweenness(call_graph)
-    #     self.write_clustering(call_graph)
-    #     self.write_degree_centrality(call_graph)
-    #     self.write_in_degree_centrality(call_graph)
-    #     self.write_out_degree_centrality(call_graph)
-    #     self.write_degree(call_graph)
-    #     self.write_in_degree(call_graph)
-    #     self.write_out_degree(call_graph)
-    #     self.write_descendant_entry_points(call_graph)
-    #     self.write_descendant_exit_points(call_graph)
-    #     self.write_ancestor_entry_points(call_graph)
-    #     self.write_ancestor_exit_points(call_graph)
-    #     self.write_descendant_entry_points_ratio(call_graph)
-    #     self.write_descendant_exit_points_ratio(call_graph)
-    #     self.write_ancestor_entry_points_ratio(call_graph)
-    #     self.write_ancestor_exit_points_ratio(call_graph)
-    #
-    # def write_header(self):
-    #     pass
-    #
-    # def write_nodes(self):
-    #     pass
-    #
-    # def write_edges(self):
-    #     pass
-    #
-    # def write_entry_points(self):
-    #     pass
-    #
-    # def write_exit_points(self):
-    #     pass
-    #
-    # def write_execution_paths(self):
-    #     pass
-    #
-    # def write_closeness(self):
-    #     pass
-    #
-    # def write_betweenness(self):
-    #     pass
-    #
-    # def write_clustering(self):
-    #     pass
-    #
-    # def write_degree_centrality(self):
-    #     pass
-    #
-    # def write_in_degree_centrality(self):
-    #     pass
-    #
-    # def write_out_degree_centrality(self):
-    #     pass
-    #
-    # def write_degree(self):
-    #     pass
-    #
-    # def write_in_degree(self):
-    #     pass
-    #
-    # def write_out_degree(self):
-    #     pass
-    #
-    # def write_descendant_entry_points(self):
-    #     pass
-    #
-    # def write_descendant_exit_points(self):
-    #     pass
-    #
-    # def write_ancestor_entry_points(self):
-    #     pass
-    #
-    # def write_ancestor_exit_points(self):
-    #     pass
-    #
-    # def write_descendant_entry_points_ratio(self):
-    #     pass
-    #
-    # def write_descendant_exit_points_ratio(self):
-    #     pass
-    #
-    # def write_ancestor_entry_points_ratio(self):
-    #     pass
-    #
-    # def write_ancestor_exit_points_ratio(self):
-    #     pass
+    def write_output(self):
+        pass
 
 
 class TxtFormatter(BaseFormatter):
@@ -376,12 +277,39 @@ class TxtFormatter(BaseFormatter):
         print()
 
 
-class HtmlFormatter(BaseFormatter):
-    def __init__(self, call_graph):
-        super(BaseFormatter, self).__init__(call_graph)
+class XElement(Xml.Element):
+    def __init__(self, tag, atrributes={}, *subelements):
+
+        super(XElement, self).__init__(tag, atrributes)
+
+        for subelement in subelements:
+            if isinstance(subelement, list):
+                self.extend(subelement)
+            else:
+                self.append(subelement)
 
 
 class XmlFormatter(BaseFormatter):
+    def __init__(self, call_graph):
+        super(XmlFormatter, self).__init__(call_graph)
+
+    def write_output(self):
+        root = XElement("attacksurface",
+                        {'directory': self.call_graph.source_dir},
+                        XElement("nodes",
+                                 {'count': str(len(self.call_graph.nodes))},
+                                 [XElement(c.function_name) for c in self.call_graph.nodes]),
+                        XElement("whatever"))
+
+        print(self.prettyfy(root))
+
+    def prettyfy(self, xml_element):
+        return parseString(
+            Xml.tostring(xml_element, encoding="unicode")
+        ).toprettyxml()
+
+
+class HtmlFormatter(BaseFormatter):
     def __init__(self, call_graph):
         super(BaseFormatter, self).__init__(call_graph)
 
@@ -390,6 +318,11 @@ class JsonFormatter(BaseFormatter):
     def __init__(self, call_graph):
         super(BaseFormatter, self).__init__(call_graph)
 
+
+formatters = {
+    'txt': TxtFormatter,
+    'xml': XmlFormatter
+}
 
 if __name__ == '__main__':
     main()
