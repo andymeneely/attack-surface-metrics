@@ -53,7 +53,7 @@ class CallTestCase(unittest.TestCase):
         test_call = Call(cflow_line)
 
         # Assert
-        self.assertEqual(test_call.identity, "printf()")
+        self.assertEqual(test_call.identity, "printf")
 
     def test_identity_full(self):
         # Arrange
@@ -61,7 +61,7 @@ class CallTestCase(unittest.TestCase):
         test_call = Call(cflow_line)
 
         # Assert
-        self.assertEqual(test_call.identity, "xstrdup()<char *xstrdup (const char *str) at ./cyrus/lib/xmalloc.c:89>")
+        self.assertEqual(test_call.identity, "xstrdup <char *xstrdup (const char *str) at ./cyrus/lib/xmalloc.c:89>")
 
     def test_function_name_only_name(self):
         # Arrange
@@ -69,7 +69,7 @@ class CallTestCase(unittest.TestCase):
         test_call = Call(cflow_line)
 
         # Assert
-        self.assertEqual(test_call.function_name, "printf()")
+        self.assertEqual(test_call.function_name, "printf")
 
     def test_function_name_full(self):
         # Arrange
@@ -77,7 +77,7 @@ class CallTestCase(unittest.TestCase):
         test_call = Call(cflow_line)
 
         # Assert
-        self.assertEqual(test_call.function_name, "xstrdup()")
+        self.assertEqual(test_call.function_name, "xstrdup")
 
     def test_function_signature_only_name(self):
         # Arrange
