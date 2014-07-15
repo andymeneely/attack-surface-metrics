@@ -22,24 +22,34 @@ class XmlFormatter(BaseFormatter):
                         XElement("nodes",
                                  {'count': str(len(self.call_graph.nodes))},
                                  [self.call_to_xml(c) for c in self.call_graph.nodes]),
+
                         XElement("edges",
                                  {'count': str(len(self.call_graph.edges))},
                                  [XElement('edge',
                                            {'from': f.function_name, 'to': t.function_name})
                                   for (f, t) in self.call_graph.edges]),
+
                         XElement('entry_points',
                                  {'count': str(len(self.call_graph.entry_points))},
                                  [self.call_to_xml(c) for c in self.call_graph.entry_points]),
+
                         XElement('exit_points',
                                  {'count': str(len(self.call_graph.exit_points))},
                                  [self.call_to_xml(c) for c in self.call_graph.exit_points]),
+
                         XElement('execution_paths',
                                  {'count': str(len(self.call_graph.execution_paths))},
-                                 [XElement('path',
-                                           {'length': str(len(xp))},
-                                           xp)
+                                 [XElement('path', {'length': str(len(xp))}, xp)
                                   for xp in [[self.call_to_xml(c) for c in p]
-                                             for p in self.call_graph.execution_paths]])
+                                             for p in self.call_graph.execution_paths]]),
+
+                        XElement('closeness', {},
+                                 [self.call_to_xml(k, closeness=str(v))
+                                  for k, v in self.call_graph.get_closeness().items()]),
+
+                        XElement('betweenness', {},
+                                 [self.call_to_xml(k, betweenness=str(v))
+                                  for k, v in self.call_graph.get_betweenness().items()]),
         )
 
         print(self.prettyfy(root))
@@ -60,8 +70,11 @@ class XmlFormatter(BaseFormatter):
             Xml.tostring(xml_element, encoding="unicode")
         ).toprettyxml()
 
-    def call_to_xml(self, call):
-        return XElement('call', {'function_name': call.function_name})
+    def call_to_xml(self, call, **extras):
+        elem = XElement('call', {'function_name': call.function_name})
+        elem.attrib.update(extras)
+
+        return elem
 
 
 class XElement(Xml.Element):
