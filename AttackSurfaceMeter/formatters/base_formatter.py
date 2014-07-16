@@ -70,29 +70,53 @@ class BaseFormatter(object):
     def exit_points_clustering(self):
         return str(self.call_graph.exit_points_clustering)
 
-    def get_closeness(self, call):
-        return str(self.call_graph.get_closeness(call))
+    def get_closeness(self, call=None):
+        if call:
+            return str(self.call_graph.get_closeness(call))
+        else:
+            return self.call_graph.get_closeness().items()
 
-    def get_betweenness(self, call):
-        return str(self.call_graph.get_closeness(call))
+    def get_betweenness(self, call=None):
+        if call:
+            return str(self.call_graph.get_betweenness(call))
+        else:
+            return self.call_graph.get_betweenness().items()
 
-    def get_degree_centrality(self, call):
-        return str(self.call_graph.get_degree_centrality(call))
+    def get_degree_centrality(self, call=None):
+        if call:
+            return str(self.call_graph.get_degree_centrality(call))
+        else:
+            return self.call_graph.get_degree_centrality().items()
 
-    def get_in_degree_centrality(self, call):
-        return str(self.call_graph.get_in_degree_centrality(call))
+    def get_in_degree_centrality(self, call=None):
+        if call:
+            return str(self.call_graph.get_in_degree_centrality(call))
+        else:
+            return self.call_graph.get_in_degree_centrality().items()
 
-    def get_out_degree_centrality(self, call):
-        return str(self.call_graph.get_out_degree_centrality(call))
+    def get_out_degree_centrality(self, call=None):
+        if call:
+            return str(self.call_graph.get_out_degree_centrality(call))
+        else:
+            return self.call_graph.get_out_degree_centrality().items()
 
-    def get_degree(self, call):
-        return str(self.call_graph.get_degree(call))
+    def get_degree(self, call=None):
+        if call:
+            return str(self.call_graph.get_degree(call))
+        else:
+            return self.call_graph.get_degree().items()
 
-    def get_in_degree(self, call):
-        return str(self.call_graph.get_in_degree(call))
+    def get_in_degree(self, call=None):
+        if call:
+            return str(self.call_graph.get_in_degree(call))
+        else:
+            return self.call_graph.get_in_degree().items()
 
-    def get_out_degree(self, call):
-        return str(self.call_graph.get_out_degree(call))
+    def get_out_degree(self, call=None):
+        if call:
+            return str(self.call_graph.get_out_degree(call))
+        else:
+            return self.call_graph.get_out_degree().items()
 
     def get_descendants_entry_point_ratio(self, call):
         return str(self.call_graph.get_descendants_entry_point_ratio(call))
@@ -106,16 +130,16 @@ class BaseFormatter(object):
     def get_ancestors_exit_point_ratio(self, call):
         return str(self.call_graph.get_ancestors_exit_point_ratio(call))
 
-    def get_count_descendant_entry_points(self, call):
+    def get_descendant_entry_points_count(self, call):
         return str(len(self.call_graph.get_descendant_entry_points(call)))
 
-    def get_count_descendant_exit_points(self, call):
+    def get_descendant_exit_points_count(self, call):
         return str(len(self.call_graph.get_descendant_exit_points(call)))
 
-    def get_count_ancestor_entry_points(self, call):
+    def get_ancestor_entry_points_count(self, call):
         return str(len(self.call_graph.get_ancestor_entry_points(call)))
 
-    def get_count_ancestor_exit_points(self, call):
+    def get_ancestor_exit_points_count(self, call):
         return str(len(self.call_graph.get_ancestor_exit_points(call)))
 
     def get_descendant_entry_points(self, call):

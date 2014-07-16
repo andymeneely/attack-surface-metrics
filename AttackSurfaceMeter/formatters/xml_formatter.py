@@ -37,16 +37,16 @@ class XmlFormatter(BaseFormatter):
                                                        'ancestor_exit_points_ratio': self.get_ancestors_exit_point_ratio(c)
                                                    },
                                                    XElement('descendant_entry_points',
-                                                            {'count': self.get_count_descendant_entry_points(c)},
+                                                            {'count': self.get_descendant_entry_points_count(c)},
                                                             [self.call_to_xml(c) for c in self.get_descendant_entry_points(c)]),
                                                    XElement('descendant_exit_points',
-                                                            {'count': self.get_count_descendant_exit_points(c)},
+                                                            {'count': self.get_descendant_exit_points_count(c)},
                                                             [self.call_to_xml(c) for c in self.get_descendant_exit_points(c)]),
                                                    XElement('ancestor_entry_points',
-                                                            {'count': self.get_count_ancestor_entry_points(c)},
+                                                            {'count': self.get_ancestor_entry_points_count(c)},
                                                             [self.call_to_xml(c) for c in self.get_ancestor_entry_points(c)]),
                                                    XElement('ancestor_exit_points',
-                                                            {'count': self.get_count_ancestor_exit_points(c)},
+                                                            {'count': self.get_ancestor_exit_points_count(c)},
                                                             [self.call_to_xml(c) for c in self.get_ancestor_exit_points(c)]))
                                   for c in self.nodes]),
 
