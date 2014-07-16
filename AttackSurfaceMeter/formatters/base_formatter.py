@@ -51,16 +51,24 @@ class BaseFormatter(object):
         return str(len(self.call_graph.execution_paths))
 
     @property
+    def average_execution_path_length(self):
+        return str(self.call_graph.avg_execution_path_length)
+
+    @property
+    def median_execution_path_length(self):
+        return str(self.call_graph.median_execution_path_length)
+
+    @property
+    def execution_paths(self):
+        return self.call_graph.execution_paths
+
+    @property
     def entry_points_clustering(self):
         return str(self.call_graph.entry_points_clustering)
 
     @property
     def exit_points_clustering(self):
         return str(self.call_graph.exit_points_clustering)
-
-    @property
-    def execution_paths(self):
-        return self.call_graph.execution_paths
 
     def get_closeness(self, call):
         return str(self.call_graph.get_closeness(call))
