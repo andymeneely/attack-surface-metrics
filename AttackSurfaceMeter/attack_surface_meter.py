@@ -5,15 +5,16 @@ import argparse
 from attacksurfacemeter import CallGraph
 from formatters import TxtFormatter, XmlFormatter, JsonFormatter, HtmlFormatter
 
-formatters = {
-    'txt': TxtFormatter,
-    'xml': XmlFormatter,
-    'json': JsonFormatter,
-    'html': HtmlFormatter
-}
-
 
 def main():
+
+    formatters = {
+        'txt': TxtFormatter,
+        'xml': XmlFormatter,
+        'json': JsonFormatter,
+        'html': HtmlFormatter
+    }
+
     args = parse_args()
 
     call_graph = CallGraph(args.source_dir, args.reverse)
