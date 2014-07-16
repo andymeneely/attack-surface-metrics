@@ -50,6 +50,24 @@ class XmlFormatter(BaseFormatter):
                         XElement('betweenness', {},
                                  [self.call_to_xml(k, betweenness=str(v))
                                   for k, v in self.call_graph.get_betweenness().items()]),
+
+                        XElement('clustering',
+                                 {'avg_entry_point_clustering': str(self.call_graph.entry_points_clustering),
+                                  'avg_exit_point_clustering': str(self.call_graph.exit_points_clustering)}),
+
+                        XElement('degree_centrality', {},
+                                 [self.call_to_xml(c,
+                                                   degree=str(self.call_graph.get_degree_centrality(c)),
+                                                   in_degree=str(self.call_graph.get_in_degree_centrality(c)),
+                                                   out_degree=str(self.call_graph.get_out_degree_centrality(c)))
+                                  for c in self.call_graph.nodes]),
+
+                        XElement('degree', {},
+                                 [self.call_to_xml(c,
+                                                   degree=str(self.call_graph.get_degree(c)),
+                                                   in_degree=str(self.call_graph.get_in_degree(c)),
+                                                   out_degree=str(self.call_graph.get_out_degree(c)))
+                                  for c in self.call_graph.nodes]),
         )
 
         print(self.prettyfy(root))
