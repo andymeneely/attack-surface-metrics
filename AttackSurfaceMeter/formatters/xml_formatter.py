@@ -21,34 +21,33 @@ class XmlFormatter(BaseFormatter):
                         {'directory': self.call_graph.source_dir},
                         XElement("nodes",
                                  {'count': str(len(self.call_graph.nodes))},
-                                 [XElement('call',
-                                           {
-                                               'function_name': c.function_name,
-                                               'closeness': str(self.call_graph.get_closeness(c)),
-                                               'betweenness': str(self.call_graph.get_betweenness(c)),
-                                               'degree_centrality': str(self.call_graph.get_degree_centrality(c)),
-                                               'in_degree_centrality': str(self.call_graph.get_in_degree_centrality(c)),
-                                               'out_degree_centrality': str(self.call_graph.get_out_degree_centrality(c)),
-                                               'degree': str(self.call_graph.get_degree(c)),
-                                               'in_degree': str(self.call_graph.get_in_degree(c)),
-                                               'out_degree': str(self.call_graph.get_out_degree(c)),
-                                               'descendant_entry_points_ratio': str(self.call_graph.get_descendants_exit_point_ratio(c)),
-                                               'descendant_exit_points_ratio': str(self.call_graph.get_ancestors_entry_point_ratio(c)),
-                                               'ancestor_entry_points_ratio': str(self.call_graph.get_ancestors_exit_point_ratio(c)),
-                                               'ancestor_exit_points_ratio': str(self.call_graph.get_ancestors_entry_point_ratio(c))
-                                           },
-                                           XElement('descendant_entry_points',
-                                                    {'count': str(len(self.call_graph.get_descendant_entry_points(c)))},
-                                                    [self.call_to_xml(c) for c in self.call_graph.get_descendant_entry_points(c)]),
-                                           XElement('descendant_exit_points',
-                                                    {'count': str(len(self.call_graph.get_descendant_exit_points(c)))},
-                                                    [self.call_to_xml(c) for c in self.call_graph.get_descendant_exit_points(c)]),
-                                           XElement('ancestor_entry_points',
-                                                    {'count': str(len(self.call_graph.get_ancestor_entry_points(c)))},
-                                                    [self.call_to_xml(c) for c in self.call_graph.get_ancestor_entry_points(c)]),
-                                           XElement('ancestor_exit_points',
-                                                    {'count': str(len(self.call_graph.get_ancestor_exit_points(c)))},
-                                                    [self.call_to_xml(c) for c in self.call_graph.get_ancestor_exit_points(c)]))
+                                 [self.call_to_xml(c,
+                                                   {
+                                                       'closeness': str(self.call_graph.get_closeness(c)),
+                                                       'betweenness': str(self.call_graph.get_betweenness(c)),
+                                                       'degree_centrality': str(self.call_graph.get_degree_centrality(c)),
+                                                       'in_degree_centrality': str(self.call_graph.get_in_degree_centrality(c)),
+                                                       'out_degree_centrality': str(self.call_graph.get_out_degree_centrality(c)),
+                                                       'degree': str(self.call_graph.get_degree(c)),
+                                                       'in_degree': str(self.call_graph.get_in_degree(c)),
+                                                       'out_degree': str(self.call_graph.get_out_degree(c)),
+                                                       'descendant_entry_points_ratio': str(self.call_graph.get_descendants_exit_point_ratio(c)),
+                                                       'descendant_exit_points_ratio': str(self.call_graph.get_ancestors_entry_point_ratio(c)),
+                                                       'ancestor_entry_points_ratio': str(self.call_graph.get_ancestors_exit_point_ratio(c)),
+                                                       'ancestor_exit_points_ratio': str(self.call_graph.get_ancestors_entry_point_ratio(c))
+                                                   },
+                                                   XElement('descendant_entry_points',
+                                                            {'count': str(len(self.call_graph.get_descendant_entry_points(c)))},
+                                                            [self.call_to_xml(c) for c in self.call_graph.get_descendant_entry_points(c)]),
+                                                   XElement('descendant_exit_points',
+                                                            {'count': str(len(self.call_graph.get_descendant_exit_points(c)))},
+                                                            [self.call_to_xml(c) for c in self.call_graph.get_descendant_exit_points(c)]),
+                                                   XElement('ancestor_entry_points',
+                                                            {'count': str(len(self.call_graph.get_ancestor_entry_points(c)))},
+                                                            [self.call_to_xml(c) for c in self.call_graph.get_ancestor_entry_points(c)]),
+                                                   XElement('ancestor_exit_points',
+                                                            {'count': str(len(self.call_graph.get_ancestor_exit_points(c)))},
+                                                            [self.call_to_xml(c) for c in self.call_graph.get_ancestor_exit_points(c)]))
                                   for c in self.call_graph.nodes]),
 
                         XElement("edges",
@@ -95,9 +94,10 @@ class XmlFormatter(BaseFormatter):
             Xml.tostring(xml_element, encoding="unicode")
         ).toprettyxml()
 
-    def call_to_xml(self, call, **extras):
-        elem = XElement('call', {'function_name': call.function_name})
-        elem.attrib.update(extras)
+    def call_to_xml(self, call, attributes={}, *subelements):
+        attributes.update({'name': call.function_name,
+                           'signature': '' if call.function_signature is None else call.function_signature})
+        elem = XElement('call', attributes, list(subelements))
 
         return elem
 
