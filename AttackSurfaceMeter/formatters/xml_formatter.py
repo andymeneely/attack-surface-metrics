@@ -65,7 +65,9 @@ class XmlFormatter(BaseFormatter):
                                  [self.call_to_xml(c) for c in self.exit_points]),
 
                         XElement('execution_paths',
-                                 {'count': self.execution_paths_count},
+                                 {'count': self.execution_paths_count,
+                                  'average': self.average_execution_path_length,
+                                  'median': self.median_execution_path_length},
                                  [XElement('path', {'length': str(len(xp))}, xp)
                                   for xp in [[self.call_to_xml(c) for c in p]
                                              for p in self.execution_paths]]),
@@ -74,7 +76,6 @@ class XmlFormatter(BaseFormatter):
                                  {'entry_points_clustering': self.entry_points_clustering,
                                   'exit_points_clustering': self.exit_points_clustering})
         )
-
 
         print(self.prettyfy(root))
 
