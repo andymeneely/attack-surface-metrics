@@ -5,14 +5,12 @@ from xml.dom.minidom import parseString
 
 from formatters.base_formatter import BaseFormatter
 
-# TODO: Refactor out of this class and into BaseFormatter all the
-# code that accesses call_graph properties and functions.
-# Ideally, derived formatter classes will send lambdas to
-# their base class's methods that will serve as selectors
-# for the various collections.
-
 
 class XmlFormatter(BaseFormatter):
+    """
+        Produces an xml report with the attack surface metrics calculated by call_graph
+        and prints it to console.
+    """
     def __init__(self, call_graph):
         super(XmlFormatter, self).__init__(call_graph)
 
@@ -65,9 +63,11 @@ class XmlFormatter(BaseFormatter):
                                  [self.call_to_xml(c) for c in self.exit_points]),
 
                         XElement('execution_paths',
-                                 {'count': self.execution_paths_count,
-                                  'average': self.average_execution_path_length,
-                                  'median': self.median_execution_path_length},
+                                 {
+                                     'count': self.execution_paths_count,
+                                     'average': self.average_execution_path_length,
+                                     'median': self.median_execution_path_length
+                                 },
                                  [XElement('path', {'length': str(len(xp))}, xp)
                                   for xp in [[self.call_to_xml(c) for c in p]
                                              for p in self.execution_paths]]),
@@ -81,21 +81,28 @@ class XmlFormatter(BaseFormatter):
 
     def prettyfy(self, xml_element):
         """
-
-            Args:
-                :
-
-            Returns:
-
-
-            Raises:
-                :
+            Returns a pretty formatted string representation of a given xml element and its descendants.
         """
         return parseString(
             Xml.tostring(xml_element, encoding="unicode")
         ).toprettyxml()
 
     def call_to_xml(self, call, attributes={}, *subelements):
+        """
+            Creates an XElement object from a given Call object.
+
+            Adds name and signature attributes to the created XElement.
+
+            Args:
+                call: An instance of Call to use to generate the XElement.
+                attibutes: An optional dictionary containing additional attributes to include in
+                    the created XElement.
+                subelements: A list or series of positional XElement objects that will be added
+                    as subelements to the created XElement.
+
+            Returns:
+                An instance of XElement based on the given Call object and the additional data provided.
+        """
         attributes.update({'name': call.function_name,
                            'signature': '' if call.function_signature is None else call.function_signature})
         elem = XElement('call', attributes, list(subelements))
@@ -104,8 +111,22 @@ class XmlFormatter(BaseFormatter):
 
 
 class XElement(Xml.Element):
+    """
+        Wraps around xml.etree.ElementTree.Element to provide a more declarative way of constructing XML trees.
+    """
     def __init__(self, tag, atrributes={}, *subelements):
+        """
+            Constructor for XElement.
 
+            Provides de ability to send subelements as arguments to achieve a declarative way of creating XML trees.
+
+            Args:
+                tag: A string representing the tag of the XML element to create.
+                attibutes: An optional dictionary containing additional attributes to include in
+                    the created XElement.
+                subelements: A list or series of positional XElement objects that will be added
+                    as subelements to the created XElement.
+        """
         super(XElement, self).__init__(tag, atrributes)
 
         for subelement in subelements:

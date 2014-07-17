@@ -280,7 +280,7 @@ class CallGraph():
                     a Call instance as a first parameter and an Execution Path (List of Calls) as the second parameter
                     and return an Int that represents the calculated distance.
                 call: A Call instance for which the distances will be calculated.
-                paths: Optional List of List of Call instances that represent the Execution Paths in which call's
+                paths: Optional List of Lists of Call instances that represent the Execution Paths in which call's
                     distance will be calculated. If paths is not provided, the distances will be calculated for all
                     the Execution Paths where call appears. If call is not present in an Execution Path, the distance
                     for that specific path will be None.
@@ -313,7 +313,7 @@ class CallGraph():
 
             Args:
                 call: A Call instance for which the distances will be calculated.
-                paths: Optional List of List of Call instances that represent the Execution Paths in which call's
+                paths: Optional List of Lists of Call instances that represent the Execution Paths in which call's
                     distance to the Entry Point will be calculated. If call is not present in an Execution Path
                     provided in paths, the distance for that specific path will be None. If paths is not provided,
                     the distances will be calculated for all the Execution Paths where call appears.
@@ -332,7 +332,7 @@ class CallGraph():
 
             Args:
                 call: A Call instance for which the distances will be calculated.
-                paths: Optional List of List of Call instances that represent the Execution Paths in which call's
+                paths: Optional List of Lists of Call instances that represent the Execution Paths in which call's
                     distance to the Exit Point will be calculated. If call is not present in an Execution Path
                     provided in paths, the distance for that specific path will be None. If paths is not provided,
                     the distances will be calculated for all the Execution Paths where call appears.

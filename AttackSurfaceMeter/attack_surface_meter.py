@@ -7,7 +7,9 @@ from formatters import TxtFormatter, XmlFormatter, JsonFormatter, HtmlFormatter
 
 
 def main():
-
+    """
+        Execution entry point of the application.
+    """
     formatters = {
         'txt': TxtFormatter,
         'xml': XmlFormatter,
@@ -24,6 +26,15 @@ def main():
 
 
 def parse_args():
+    """
+        Provides a command line interface for the attack surface meter.
+
+        Defines all the positional and optional arguments along with their respective valid values
+        for the command line interface and returns all the received arguments as an object.
+
+        Returns:
+            An object that contains all the provided comand line arguments.
+    """
     parser = argparse.ArgumentParser(
         description="Analyzes a software's source code and reports various metrics related to it's attack surface.")
 
