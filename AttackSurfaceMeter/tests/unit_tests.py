@@ -17,7 +17,7 @@ class StackTestCase(unittest.TestCase):
         test_stack.push(2)
 
         # Assert
-        self.assertEqual(len(test_stack), 2)
+        self.assertEqual(2, len(test_stack))
 
     def test_pop(self):
         # Arrange
@@ -30,8 +30,8 @@ class StackTestCase(unittest.TestCase):
         popped_value = test_stack.pop()
 
         # Assert
-        self.assertEqual(popped_value, 2)
-        self.assertEqual(len(test_stack), 1)
+        self.assertEqual(2, popped_value)
+        self.assertEqual(1, len(test_stack))
 
     def test_top(self):
         # Arrange
@@ -42,7 +42,7 @@ class StackTestCase(unittest.TestCase):
         test_stack.push(2)
 
         # Assert
-        self.assertEqual(test_stack.top, 2)
+        self.assertEqual(2, test_stack.top)
 
 
 class CallTestCase(unittest.TestCase):
@@ -53,7 +53,7 @@ class CallTestCase(unittest.TestCase):
         test_call = Call(cflow_line)
 
         # Assert
-        self.assertEqual(test_call.identity, "printf")
+        self.assertEqual("printf", test_call.identity)
 
     def test_identity_full(self):
         # Arrange
@@ -61,7 +61,7 @@ class CallTestCase(unittest.TestCase):
         test_call = Call(cflow_line)
 
         # Assert
-        self.assertEqual(test_call.identity, "xstrdup <char *xstrdup (const char *str) at ./cyrus/lib/xmalloc.c:89>")
+        self.assertEqual("xstrdup <char *xstrdup (const char *str) at ./cyrus/lib/xmalloc.c:89>", test_call.identity)
 
     def test_function_name_only_name(self):
         # Arrange
@@ -69,7 +69,7 @@ class CallTestCase(unittest.TestCase):
         test_call = Call(cflow_line)
 
         # Assert
-        self.assertEqual(test_call.function_name, "printf")
+        self.assertEqual("printf", test_call.function_name)
 
     def test_function_name_full(self):
         # Arrange
@@ -77,7 +77,7 @@ class CallTestCase(unittest.TestCase):
         test_call = Call(cflow_line)
 
         # Assert
-        self.assertEqual(test_call.function_name, "xstrdup")
+        self.assertEqual("xstrdup", test_call.function_name)
 
     def test_function_signature_only_name(self):
         # Arrange
@@ -93,7 +93,7 @@ class CallTestCase(unittest.TestCase):
         test_call = Call(cflow_line)
 
         # Assert
-        self.assertEqual(test_call.function_signature, "<char *xstrdup (const char *str) at ./cyrus/lib/xmalloc.c:89>")
+        self.assertEqual("<char *xstrdup (const char *str) at ./cyrus/lib/xmalloc.c:89>", test_call.function_signature)
 
     def test_is_input_function(self):
         # Arrange
@@ -173,14 +173,14 @@ class CallGraphTestCase(unittest.TestCase):
         entry_points_count = len(self.call_graph.entry_points)
 
         # Assert
-        self.assertEqual(entry_points_count, 1)
+        self.assertEqual(1, entry_points_count)
 
     def test_exit_points_count(self):
         # Act
         exit_points_count = len(self.call_graph.exit_points)
 
         # Assert
-        self.assertEqual(exit_points_count, 6)
+        self.assertEqual(6, exit_points_count)
 
     def test_entry_points_content(self):
         # Arrange
@@ -229,7 +229,7 @@ class CallGraphTestCase(unittest.TestCase):
         #     print('Call("' + c.function_info + '"),')
 
         # Assert
-        self.assertEqual(len(call_path), 3)
+        self.assertEqual(3, len(call_path))
         self.assertTrue(all_calls_found)
 
     def test_nodes(self):
@@ -258,7 +258,7 @@ class CallGraphTestCase(unittest.TestCase):
         #     print('Call("' + c.function_info + '"),')
 
         # Assert
-        self.assertEqual(len(nodes), 15)
+        self.assertEqual(15, len(nodes))
         self.assertTrue(all_calls_found)
 
     def test_edges(self):
@@ -294,7 +294,7 @@ class CallGraphTestCase(unittest.TestCase):
         #     print('(Call("' + e[0].function_info + '"), Call("' + e[1].function_info + '")),')
 
         # Assert
-        self.assertEqual(len(edges), 22)
+        self.assertEqual(22, len(edges))
         self.assertTrue(all_calls_found)
 
     def test_execution_paths(self):
@@ -318,7 +318,7 @@ class CallGraphTestCase(unittest.TestCase):
         #     print("],")
 
         # Assert
-        self.assertEqual(len(paths), 3)
+        self.assertEqual(3, len(paths))
         self.assertTrue(all_paths_found)
 
     def test_avg_execution_path(self):
@@ -326,28 +326,28 @@ class CallGraphTestCase(unittest.TestCase):
         average = self.call_graph.avg_execution_path_length
 
         # Assert
-        self.assertEqual(average, 2.3333333333333335)
+        self.assertEqual(2.3333333333333335, average)
 
     def test_median_execution_path(self):
         # Act
         median = self.call_graph.median_execution_path_length
 
         # Assert
-        self.assertEqual(median, 2)
+        self.assertEqual(2, median)
 
     def test_entry_clustering_coefficient(self):
         # Act
         coefficient = self.call_graph.entry_points_clustering
 
         # Assert
-        self.assertEqual(coefficient, 0.0)
+        self.assertEqual(0.0, coefficient)
 
     def test_exit_clustering_coefficient(self):
         # Act
         coefficient = self.call_graph.exit_points_clustering
 
         # Assert
-        self.assertEqual(coefficient, 0.1111111111111111)
+        self.assertEqual(0.1111111111111111, coefficient)
 
     def test_execution_paths_for_call(self):
         # Arrange
@@ -363,7 +363,7 @@ class CallGraphTestCase(unittest.TestCase):
         call_in_all_paths = all([call in p for p in paths])
 
         # Assert
-        self.assertEqual(len(paths), 1)
+        self.assertEqual(1, len(paths))
         self.assertTrue(all_paths_found)
         self.assertTrue(call_in_all_paths)
 
@@ -390,9 +390,9 @@ class CallGraphTestCase(unittest.TestCase):
         third_distance = self.call_graph.get_distance_to_entry_point(third_call, [path])
 
         # Assert
-        self.assertEqual(first_distance[0]['distance'], 0)
-        self.assertEqual(second_distance[0]['distance'], 1)
-        self.assertEqual(third_distance[0]['distance'], 2)
+        self.assertEqual(0, first_distance[0]['distance'])
+        self.assertEqual(1, second_distance[0]['distance'])
+        self.assertEqual(2, third_distance[0]['distance'])
 
     def test_distance_to_exit_point(self):
         # Arrange
@@ -407,9 +407,9 @@ class CallGraphTestCase(unittest.TestCase):
         third_distance = self.call_graph.get_distance_to_exit_point(third_call, [path])
 
         # Assert
-        self.assertEqual(first_distance[0]['distance'], 2)
-        self.assertEqual(second_distance[0]['distance'], 1)
-        self.assertEqual(third_distance[0]['distance'], 0)
+        self.assertEqual(2, first_distance[0]['distance'])
+        self.assertEqual(1, second_distance[0]['distance'])
+        self.assertEqual(0, third_distance[0]['distance'])
 
     def test_all_betweenness(self):
         # Arrange
@@ -438,7 +438,7 @@ class CallGraphTestCase(unittest.TestCase):
 
         # Assert
         self.assertTrue(all_values_correct)
-        self.assertEqual(len(betweennesses), 15)
+        self.assertEqual(15, len(betweennesses))
 
     def test_node_specific_betweenness(self):
         # Arrange
@@ -449,7 +449,7 @@ class CallGraphTestCase(unittest.TestCase):
         betweenness = self.call_graph.get_betweenness(call)
 
         # Assert
-        self.assertEqual(betweenness, expected_value)
+        self.assertEqual(expected_value, betweenness)
 
     def test_all_closeness(self):
         # Arrange
@@ -478,7 +478,7 @@ class CallGraphTestCase(unittest.TestCase):
 
         # Assert
         self.assertTrue(all_values_correct)
-        self.assertEqual(len(closenesses), 15)
+        self.assertEqual(15, len(closenesses))
 
     def test_node_specific_closeness(self):
         # Arrange
@@ -489,7 +489,7 @@ class CallGraphTestCase(unittest.TestCase):
         closeness = self.call_graph.get_closeness(call)
 
         # Assert
-        self.assertEqual(closeness, expected_value)
+        self.assertEqual(expected_value, closeness)
 
     def test_all_degree_centrality(self):
         # Arrange
@@ -518,7 +518,7 @@ class CallGraphTestCase(unittest.TestCase):
 
         # Assert
         self.assertTrue(all_values_correct)
-        self.assertEqual(len(degrees), 15)
+        self.assertEqual(15, len(degrees))
 
     def test_all_in_degree_centrality(self):
         # Arrange
@@ -547,7 +547,7 @@ class CallGraphTestCase(unittest.TestCase):
 
         # Assert
         self.assertTrue(all_values_correct)
-        self.assertEqual(len(degrees), 15)
+        self.assertEqual(15, len(degrees))
 
     def test_all_out_degree_centrality(self):
         # Arrange
@@ -576,7 +576,7 @@ class CallGraphTestCase(unittest.TestCase):
 
         # Assert
         self.assertTrue(all_values_correct)
-        self.assertEqual(len(degrees), 15)
+        self.assertEqual(15, len(degrees))
 
     def test_node_specific_degree_centrality(self):
         # Arrange
@@ -587,7 +587,7 @@ class CallGraphTestCase(unittest.TestCase):
         degree = self.call_graph.get_degree_centrality(call)
 
         # Assert
-        self.assertEqual(degree, expected_value)
+        self.assertEqual(expected_value, degree)
 
     def test_node_specific_in_degree_centrality(self):
         # Arrange
@@ -598,7 +598,7 @@ class CallGraphTestCase(unittest.TestCase):
         degree = self.call_graph.get_in_degree_centrality(call)
 
         # Assert
-        self.assertEqual(degree, expected_value)
+        self.assertEqual(expected_value, degree)
 
     def test_node_specific_out_degree_centrality(self):
         # Arrange
@@ -609,7 +609,7 @@ class CallGraphTestCase(unittest.TestCase):
         degree = self.call_graph.get_out_degree_centrality(call)
 
         # Assert
-        self.assertEqual(degree, expected_value)
+        self.assertEqual(expected_value, degree)
     
     def test_all_degree(self):
         # Arrange
@@ -638,7 +638,7 @@ class CallGraphTestCase(unittest.TestCase):
 
         # Assert
         self.assertTrue(all_values_correct)
-        self.assertEqual(len(degrees), 15)
+        self.assertEqual(15, len(degrees))
 
     def test_all_in_degree(self):
         # Arrange
@@ -667,7 +667,7 @@ class CallGraphTestCase(unittest.TestCase):
 
         # Assert
         self.assertTrue(all_values_correct)
-        self.assertEqual(len(degrees), 15)
+        self.assertEqual(15, len(degrees))
 
     def test_all_out_degree(self):
         # Arrange
@@ -696,7 +696,7 @@ class CallGraphTestCase(unittest.TestCase):
 
         # Assert
         self.assertTrue(all_values_correct)
-        self.assertEqual(len(degrees), 15)
+        self.assertEqual(15, len(degrees))
 
     def test_node_specific_degree(self):
         # Arrange
@@ -707,7 +707,7 @@ class CallGraphTestCase(unittest.TestCase):
         degree = self.call_graph.get_degree(call)
 
         # Assert
-        self.assertEqual(degree, expected_value)
+        self.assertEqual(expected_value, degree)
 
     def test_node_specific_in_degree(self):
         # Arrange
@@ -718,7 +718,7 @@ class CallGraphTestCase(unittest.TestCase):
         degree = self.call_graph.get_in_degree(call)
 
         # Assert
-        self.assertEqual(degree, expected_value)
+        self.assertEqual(expected_value, degree)
 
     def test_node_specific_out_degree(self):
         # Arrange
@@ -729,7 +729,7 @@ class CallGraphTestCase(unittest.TestCase):
         degree = self.call_graph.get_out_degree(call)
 
         # Assert
-        self.assertEqual(degree, expected_value)
+        self.assertEqual(expected_value, degree)
 
     def test_get_descendants(self):
         # Arrange
@@ -754,7 +754,7 @@ class CallGraphTestCase(unittest.TestCase):
         #     print('Call("' + c.function_info + '"),')
 
         # Assert
-        self.assertEqual(len(descendants), expected_count)
+        self.assertEqual(expected_count, len(descendants))
         self.assertTrue(all_descendants_found)
 
     def test_get_ancestors(self):
@@ -771,7 +771,7 @@ class CallGraphTestCase(unittest.TestCase):
         #     print('Call("' + c.function_info + '"),')
 
         # Assert
-        self.assertEqual(len(ancestors), expected_count)
+        self.assertEqual(expected_count, len(ancestors))
         self.assertTrue(all_ancestors_found)
 
     def test_descendant_entry_points(self):
@@ -787,7 +787,7 @@ class CallGraphTestCase(unittest.TestCase):
         # [print(n.function_info) for n in self.call_graph.get_descendant_entry_points(call)]
 
         # Assert
-        self.assertEqual(len(descendant_entry_points), expected_count)
+        self.assertEqual(expected_count, len(descendant_entry_points))
         self.assertTrue(all_found)
 
     def test_descendant_exit_points(self):
@@ -807,7 +807,7 @@ class CallGraphTestCase(unittest.TestCase):
         # [print('Call("' + n.function_info + '"),') for n in self.call_graph.get_descendant_exit_points(call)]
 
         # Assert
-        self.assertEqual(len(descendant_exit_points), expected_count)
+        self.assertEqual(expected_count, len(descendant_exit_points))
         self.assertTrue(all_found)
 
     def test_descendants_entry_point_ratio(self):
@@ -819,7 +819,7 @@ class CallGraphTestCase(unittest.TestCase):
         ratio = self.call_graph.get_descendants_entry_point_ratio(call)
 
         # Assert
-        self.assertEqual(ratio, expected_value)
+        self.assertEqual(expected_value, ratio)
 
     def test_descendants_exit_point_ratio(self):
         # Arrange
@@ -830,7 +830,7 @@ class CallGraphTestCase(unittest.TestCase):
         ratio = self.call_graph.get_descendants_exit_point_ratio(call)
 
         # Assert
-        self.assertEqual(ratio, expected_value)
+        self.assertEqual(expected_value, ratio)
 
     def test_ancestor_entry_points(self):
         # Arrange
@@ -843,7 +843,7 @@ class CallGraphTestCase(unittest.TestCase):
         all_found = all([c in ancestor_entry_points for c in expected_content])
 
         # Assert
-        self.assertEqual(len(ancestor_entry_points), expected_count)
+        self.assertEqual(expected_count, len(ancestor_entry_points))
         self.assertTrue(all_found)
 
     def test_ancestor_exit_points(self):
@@ -858,7 +858,7 @@ class CallGraphTestCase(unittest.TestCase):
         all_found = all([c in ancestor_exit_points for c in expected_content])
 
         # Assert
-        self.assertEqual(len(ancestor_exit_points), expected_count)
+        self.assertEqual(expected_count, len(ancestor_exit_points))
         self.assertTrue(all_found)
 
     def test_ancestors_entry_point_ratio(self):
@@ -870,7 +870,7 @@ class CallGraphTestCase(unittest.TestCase):
         ratio = self.call_graph.get_ancestors_entry_point_ratio(call)
 
         # Assert
-        self.assertEqual(ratio, expected_value)
+        self.assertEqual(expected_value, ratio)
 
     def test_ancestors_exit_point_ratio(self):
         # Arrange
@@ -881,7 +881,7 @@ class CallGraphTestCase(unittest.TestCase):
         ratio = self.call_graph.get_ancestors_exit_point_ratio(call)
 
         # Assert
-        self.assertEqual(ratio, expected_value)
+        self.assertEqual(expected_value, ratio)
 
 
 class CallGraphReverseTestCase(CallGraphTestCase):
