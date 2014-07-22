@@ -12,233 +12,236 @@ class TxtFormatter(BaseFormatter):
         super(TxtFormatter, self).__init__(call_graph)
 
     def write_output(self):
-        print("Attack surface report")
-        print("=====================")
-        print()
-        print("Source code directory: " + self.source_dir)
-        print()
+        output = ''
+        
+        output += "Attack surface report\n"
+        output += "=====================\n"
+        output += ""
+        output += "Source code directory: " + self.source_dir + "\n"
+        output += "\n"
 
-        print("Nodes")
-        print("=====================")
-        print()
-        print("Number of nodes: " + self.nodes_count)
+        output += "Nodes\n"
+        output += "=====================\n"
+        output += "\n"
+        output += "Number of nodes: " + self.nodes_count+ "\n"
         nodes = ', '.join([c.function_name for c in self.nodes])
-        print("Nodes:")
-        print(nodes)
-        print()
+        output += "Nodes:\n"
+        output += nodes + "\n"
+        output += "\n"
 
-        print("Edges")
-        print("=====================")
-        print()
-        print("Number of edges: " + self.edges_count)
+        output += "Edges\n"
+        output += "=====================\n"
+        output += "\n"
+        output += "Number of edges: " + self.edges_count+ "\n"
         edges = '\n'.join([f.function_name + " ---> " + t.function_name for (f, t) in self.edges])
-        print("Edges:")
-        print(edges)
-        print()
+        output += "Edges:\n"
+        output += edges + "\n"
+        output += "\n"
 
-        print("Entry Points")
-        print("=====================")
-        print()
-        print("Number of Entry Points: " + self.entry_points_count)
-        print()
+        output += "Entry Points\n"
+        output += "=====================\n"
+        output += "\n"
+        output += "Number of Entry Points: " + self.entry_points_count + "\n"
+        output += "\n"
         entry_points = ', '.join([c.function_name for c in self.entry_points])
-        print("Entry Points:")
-        print(entry_points)
-        print()
+        output += "Entry Points:\n"
+        output += entry_points + "\n"
+        output += "\n"
 
-        print("Exit Points")
-        print("=====================")
-        print()
-        print("Number of Exit Points: " + self.exit_points_count)
-        print()
+        output += "Exit Points\n"
+        output += "=====================\n"
+        output += "\n"
+        output += "Number of Exit Points: " + self.exit_points_count + "\n"
+        output += "\n"
         exit_points = ', '.join([c.function_name for c in self.exit_points])
-        print("Exit Points:")
-        print(exit_points)
-        print()
+        output += "Exit Points:\n"
+        output += exit_points + "\n"
+        output += "\n"
 
-        print("Execution Paths")
-        print("=====================")
-        print()
-        print("Number of Execution Paths: " + self.execution_paths_count)
-        print()
+        output += "Execution Paths\n"
+        output += "=====================\n"
+        output += "\n"
+        output += "Number of Execution Paths: " + self.execution_paths_count + "\n"
+        output += "\n"
         execution_paths = '\n'.join([' ---> '.join(c.function_name for c in p) for p in self.execution_paths])
-        print("Execution Paths:")
-        print(execution_paths)
-        print()
-        print("Average Execution Path Length: " + self.average_execution_path_length)
-        print("Median Execution Path Length: " + self.median_execution_path_length)
-        print()
+        output += "Execution Paths:\n"
+        output += execution_paths + "\n"
+        output += "\n"
+        output += "Average Execution Path Length: " + self.average_execution_path_length + "\n"
+        output += "Median Execution Path Length: " + self.median_execution_path_length + "\n"
+        output += "\n"
 
-        print("Closeness")
-        print("=====================")
-        print()
+        output += "Closeness\n"
+        output += "=====================\n"
+        output += "\n"
         closeness = "\n".join([k.function_name + ": " + str(v)
                                for k, v in self.get_closeness()])
-        print(closeness)
-        print()
+        output += closeness + "\n"
+        output += "\n"
 
-        print("Betweenness")
-        print("=====================")
-        print()
+        output += "Betweenness\n"
+        output += "=====================\n"
+        output += "\n"
         betweenness = "\n".join([k.function_name + ": " + str(v)
                                  for k, v in self.get_betweenness()])
-        print(betweenness)
-        print()
+        output += betweenness + "\n"
+        output += "\n"
 
-        print("Clustering")
-        print("=====================")
-        print()
-        print("Average Entry Point Clustering: " + self.entry_points_clustering)
-        print("Average Exit Point Clustering: " + self.exit_points_clustering)
-        print()
+        output += "Clustering\n"
+        output += "=====================\n"
+        output += "\n"
+        output += "Average Entry Point Clustering: " + self.entry_points_clustering + "\n"
+        output += "Average Exit Point Clustering: " + self.exit_points_clustering + "\n"
+        output += "\n"
 
-        print("Degree Centrality")
-        print("=====================")
-        print()
+        output += "Degree Centrality\n"
+        output += "=====================\n"
+        output += "\n"
         centrality = "\n".join([k.function_name + ": " + str(v)
                                 for k, v in self.get_degree_centrality()])
-        print(centrality)
-        print()
+        output += centrality + "\n"
+        output += "\n"
 
-        print("In Degree Centrality")
-        print("=====================")
-        print()
+        output += "In Degree Centrality\n"
+        output += "=====================\n"
+        output += "\n"
         in_centrality = "\n".join([k.function_name + ": " + str(v)
                                    for k, v in self.get_in_degree_centrality()])
-        print(in_centrality)
-        print()
+        output += in_centrality + "\n"
+        output += "\n"
 
-        print("Out Degree Centrality")
-        print("=====================")
-        print()
+        output += "Out Degree Centrality\n"
+        output += "=====================\n"
+        output += "\n"
         out_centrality = "\n".join([k.function_name + ": " + str(v)
                                     for k, v in self.get_out_degree_centrality()])
-        print(out_centrality)
-        print()
+        output += out_centrality + "\n"
+        output += "\n"
 
-        print("Degree")
-        print("=====================")
-        print()
+        output += "Degree\n"
+        output += "=====================\n"
+        output += "\n"
         degree = "\n".join([k.function_name + ": " + str(v)
                             for k, v in self.get_degree()])
-        print(degree)
-        print()
+        output += degree + "\n"
+        output += "\n"
 
-        print("In Degree")
-        print("=====================")
-        print()
+        output += "In Degree\n"
+        output += "=====================\n"
+        output += "\n"
         degree = "\n".join([k.function_name + ": " + str(v)
                             for k, v in self.get_in_degree()])
-        print(degree)
-        print()
+        output += degree + "\n"
+        output += "\n"
 
-        print("Out Degree")
-        print("=====================")
-        print()
+        output += "Out Degree\n"
+        output += "=====================\n"
+        output += "\n"
         degree = "\n".join([k.function_name + ": " + str(v)
                             for k, v in self.get_out_degree()])
-        print(degree)
-        print()
+        output += degree + "\n"
+        output += "\n"
 
-        # print("Descendants")
-        # print("=====================")
-        # print()
+        # output += "Descendants\n"
+        # output += "=====================\n"
+        # output += "\n"
         # descendants = "\n".join([c.function_name + ": " +
         #                          ", ".join([d.function_name
         #                                     for d in self.call_graph.get_descendants(c)])
         #                          for c in self.call_graph.nodes
         #                          if len(self.call_graph.get_descendants(c)) > 0])
-        # print(descendants)
-        # print()
+        # output += descendants)
+        # output += "\n"
 
-        print("Descendant Entry Points")
-        print("=====================")
-        print()
+        output += "Descendant Entry Points\n"
+        output += "=====================\n"
+        output += "\n"
         descendants = "\n".join([c.function_name + ": " +
                                  ", ".join([d.function_name
                                             for d in self.get_descendant_entry_points(c)])
                                  for c in self.nodes
                                  if len(self.get_descendant_entry_points(c)) > 0])
-        print(descendants)
-        print()
+        output += descendants + "\n"
+        output += "\n"
 
-        print("Descendant Exit Points")
-        print("=====================")
-        print()
+        output += "Descendant Exit Points\n"
+        output += "=====================\n"
+        output += "\n"
         descendants = "\n".join([c.function_name + ": " +
                                  ", ".join([d.function_name
                                             for d in self.get_descendant_exit_points(c)])
                                  for c in self.nodes
                                  if len(self.get_descendant_exit_points(c)) > 0])
-        print(descendants)
-        print()
+        output += descendants + "\n"
+        output += "\n"
 
-        # print("Ancestors")
-        # print("=====================")
-        # print()
+        # output += "Ancestors\n"
+        # output += "=====================\n"
+        # output += "\n"
         # ancestors = "\n".join([c.function_name + ": " +
         #                        ", ".join([d.function_name
         #                                   for d in self.call_graph.get_ancestors(c)])
         #                        for c in self.call_graph.nodes
         #                        if len(self.call_graph.get_ancestors(c)) > 0])
-        # print(ancestors)
-        # print()
+        # output += ancestors)
+        # output += "\n"
 
-        print("Ancestor Entry Points")
-        print("=====================")
-        print()
+        output += "Ancestor Entry Points\n"
+        output += "=====================\n"
+        output += "\n"
         ancestors = "\n".join([c.function_name + ": " +
                                ", ".join([d.function_name
                                           for d in self.get_ancestor_entry_points(c)])
                                for c in self.nodes
                                if len(self.get_ancestor_entry_points(c)) > 0])
-        print(ancestors)
-        print()
+        output += ancestors + "\n"
+        output += "\n"
 
-        print("Ancestor Exit Points")
-        print("=====================")
-        print()
+        output += "Ancestor Exit Points\n"
+        output += "=====================\n"
+        output += "\n"
         ancestors = "\n".join([c.function_name + ": " +
                                ", ".join([d.function_name
                                           for d in self.get_ancestor_exit_points(c)])
                                for c in self.nodes
                                if len(self.get_ancestor_exit_points(c)) > 0])
-        print(ancestors)
-        print()
+        output += ancestors + "\n"
+        output += "\n"
 
-        print("Descendant Entry Points Ratio")
-        print("=====================")
-        print()
+        output += "Descendant Entry Points Ratio\n"
+        output += "=====================\n"
+        output += "\n"
         descendants = "\n".join([c.function_name + ": " +
                                  str(self.get_descendants_entry_point_ratio(c))
                                  for c in self.nodes])
-        print(descendants)
-        print()
+        output += descendants + "\n"
+        output += "\n"
 
-        print("Descendant Exit Points Ratio")
-        print("=====================")
-        print()
+        output += "Descendant Exit Points Ratio\n"
+        output += "=====================\n"
+        output += "\n"
         descendants = "\n".join([c.function_name + ": " +
                                  str(self.get_descendants_exit_point_ratio(c))
                                  for c in self.nodes])
-        print(descendants)
-        print()
+        output += descendants + "\n"
+        output += "\n"
 
-        print("Ancestor Entry Points Ratio")
-        print("=====================")
-        print()
+        output += "Ancestor Entry Points Ratio\n"
+        output += "=====================\n"
+        output += "\n"
         ancestors = "\n".join([c.function_name + ": " +
                                str(self.get_ancestors_entry_point_ratio(c))
                                for c in self.nodes])
 
-        print(ancestors)
-        print()
+        output += ancestors + "\n"
+        output += "\n"
 
-        print("Ancestor Exit Points Ratio")
-        print("=====================")
-        print()
+        output += "Ancestor Exit Points Ratio\n"
+        output += "=====================\n"
+        output += "\n"
         ancestors = "\n".join([c.function_name + ": " +
                                str(self.get_ancestors_exit_point_ratio(c))
                                for c in self.nodes])
-        print(ancestors)
-        print()
+        output += ancestors
+
+        print(output)
