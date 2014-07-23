@@ -5,11 +5,21 @@
     <title></title>
 </head>
 <body>
+
     <h1>Attack Surface</h1>
-    <label>Directory: </label><span>{{ data.source_dir }}</span>
+    <label>Directory: </label><span>{{ source_dir }}</span>
 
     <h2>Calls</h2>
-    <label>Count: </label><span>{{ data.nodes_count }}</span>
+    <label>Count: </label><span>{{ nodes_count }}</span>
+
+    <ul>
+    {% for call in nodes %}
+        <li>
+            {{ call.function_name }}
+            {{ call.closeness }}
+        </li>
+    {% endfor %}
+    </ul>
 
 </body>
 </html>
