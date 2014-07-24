@@ -15,8 +15,69 @@
     <ul>
     {% for call in nodes %}
         <li>
-            {{ call.function_name }}
-            {{ call.closeness }}
+            <h3>{{ call.function_name }}</h3>
+
+            <label>Closeness: </label><span>{{ call.closeness }}</span>
+            <label>Betweenness: </label><span>{{ call.betweenness }}</span>
+            <label>Degree Centrality: </label><span>{{ call.degree_centrality }}</span>
+            <label>In Degree Centrality: </label><span>{{ call.in_degree_centrality }}</span>
+            <label>Out Degree Centrality: </label><span>{{ call.out_degree_centrality }}</span>
+            <label>Degree: </label><span>{{ call.degree }}</span>
+            <label>In Degree: </label><span>{{ call.in_degree }}</span>
+            <label>Out Degree: </label><span>{{ call.out_degree }}</span>
+            <label>Descendant Entry Points Ratio: </label><span>{{ call.descendant_entry_points_ratio }}</span>
+            <label>Descendant Exit Points Ratio: </label><span>{{ call.descendant_exit_points_ratio }}</span>
+            <label>Ancestor Entry Points Ratio: </label><span>{{ call.ancestor_entry_points_ratio }}</span>
+            <label>Ancestor Exit Points Ratio: </label><span>{{ call.ancestor_exit_points_ratio }}</span>
+
+            {% if call.descendant_entry_points %}
+                <h2>Descendant Entry Points</h2>
+                <label>Count: </label><span>{{ call.descendant_entry_points_count }}</span>
+                <ul>
+                {% for entry_point in call.descendant_entry_points %}
+                    <li>
+                        <span>{{ entry_point.function_name }}</span>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if call.descendant_exit_points %}
+                <h2>Descendant Exit Points</h2>
+                <label>Count: </label><span>{{ call.descendant_exit_points_count }}</span>
+                <ul>
+                {% for exit_point in call.descendant_exit_points %}
+                    <li>
+                        <span>{{ exit_point.function_name }}</span>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if ancestor_entry_points %}
+                <h2>Ancestor Entry Points</h2>
+                <label>Count: </label><span>{{ call.ancestor_entry_points_count }}</span>
+                <ul>
+                {% for entry_point in call.ancestor_entry_points %}
+                    <li>
+                        <span>{{ entry_point.function_name }}</span>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if call.ancestor_exit_points %}
+                <h2>Ancestor Exit Points</h2>
+                <label>Count: </label><span>{{ call.ancestor_exit_points_count }}</span>
+                <ul>
+                {% for exit_point in call.ancestor_exit_points %}
+                    <li>
+                        <span>{{ exit_point.function_name }}</span>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+
         </li>
     {% endfor %}
     </ul>

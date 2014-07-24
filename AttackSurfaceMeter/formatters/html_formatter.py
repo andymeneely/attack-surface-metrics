@@ -47,39 +47,39 @@ class HtmlFormatter(BaseFormatter):
 
                           'descendant_entry_points_count': self.get_descendant_entry_points_count(c),
                           'descendant_entry_points': [{'function_name': denp.function_name,
-                                                       'function_signature': self._get_function_signature(denp)
-                                                      } for denp in self.get_descendant_entry_points(c)],
+                                                       'function_signature': self._get_function_signature(denp)}
+                                                      for denp in self.get_descendant_entry_points(c)],
 
                           'descendant_exit_points_count': self.get_descendant_exit_points_count(c),
                           'descendant_exit_points': [{'function_name': dexp.function_name,
-                                                      'function_signature': self._get_function_signature(dexp)
-                                                     } for dexp in self.get_descendant_exit_points(c)],
+                                                      'function_signature': self._get_function_signature(dexp)}
+                                                     for dexp in self.get_descendant_exit_points(c)],
 
                           'ancestor_entry_points_count': self.get_ancestor_entry_points_count(c),
                           'ancestor_entry_points': [{'function_name': aenp.function_name,
-                                                     'function_signature': self._get_function_signature(aenp)
-                                                    } for aenp in self.get_ancestor_entry_points(c)],
+                                                     'function_signature': self._get_function_signature(aenp)}
+                                                    for aenp in self.get_ancestor_entry_points(c)],
 
                           'ancestor_exit_points_count': self.get_ancestor_exit_points_count(c),
                           'ancestor_exit_points': [{'function_name': aexp.function_name,
-                                                    'function_signature': self._get_function_signature(aexp)
-                                                   } for aexp in self.get_ancestor_exit_points(c)]
-                      } for c in self.nodes],
+                                                    'function_signature': self._get_function_signature(aexp)}
+                                                   for aexp in self.get_ancestor_exit_points(c)]}
+                      for c in self.nodes],
 
             'edges_count': self.edges_count,
             'edges': [{'from': f.function_name,
-                       'to': t.function_name
-                      } for (f, t) in self.edges],
+                       'to': t.function_name}
+                      for (f, t) in self.edges],
 
             'entry_points_count': self.entry_points_count,
             'entry_points': [{'function_name': enp.function_name,
-                              'function_signature': self._get_function_signature(enp)
-                             } for enp in self.entry_points],
+                              'function_signature': self._get_function_signature(enp)}
+                             for enp in self.entry_points],
 
             'exit_points_count': self.exit_points_count,
             'exit_points': [{'function_name': exp.function_name,
-                             'function_signature': self._get_function_signature(exp)
-                             } for exp in self.exit_points],
+                             'function_signature': self._get_function_signature(exp)}
+                            for exp in self.exit_points],
 
             'entry_points_clustering': self.entry_points_clustering,
             'exit_points_clustering': self.exit_points_clustering,
