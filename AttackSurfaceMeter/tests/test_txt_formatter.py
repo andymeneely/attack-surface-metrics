@@ -1,6 +1,7 @@
 __author__ = 'kevin'
 
 import unittest
+import os
 from attacksurfacemeter import Call, CallGraph
 from formatters import TxtFormatter
 
@@ -8,11 +9,11 @@ from formatters import TxtFormatter
 class TxtFormatterTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.formatter = TxtFormatter(CallGraph("./helloworld"))
+        self.formatter = TxtFormatter(CallGraph(os.path.join(os.path.dirname(os.path.realpath(__file__)), "helloworld")))
 
     def test_source_dir(self):
         # Arrange
-        expected_value = "./helloworld"
+        expected_value = os.path.join(os.path.dirname(os.path.realpath(__file__)), "helloworld")
 
         # Act
         source_dir = self.formatter.source_dir

@@ -1,13 +1,14 @@
 __author__ = 'kevin'
 
 import unittest
+import os
 from attacksurfacemeter import Call, CallGraph
 
 
 class CallGraphTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.call_graph = CallGraph("./helloworld")
+        self.call_graph = CallGraph(os.path.join(os.path.dirname(os.path.realpath(__file__)), "helloworld"))
 
     def test_entry_points(self):
         # Arrange
