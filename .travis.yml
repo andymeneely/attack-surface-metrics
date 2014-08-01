@@ -1,0 +1,19 @@
+language: python
+python:
+  - "3.4"
+
+# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
+install:
+  pip install matplotlib
+  pip install networkx
+  pip install django
+
+# command to run tests, e.g. python setup.py test
+script:
+  python -m unittest tests.test_call.CallTestCase
+  python -m unittest tests.test_call_graph.CallGraphTestCase
+  python -m unittest tests.test_call_graph_reverse.CallGraphReverseTestCase
+  python -m unittest tests.test_stack.StackTestCase
+  python -m unittest tests.test_txt_formatter.TxtFormatterTestCase
+  python -m unittest tests.test_xelement.XElementTestCase
+  python -m unittest tests.test_xml_formatter.XmlFormatterTestCase
