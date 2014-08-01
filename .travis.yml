@@ -14,7 +14,6 @@ install:
 
 # command to run tests, e.g. python setup.py test
 script:
-  - cd AttackSurfaceMeter/
   - python -m unittest tests.test_call.CallTestCase
   - python -m unittest tests.test_call_graph.CallGraphTestCase
   - python -m unittest tests.test_call_graph_reverse.CallGraphReverseTestCase
