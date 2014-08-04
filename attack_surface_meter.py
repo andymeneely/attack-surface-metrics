@@ -31,12 +31,14 @@ def parse_args():
         for the command line interface and returns all the received arguments as an object.
 
         Returns:
-            An object that contains all the provided comand line arguments.
+            An object that contains all the provided command line arguments.
     """
     parser = argparse.ArgumentParser(
         description="Analyzes a software's source code and reports various metrics related to it's attack surface.")
 
-    parser.add_argument("source_dir", help="Root directory of the source code to analyze.")
+    parser.add_argument("source_dir",
+                        help="Root directory of the source code to analyze or the text file that "
+                             "contains the raw call graph information.")
     parser.add_argument("-f", "--format", choices=["txt", "html", "xml", "json"], default="txt",
                         help="Output format of the calculated metrics.")
     parser.add_argument("-r", "--reverse", action="store_true",

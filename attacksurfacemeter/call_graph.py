@@ -63,10 +63,16 @@ class CallGraph():
         is_first_line = True
         parent = Stack()
 
-        proc = self._exec_cflow(is_reverse)
+        if os.path.isfile(self.source_dir):
+            raw_call_graph = open(self.source_dir)
+            readline = lambda: raw_call_graph.readline()
+
+        else:  # if os.path.isdir(self.source_dir):
+            raw_call_graph = self._exec_cflow(is_reverse)
+            readline = lambda: raw_call_graph.stdout.readline().decode(encoding='UTF-8')
 
         while True:
-            line = proc.stdout.readline().decode(encoding='UTF-8')
+            line = readline()
 
             if line == '':
                 break
