@@ -4,13 +4,13 @@ import unittest
 import os
 from attacksurfacemeter import CallGraph
 from tests.test_txt_formatter import TxtFormatterTestCase
-from formatters import XmlFormatter
+from formatters import HtmlFormatter
 
 
-class XmlFormatterTestCase(TxtFormatterTestCase):
+class HtmlFormatterTestCase(TxtFormatterTestCase):
 
     def setUp(self):
-        self.formatter = XmlFormatter(
+        self.formatter = HtmlFormatter(
             CallGraph(
                 os.path.join(
                     os.path.dirname(os.path.realpath(__file__)),
@@ -18,7 +18,7 @@ class XmlFormatterTestCase(TxtFormatterTestCase):
 
         self.formatter_output_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            "helloworld/formatter.output.xml")
+            "helloworld/formatter.output.html")
 
     def test_write_output(self):
         # Arrange

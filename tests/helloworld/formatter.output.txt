@@ -1,0 +1,344 @@
+Attack surface report
+=====================
+Source code directory: /home/kevin/Documents/attack-surface-metrics/tests/helloworld
+
+Nodes
+=====================
+
+Number of nodes: 15
+Nodes:
+GreeterSayHiTo, greet_a, recursive_a, printf, GreeterSayHi, main, new_Greeter, greet, recursive_b, greet_b, malloc, functionPtr, gets, puts, addInt
+
+Edges
+=====================
+
+Number of edges: 22
+Edges:
+GreeterSayHiTo ---> printf
+greet_a ---> greet
+greet_a ---> recursive_a
+recursive_a ---> recursive_b
+recursive_a ---> printf
+GreeterSayHi ---> printf
+main ---> greet_a
+main ---> greet_b
+main ---> printf
+main ---> puts
+main ---> functionPtr
+main ---> new_Greeter
+main ---> addInt
+new_Greeter ---> GreeterSayHiTo
+new_Greeter ---> GreeterSayHi
+new_Greeter ---> malloc
+greet ---> puts
+recursive_b ---> recursive_a
+recursive_b ---> printf
+greet_b ---> gets
+greet_b ---> greet
+greet_b ---> recursive_b
+
+Entry Points
+=====================
+
+Number of Entry Points: 1
+
+Entry Points:
+greet_b
+
+Exit Points
+=====================
+
+Number of Exit Points: 6
+
+Exit Points:
+GreeterSayHiTo, recursive_a, GreeterSayHi, main, greet, recursive_b
+
+Execution Paths
+=====================
+
+Number of Execution Paths: 3
+
+Execution Paths:
+greet_b ---> recursive_b ---> recursive_a
+greet_b ---> greet
+greet_b ---> recursive_b
+
+Average Execution Path Length: 2.3333333333333335
+Median Execution Path Length: 2
+
+Closeness
+=====================
+
+GreeterSayHiTo: 0.07142857142857142
+greet_a: 0.22321428571428573
+recursive_a: 0.14285714285714285
+printf: 0.0
+recursive_b: 0.14285714285714285
+main: 0.6666666666666666
+new_Greeter: 0.22857142857142856
+greet: 0.07142857142857142
+GreeterSayHi: 0.07142857142857142
+greet_b: 0.2857142857142857
+gets: 0.0
+functionPtr: 0.0
+addInt: 0.0
+puts: 0.0
+malloc: 0.0
+
+Betweenness
+=====================
+
+GreeterSayHiTo: 0.0027472527472527475
+greet_a: 0.008241758241758242
+recursive_a: 0.01098901098901099
+printf: 0.0
+recursive_b: 0.01098901098901099
+main: 0.0
+new_Greeter: 0.016483516483516484
+greet: 0.01098901098901099
+GreeterSayHi: 0.0027472527472527475
+greet_b: 0.013736263736263738
+gets: 0.0
+functionPtr: 0.0
+addInt: 0.0
+puts: 0.0
+malloc: 0.0
+
+Clustering
+=====================
+
+Average Entry Point Clustering: 0.0
+Average Exit Point Clustering: 0.1111111111111111
+
+Degree Centrality
+=====================
+
+GreeterSayHiTo: 0.14285714285714285
+greet_a: 0.21428571428571427
+recursive_a: 0.2857142857142857
+printf: 0.3571428571428571
+recursive_b: 0.2857142857142857
+main: 0.5
+new_Greeter: 0.2857142857142857
+greet: 0.21428571428571427
+GreeterSayHi: 0.14285714285714285
+greet_b: 0.2857142857142857
+gets: 0.07142857142857142
+functionPtr: 0.07142857142857142
+addInt: 0.07142857142857142
+puts: 0.14285714285714285
+malloc: 0.07142857142857142
+
+In Degree Centrality
+=====================
+
+GreeterSayHiTo: 0.07142857142857142
+greet_a: 0.07142857142857142
+recursive_a: 0.14285714285714285
+printf: 0.3571428571428571
+recursive_b: 0.14285714285714285
+main: 0.0
+new_Greeter: 0.07142857142857142
+greet: 0.14285714285714285
+GreeterSayHi: 0.07142857142857142
+greet_b: 0.07142857142857142
+gets: 0.07142857142857142
+functionPtr: 0.07142857142857142
+addInt: 0.07142857142857142
+puts: 0.14285714285714285
+malloc: 0.07142857142857142
+
+Out Degree Centrality
+=====================
+
+GreeterSayHiTo: 0.07142857142857142
+greet_a: 0.14285714285714285
+recursive_a: 0.14285714285714285
+printf: 0.0
+recursive_b: 0.14285714285714285
+main: 0.5
+new_Greeter: 0.21428571428571427
+greet: 0.07142857142857142
+GreeterSayHi: 0.07142857142857142
+greet_b: 0.21428571428571427
+gets: 0.0
+functionPtr: 0.0
+addInt: 0.0
+puts: 0.0
+malloc: 0.0
+
+Degree
+=====================
+
+GreeterSayHiTo: 2
+greet_a: 3
+recursive_a: 4
+printf: 5
+recursive_b: 4
+main: 7
+new_Greeter: 4
+greet: 3
+GreeterSayHi: 2
+greet_b: 4
+gets: 1
+functionPtr: 1
+addInt: 1
+puts: 2
+malloc: 1
+
+In Degree
+=====================
+
+GreeterSayHiTo: 1
+greet_a: 1
+recursive_a: 2
+printf: 5
+recursive_b: 2
+main: 0
+new_Greeter: 1
+greet: 2
+GreeterSayHi: 1
+greet_b: 1
+gets: 1
+functionPtr: 1
+addInt: 1
+puts: 2
+malloc: 1
+
+Out Degree
+=====================
+
+GreeterSayHiTo: 1
+greet_a: 2
+recursive_a: 2
+printf: 0
+recursive_b: 2
+main: 7
+new_Greeter: 3
+greet: 1
+GreeterSayHi: 1
+greet_b: 3
+gets: 0
+functionPtr: 0
+addInt: 0
+puts: 0
+malloc: 0
+
+Descendant Entry Points
+=====================
+
+main: greet_b
+
+Descendant Exit Points
+=====================
+
+greet_a: greet, recursive_a, recursive_b
+recursive_a: recursive_b
+main: GreeterSayHiTo, recursive_a, greet, GreeterSayHi, recursive_b
+new_Greeter: GreeterSayHiTo, GreeterSayHi
+recursive_b: recursive_a
+greet_b: recursive_a, greet, recursive_b
+
+Ancestor Entry Points
+=====================
+
+recursive_a: greet_b
+printf: greet_b
+greet: greet_b
+recursive_b: greet_b
+gets: greet_b
+puts: greet_b
+
+Ancestor Exit Points
+=====================
+
+GreeterSayHiTo: main
+greet_a: main
+recursive_a: main, recursive_b
+printf: GreeterSayHiTo, recursive_a, main, recursive_b, GreeterSayHi
+GreeterSayHi: main
+new_Greeter: main
+greet: main
+recursive_b: main, recursive_a
+greet_b: main
+malloc: main
+functionPtr: main
+gets: main
+puts: greet, main
+addInt: main
+
+Descendant Entry Points Ratio
+=====================
+
+GreeterSayHiTo: 0.0
+greet_a: 0.0
+recursive_a: 0.0
+printf: 0.0
+GreeterSayHi: 0.0
+main: 0.07142857142857142
+new_Greeter: 0.0
+greet: 0.0
+recursive_b: 0.0
+greet_b: 0.0
+malloc: 0.0
+functionPtr: 0.0
+gets: 0.0
+puts: 0.0
+addInt: 0.0
+
+Descendant Exit Points Ratio
+=====================
+
+GreeterSayHiTo: 0.0
+greet_a: 0.6
+recursive_a: 0.5
+printf: 0.0
+GreeterSayHi: 0.0
+main: 0.35714285714285715
+new_Greeter: 0.5
+greet: 0.0
+recursive_b: 0.5
+greet_b: 0.5
+malloc: 0.0
+functionPtr: 0.0
+gets: 0.0
+puts: 0.0
+addInt: 0.0
+
+Ancestor Entry Points Ratio
+=====================
+
+GreeterSayHiTo: 0.0
+greet_a: 0.0
+recursive_a: 0.25
+printf: 0.125
+GreeterSayHi: 0.0
+main: 0.0
+new_Greeter: 0.0
+greet: 0.3333333333333333
+recursive_b: 0.25
+greet_b: 0.0
+malloc: 0.0
+functionPtr: 0.0
+gets: 0.5
+puts: 0.25
+addInt: 0.0
+
+Ancestor Exit Points Ratio
+=====================
+
+GreeterSayHiTo: 0.5
+greet_a: 1.0
+recursive_a: 0.5
+printf: 0.625
+GreeterSayHi: 0.5
+main: 0.0
+new_Greeter: 1.0
+greet: 0.3333333333333333
+recursive_b: 0.5
+greet_b: 1.0
+malloc: 0.5
+functionPtr: 1.0
+gets: 0.5
+puts: 0.5
+addInt: 1.0

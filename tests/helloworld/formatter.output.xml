@@ -1,0 +1,216 @@
+<?xml version="1.0" ?>
+<attack_surface directory="/home/kevin/Documents/attack-surface-metrics/tests/helloworld">
+	<nodes count="15">
+		<call ancestor_entry_points_ratio="0.0" ancestor_exit_points_ratio="1.0" betweenness="0.008241758241758242" closeness="0.22321428571428573" degree="3" degree_centrality="0.21428571428571427" descendant_entry_points_ratio="0.0" descendant_exit_points_ratio="0.6" in_degree="1" in_degree_centrality="0.07142857142857142" name="greet_a" out_degree="2" out_degree_centrality="0.14285714285714285" signature="&lt;void greet_a (int i) at ./src/helloworld.c:76&gt;">
+			<descendant_entry_points count="0"/>
+			<descendant_exit_points count="3">
+				<call name="recursive_a" signature="&lt;void recursive_a (int i) at ./src/greetings.c:26&gt;"/>
+				<call name="recursive_b" signature="&lt;void recursive_b (int i) at ./src/greetings.c:32&gt;"/>
+				<call name="greet" signature="&lt;void greet (int greeting_code) at ./src/greetings.c:14&gt;"/>
+			</descendant_exit_points>
+			<ancestor_entry_points count="0"/>
+			<ancestor_exit_points count="1">
+				<call name="main" signature="&lt;int main (void) at ./src/helloworld.c:58&gt;"/>
+			</ancestor_exit_points>
+		</call>
+		<call ancestor_entry_points_ratio="0.0" ancestor_exit_points_ratio="1.0" betweenness="0.016483516483516484" closeness="0.22857142857142856" degree="4" degree_centrality="0.2857142857142857" descendant_entry_points_ratio="0.0" descendant_exit_points_ratio="0.5" in_degree="1" in_degree_centrality="0.07142857142857142" name="new_Greeter" out_degree="3" out_degree_centrality="0.21428571428571427" signature="&lt;Greeter new_Greeter () at ./src/helloworld.c:38&gt;">
+			<descendant_entry_points count="0"/>
+			<descendant_exit_points count="2">
+				<call name="GreeterSayHiTo" signature="&lt;void GreeterSayHiTo (int value) at ./src/helloworld.c:53&gt;"/>
+				<call name="GreeterSayHi" signature="&lt;void GreeterSayHi () at ./src/helloworld.c:48&gt;"/>
+			</descendant_exit_points>
+			<ancestor_entry_points count="0"/>
+			<ancestor_exit_points count="1">
+				<call name="main" signature="&lt;int main (void) at ./src/helloworld.c:58&gt;"/>
+			</ancestor_exit_points>
+		</call>
+		<call ancestor_entry_points_ratio="0.0" ancestor_exit_points_ratio="1.0" betweenness="0.013736263736263738" closeness="0.2857142857142857" degree="4" degree_centrality="0.2857142857142857" descendant_entry_points_ratio="0.0" descendant_exit_points_ratio="0.5" in_degree="1" in_degree_centrality="0.07142857142857142" name="greet_b" out_degree="3" out_degree_centrality="0.21428571428571427" signature="&lt;void greet_b (int i) at ./src/helloworld.c:82&gt;">
+			<descendant_entry_points count="0"/>
+			<descendant_exit_points count="3">
+				<call name="greet" signature="&lt;void greet (int greeting_code) at ./src/greetings.c:14&gt;"/>
+				<call name="recursive_a" signature="&lt;void recursive_a (int i) at ./src/greetings.c:26&gt;"/>
+				<call name="recursive_b" signature="&lt;void recursive_b (int i) at ./src/greetings.c:32&gt;"/>
+			</descendant_exit_points>
+			<ancestor_entry_points count="0"/>
+			<ancestor_exit_points count="1">
+				<call name="main" signature="&lt;int main (void) at ./src/helloworld.c:58&gt;"/>
+			</ancestor_exit_points>
+		</call>
+		<call ancestor_entry_points_ratio="0.5" ancestor_exit_points_ratio="0.5" betweenness="0.0" closeness="0.0" degree="1" degree_centrality="0.07142857142857142" descendant_entry_points_ratio="0.0" descendant_exit_points_ratio="0.0" in_degree="1" in_degree_centrality="0.07142857142857142" name="gets" out_degree="0" out_degree_centrality="0.0" signature="">
+			<descendant_entry_points count="0"/>
+			<descendant_exit_points count="0"/>
+			<ancestor_entry_points count="1">
+				<call name="greet_b" signature="&lt;void greet_b (int i) at ./src/helloworld.c:82&gt;"/>
+			</ancestor_entry_points>
+			<ancestor_exit_points count="1">
+				<call name="main" signature="&lt;int main (void) at ./src/helloworld.c:58&gt;"/>
+			</ancestor_exit_points>
+		</call>
+		<call ancestor_entry_points_ratio="0.0" ancestor_exit_points_ratio="1.0" betweenness="0.0" closeness="0.0" degree="1" degree_centrality="0.07142857142857142" descendant_entry_points_ratio="0.0" descendant_exit_points_ratio="0.0" in_degree="1" in_degree_centrality="0.07142857142857142" name="addInt" out_degree="0" out_degree_centrality="0.0" signature="&lt;int addInt (int n, int m) at ./src/helloworld.c:18&gt;">
+			<descendant_entry_points count="0"/>
+			<descendant_exit_points count="0"/>
+			<ancestor_entry_points count="0"/>
+			<ancestor_exit_points count="1">
+				<call name="main" signature="&lt;int main (void) at ./src/helloworld.c:58&gt;"/>
+			</ancestor_exit_points>
+		</call>
+		<call ancestor_entry_points_ratio="0.0" ancestor_exit_points_ratio="1.0" betweenness="0.0" closeness="0.0" degree="1" degree_centrality="0.07142857142857142" descendant_entry_points_ratio="0.0" descendant_exit_points_ratio="0.0" in_degree="1" in_degree_centrality="0.07142857142857142" name="functionPtr" out_degree="0" out_degree_centrality="0.0" signature="&lt;int (*functionPtr) (int, int) at ./src/helloworld.c:23&gt;">
+			<descendant_entry_points count="0"/>
+			<descendant_exit_points count="0"/>
+			<ancestor_entry_points count="0"/>
+			<ancestor_exit_points count="1">
+				<call name="main" signature="&lt;int main (void) at ./src/helloworld.c:58&gt;"/>
+			</ancestor_exit_points>
+		</call>
+		<call ancestor_entry_points_ratio="0.3333333333333333" ancestor_exit_points_ratio="0.3333333333333333" betweenness="0.01098901098901099" closeness="0.07142857142857142" degree="3" degree_centrality="0.21428571428571427" descendant_entry_points_ratio="0.0" descendant_exit_points_ratio="0.0" in_degree="2" in_degree_centrality="0.14285714285714285" name="greet" out_degree="1" out_degree_centrality="0.07142857142857142" signature="&lt;void greet (int greeting_code) at ./src/greetings.c:14&gt;">
+			<descendant_entry_points count="0"/>
+			<descendant_exit_points count="0"/>
+			<ancestor_entry_points count="1">
+				<call name="greet_b" signature="&lt;void greet_b (int i) at ./src/helloworld.c:82&gt;"/>
+			</ancestor_entry_points>
+			<ancestor_exit_points count="1">
+				<call name="main" signature="&lt;int main (void) at ./src/helloworld.c:58&gt;"/>
+			</ancestor_exit_points>
+		</call>
+		<call ancestor_entry_points_ratio="0.125" ancestor_exit_points_ratio="0.625" betweenness="0.0" closeness="0.0" degree="5" degree_centrality="0.3571428571428571" descendant_entry_points_ratio="0.0" descendant_exit_points_ratio="0.0" in_degree="5" in_degree_centrality="0.3571428571428571" name="printf" out_degree="0" out_degree_centrality="0.0" signature="">
+			<descendant_entry_points count="0"/>
+			<descendant_exit_points count="0"/>
+			<ancestor_entry_points count="1">
+				<call name="greet_b" signature="&lt;void greet_b (int i) at ./src/helloworld.c:82&gt;"/>
+			</ancestor_entry_points>
+			<ancestor_exit_points count="5">
+				<call name="recursive_a" signature="&lt;void recursive_a (int i) at ./src/greetings.c:26&gt;"/>
+				<call name="GreeterSayHi" signature="&lt;void GreeterSayHi () at ./src/helloworld.c:48&gt;"/>
+				<call name="GreeterSayHiTo" signature="&lt;void GreeterSayHiTo (int value) at ./src/helloworld.c:53&gt;"/>
+				<call name="main" signature="&lt;int main (void) at ./src/helloworld.c:58&gt;"/>
+				<call name="recursive_b" signature="&lt;void recursive_b (int i) at ./src/greetings.c:32&gt;"/>
+			</ancestor_exit_points>
+		</call>
+		<call ancestor_entry_points_ratio="0.0" ancestor_exit_points_ratio="0.5" betweenness="0.0027472527472527475" closeness="0.07142857142857142" degree="2" degree_centrality="0.14285714285714285" descendant_entry_points_ratio="0.0" descendant_exit_points_ratio="0.0" in_degree="1" in_degree_centrality="0.07142857142857142" name="GreeterSayHi" out_degree="1" out_degree_centrality="0.07142857142857142" signature="&lt;void GreeterSayHi () at ./src/helloworld.c:48&gt;">
+			<descendant_entry_points count="0"/>
+			<descendant_exit_points count="0"/>
+			<ancestor_entry_points count="0"/>
+			<ancestor_exit_points count="1">
+				<call name="main" signature="&lt;int main (void) at ./src/helloworld.c:58&gt;"/>
+			</ancestor_exit_points>
+		</call>
+		<call ancestor_entry_points_ratio="0.0" ancestor_exit_points_ratio="0.5" betweenness="0.0027472527472527475" closeness="0.07142857142857142" degree="2" degree_centrality="0.14285714285714285" descendant_entry_points_ratio="0.0" descendant_exit_points_ratio="0.0" in_degree="1" in_degree_centrality="0.07142857142857142" name="GreeterSayHiTo" out_degree="1" out_degree_centrality="0.07142857142857142" signature="&lt;void GreeterSayHiTo (int value) at ./src/helloworld.c:53&gt;">
+			<descendant_entry_points count="0"/>
+			<descendant_exit_points count="0"/>
+			<ancestor_entry_points count="0"/>
+			<ancestor_exit_points count="1">
+				<call name="main" signature="&lt;int main (void) at ./src/helloworld.c:58&gt;"/>
+			</ancestor_exit_points>
+		</call>
+		<call ancestor_entry_points_ratio="0.25" ancestor_exit_points_ratio="0.5" betweenness="0.01098901098901099" closeness="0.14285714285714285" degree="4" degree_centrality="0.2857142857142857" descendant_entry_points_ratio="0.0" descendant_exit_points_ratio="0.5" in_degree="2" in_degree_centrality="0.14285714285714285" name="recursive_a" out_degree="2" out_degree_centrality="0.14285714285714285" signature="&lt;void recursive_a (int i) at ./src/greetings.c:26&gt;">
+			<descendant_entry_points count="0"/>
+			<descendant_exit_points count="1">
+				<call name="recursive_b" signature="&lt;void recursive_b (int i) at ./src/greetings.c:32&gt;"/>
+			</descendant_exit_points>
+			<ancestor_entry_points count="1">
+				<call name="greet_b" signature="&lt;void greet_b (int i) at ./src/helloworld.c:82&gt;"/>
+			</ancestor_entry_points>
+			<ancestor_exit_points count="2">
+				<call name="main" signature="&lt;int main (void) at ./src/helloworld.c:58&gt;"/>
+				<call name="recursive_b" signature="&lt;void recursive_b (int i) at ./src/greetings.c:32&gt;"/>
+			</ancestor_exit_points>
+		</call>
+		<call ancestor_entry_points_ratio="0.0" ancestor_exit_points_ratio="0.0" betweenness="0.0" closeness="0.6666666666666666" degree="7" degree_centrality="0.5" descendant_entry_points_ratio="0.07142857142857142" descendant_exit_points_ratio="0.35714285714285715" in_degree="0" in_degree_centrality="0.0" name="main" out_degree="7" out_degree_centrality="0.5" signature="&lt;int main (void) at ./src/helloworld.c:58&gt;">
+			<descendant_entry_points count="1">
+				<call name="greet_b" signature="&lt;void greet_b (int i) at ./src/helloworld.c:82&gt;"/>
+			</descendant_entry_points>
+			<descendant_exit_points count="5">
+				<call name="greet" signature="&lt;void greet (int greeting_code) at ./src/greetings.c:14&gt;"/>
+				<call name="recursive_a" signature="&lt;void recursive_a (int i) at ./src/greetings.c:26&gt;"/>
+				<call name="GreeterSayHi" signature="&lt;void GreeterSayHi () at ./src/helloworld.c:48&gt;"/>
+				<call name="GreeterSayHiTo" signature="&lt;void GreeterSayHiTo (int value) at ./src/helloworld.c:53&gt;"/>
+				<call name="recursive_b" signature="&lt;void recursive_b (int i) at ./src/greetings.c:32&gt;"/>
+			</descendant_exit_points>
+			<ancestor_entry_points count="0"/>
+			<ancestor_exit_points count="0"/>
+		</call>
+		<call ancestor_entry_points_ratio="0.25" ancestor_exit_points_ratio="0.5" betweenness="0.0" closeness="0.0" degree="2" degree_centrality="0.14285714285714285" descendant_entry_points_ratio="0.0" descendant_exit_points_ratio="0.0" in_degree="2" in_degree_centrality="0.14285714285714285" name="puts" out_degree="0" out_degree_centrality="0.0" signature="">
+			<descendant_entry_points count="0"/>
+			<descendant_exit_points count="0"/>
+			<ancestor_entry_points count="1">
+				<call name="greet_b" signature="&lt;void greet_b (int i) at ./src/helloworld.c:82&gt;"/>
+			</ancestor_entry_points>
+			<ancestor_exit_points count="2">
+				<call name="main" signature="&lt;int main (void) at ./src/helloworld.c:58&gt;"/>
+				<call name="greet" signature="&lt;void greet (int greeting_code) at ./src/greetings.c:14&gt;"/>
+			</ancestor_exit_points>
+		</call>
+		<call ancestor_entry_points_ratio="0.0" ancestor_exit_points_ratio="0.5" betweenness="0.0" closeness="0.0" degree="1" degree_centrality="0.07142857142857142" descendant_entry_points_ratio="0.0" descendant_exit_points_ratio="0.0" in_degree="1" in_degree_centrality="0.07142857142857142" name="malloc" out_degree="0" out_degree_centrality="0.0" signature="">
+			<descendant_entry_points count="0"/>
+			<descendant_exit_points count="0"/>
+			<ancestor_entry_points count="0"/>
+			<ancestor_exit_points count="1">
+				<call name="main" signature="&lt;int main (void) at ./src/helloworld.c:58&gt;"/>
+			</ancestor_exit_points>
+		</call>
+		<call ancestor_entry_points_ratio="0.25" ancestor_exit_points_ratio="0.5" betweenness="0.01098901098901099" closeness="0.14285714285714285" degree="4" degree_centrality="0.2857142857142857" descendant_entry_points_ratio="0.0" descendant_exit_points_ratio="0.5" in_degree="2" in_degree_centrality="0.14285714285714285" name="recursive_b" out_degree="2" out_degree_centrality="0.14285714285714285" signature="&lt;void recursive_b (int i) at ./src/greetings.c:32&gt;">
+			<descendant_entry_points count="0"/>
+			<descendant_exit_points count="1">
+				<call name="recursive_a" signature="&lt;void recursive_a (int i) at ./src/greetings.c:26&gt;"/>
+			</descendant_exit_points>
+			<ancestor_entry_points count="1">
+				<call name="greet_b" signature="&lt;void greet_b (int i) at ./src/helloworld.c:82&gt;"/>
+			</ancestor_entry_points>
+			<ancestor_exit_points count="2">
+				<call name="main" signature="&lt;int main (void) at ./src/helloworld.c:58&gt;"/>
+				<call name="recursive_a" signature="&lt;void recursive_a (int i) at ./src/greetings.c:26&gt;"/>
+			</ancestor_exit_points>
+		</call>
+	</nodes>
+	<edges count="22">
+		<edge from="greet_a" to="greet"/>
+		<edge from="greet_a" to="recursive_a"/>
+		<edge from="new_Greeter" to="GreeterSayHiTo"/>
+		<edge from="new_Greeter" to="GreeterSayHi"/>
+		<edge from="new_Greeter" to="malloc"/>
+		<edge from="greet_b" to="greet"/>
+		<edge from="greet_b" to="gets"/>
+		<edge from="greet_b" to="recursive_b"/>
+		<edge from="greet" to="puts"/>
+		<edge from="GreeterSayHi" to="printf"/>
+		<edge from="GreeterSayHiTo" to="printf"/>
+		<edge from="recursive_a" to="printf"/>
+		<edge from="recursive_a" to="recursive_b"/>
+		<edge from="main" to="greet_a"/>
+		<edge from="main" to="new_Greeter"/>
+		<edge from="main" to="greet_b"/>
+		<edge from="main" to="puts"/>
+		<edge from="main" to="addInt"/>
+		<edge from="main" to="functionPtr"/>
+		<edge from="main" to="printf"/>
+		<edge from="recursive_b" to="printf"/>
+		<edge from="recursive_b" to="recursive_a"/>
+	</edges>
+	<entry_points count="1">
+		<call name="greet_b" signature="&lt;void greet_b (int i) at ./src/helloworld.c:82&gt;"/>
+	</entry_points>
+	<exit_points count="6">
+		<call name="greet" signature="&lt;void greet (int greeting_code) at ./src/greetings.c:14&gt;"/>
+		<call name="GreeterSayHi" signature="&lt;void GreeterSayHi () at ./src/helloworld.c:48&gt;"/>
+		<call name="GreeterSayHiTo" signature="&lt;void GreeterSayHiTo (int value) at ./src/helloworld.c:53&gt;"/>
+		<call name="recursive_a" signature="&lt;void recursive_a (int i) at ./src/greetings.c:26&gt;"/>
+		<call name="main" signature="&lt;int main (void) at ./src/helloworld.c:58&gt;"/>
+		<call name="recursive_b" signature="&lt;void recursive_b (int i) at ./src/greetings.c:32&gt;"/>
+	</exit_points>
+	<execution_paths average="2.3333333333333335" count="3" median="2">
+		<path length="2">
+			<call name="greet_b" signature="&lt;void greet_b (int i) at ./src/helloworld.c:82&gt;"/>
+			<call name="greet" signature="&lt;void greet (int greeting_code) at ./src/greetings.c:14&gt;"/>
+		</path>
+		<path length="3">
+			<call name="greet_b" signature="&lt;void greet_b (int i) at ./src/helloworld.c:82&gt;"/>
+			<call name="recursive_b" signature="&lt;void recursive_b (int i) at ./src/greetings.c:32&gt;"/>
+			<call name="recursive_a" signature="&lt;void recursive_a (int i) at ./src/greetings.c:26&gt;"/>
+		</path>
+		<path length="2">
+			<call name="greet_b" signature="&lt;void greet_b (int i) at ./src/helloworld.c:82&gt;"/>
+			<call name="recursive_b" signature="&lt;void recursive_b (int i) at ./src/greetings.c:32&gt;"/>
+		</path>
+	</execution_paths>
+	<clustering entry_points_clustering="0.0" exit_points_clustering="0.1111111111111111"/>
+</attack_surface>

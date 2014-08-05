@@ -9,7 +9,28 @@ from formatters import TxtFormatter
 class TxtFormatterTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.formatter = TxtFormatter(CallGraph(os.path.join(os.path.dirname(os.path.realpath(__file__)), "helloworld")))
+        self.formatter = TxtFormatter(
+            CallGraph(
+                os.path.join(
+                    os.path.dirname(os.path.realpath(__file__)),
+                    "helloworld")))
+
+        self.formatter_output_file = os.path.join(
+            os.path.dirname(os.path.realpath(__file__)),
+            "helloworld/formatter.output.txt")
+
+    def test_write_output(self):
+        # Arrange
+        expected_lines = [l for l in open(self.formatter_output_file)]
+
+        # Act
+        lines = self.formatter.write_output().splitlines(keepends=True)
+        # all_lines_found = all([l in lines for l in expected_lines])
+
+        # Assert
+        self.assertEqual(len(expected_lines), len(lines))
+        # TODO: need to find a way to correctly test the contents of this
+        # self.assertTrue(all_lines_found)
 
     def test_source_dir(self):
         # Arrange
