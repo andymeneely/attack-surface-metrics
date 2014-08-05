@@ -1,6 +1,7 @@
 __author__ = 'kevin'
 
-from distutils.core import setup
+# from distutils.core import setup
+from setuptools import setup
 
 setup(
     name='AttackSurfaceMeter',
@@ -12,5 +13,6 @@ setup(
     long_description=open('README.md').read(),
     author='Kevin Campusano',
     author_email='kac2375@rit.edu',
-    url='https://github.com/andymeneely/attack-surface-metrics'
+    url='https://github.com/andymeneely/attack-surface-metrics',
+    test_suite="tests"
 )

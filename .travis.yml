@@ -11,18 +11,11 @@ install:
   - pip install matplotlib
   - pip install networkx
   - pip install django
+  - pip install coveralls
 
 # command to run tests, e.g. python setup.py test
 script:
-  - python -m unittest tests.test_stack.StackTestCase
-  - python -m unittest tests.test_call.CallTestCase
-  - python -m unittest tests.test_call_graph.CallGraphTestCase
-  - python -m unittest tests.test_call_graph_reverse.CallGraphReverseTestCase
-  - python -m unittest tests.test_call_graph_file.CallGraphFileTestCase
-  - python -m unittest tests.test_call_graph_file_reverse.CallGraphReverseFileTestCase
-  - python -m unittest tests.test_txt_formatter.TxtFormatterTestCase
-  - python -m unittest tests.test_xelement.XElementTestCase
-  - python -m unittest tests.test_xml_formatter.XmlFormatterTestCase
+  - coverage run --source=attacksurfacemeter setup.py test
 
 after_success:
   - coveralls
