@@ -88,6 +88,4 @@ class HtmlFormatter(BaseFormatter):
                                 for xp in self.execution_paths]
         })
 
-        output = template.render(context)
-
-        print(output)
+        return template.render(context)

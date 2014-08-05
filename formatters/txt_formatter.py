@@ -244,4 +244,4 @@ class TxtFormatter(BaseFormatter):
                                for c in self.nodes])
         output += ancestors
 
-        print(output)
+        return output

@@ -20,7 +20,7 @@ def main():
     call_graph = CallGraph(args.source_dir, args.reverse)
 
     formatter = formatters[args.format](call_graph)
-    formatter.write_output()
+    print(formatter.write_output())
 
 
 def parse_args():

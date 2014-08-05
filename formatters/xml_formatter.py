@@ -77,7 +77,7 @@ class XmlFormatter(BaseFormatter):
                                   'exit_points_clustering': self.exit_points_clustering})
         )
 
-        print(self.prettyfy(root))
+        return self.prettyfy(root)
 
     def prettyfy(self, xml_element):
         """
