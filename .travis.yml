@@ -23,3 +23,6 @@ script:
   - python -m unittest tests.test_txt_formatter.TxtFormatterTestCase
   - python -m unittest tests.test_xelement.XElementTestCase
   - python -m unittest tests.test_xml_formatter.XmlFormatterTestCase
+
+after_success:
+  - coveralls
