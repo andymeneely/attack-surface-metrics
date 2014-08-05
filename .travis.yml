@@ -15,8 +15,7 @@ install:
 
 # command to run tests, e.g. python setup.py test
 script:
-  - coverage run --source=formatters setup.py test
-  - coverage run --source=attacksurfacemeter setup.py test
+  - coverage run --source=attacksurfacemeter,formatters setup.py test
 
 after_success:
   - coveralls
