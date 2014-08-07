@@ -376,6 +376,14 @@ class CallGraph():
                 dictionary with every Call in the Call Graph with their respective Closenesses.
         """
         return nx.closeness_centrality(self.call_graph, call)
+
+    @property
+    def median_closeness(self):
+        return stat.median([closeness for k, closeness in self.get_closeness().items()])
+
+    @property
+    def average_closeness(self):
+        return stat.mean([closeness for k, closeness in self.get_closeness().items()])
     
     def get_betweenness(self, call=None):
         """
@@ -407,6 +415,14 @@ class CallGraph():
             return betweennesses[call]
         else:
             return betweennesses
+
+    @property
+    def median_betweenness(self):
+        return stat.median([betweenness for k, betweenness in self.get_betweenness().items()])
+
+    @property
+    def average_betweenness(self):
+        return stat.mean([betweenness for k, betweenness in self.get_betweenness().items()])
 
     # Reconsider this. Maybe clustering is not all that useful in terms of call graph.
     def average_clustering(self, nodes):
@@ -464,6 +480,14 @@ class CallGraph():
         else:
             return degrees
 
+    @property
+    def median_degree_centrality(self):
+        return stat.median([degree_centrality for k, degree_centrality in self.get_degree_centrality().items()])
+
+    @property
+    def average_degree_centrality(self):
+        return stat.mean([degree_centrality for k, degree_centrality in self.get_degree_centrality().items()])
+
     def get_in_degree_centrality(self, call=None):
         """
             Returns the in degree centrality of a given Call
@@ -486,6 +510,14 @@ class CallGraph():
         else:
             return degrees
 
+    @property
+    def median_in_degree_centrality(self):
+        return stat.median([in_degree_centrality for k, in_degree_centrality in self.get_in_degree_centrality().items()])
+
+    @property
+    def average_in_degree_centrality(self):
+        return stat.mean([in_degree_centrality for k, in_degree_centrality in self.get_in_degree_centrality().items()])
+
     def get_out_degree_centrality(self, call=None):
         """
             Returns the out degree centrality of a given Call
@@ -507,6 +539,14 @@ class CallGraph():
             return degrees[call]
         else:
             return degrees
+
+    @property
+    def median_out_degree_centrality(self):
+        return stat.median([out_degree_centrality for k, out_degree_centrality in self.get_out_degree_centrality().items()])
+
+    @property
+    def average_out_degree_centrality(self):
+        return stat.mean([out_degree_centrality for k, out_degree_centrality in self.get_out_degree_centrality().items()])
         
     def get_degree(self, call=None):
         """
@@ -527,6 +567,14 @@ class CallGraph():
         else:
             return self.call_graph.degree()
 
+    @property
+    def median_degree(self):
+        return stat.median([degree for k, degree in self.get_degree().items()])
+
+    @property
+    def average_degree(self):
+        return stat.mean([degree for k, degree in self.get_degree().items()])
+
     def get_in_degree(self, call=None):
         """
             Returns the in degree of a given Call.
@@ -546,6 +594,14 @@ class CallGraph():
         else:
             return self.call_graph.in_degree()
 
+    @property
+    def median_in_degree(self):
+        return stat.median([in_degree for k, in_degree in self.get_in_degree().items()])
+
+    @property
+    def average_in_degree(self):
+        return stat.mean([in_degree for k, in_degree in self.get_in_degree().items()])
+
     def get_out_degree(self, call=None):
         """
             Returns the out degree of a given Call.
@@ -564,6 +620,14 @@ class CallGraph():
             return self.call_graph.out_degree([call])[call]
         else:
             return self.call_graph.out_degree()
+
+    @property
+    def median_out_degree(self):
+        return stat.median([out_degree for k, out_degree in self.get_out_degree().items()])
+
+    @property
+    def average_out_degree(self):
+        return stat.mean([out_degree for k, out_degree in self.get_out_degree().items()])
 
     # This doesn't make much sense for directed graphs
     # def get_eccentricity(self, call=None):

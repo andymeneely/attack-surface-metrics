@@ -11,19 +11,54 @@ class TxtFormatter(BaseFormatter):
     def __init__(self, call_graph):
         super(TxtFormatter, self).__init__(call_graph)
 
+    def write_summary(self):
+        output = ''
+
+        output += "Attack surface report summary\n"
+        output += "=====================\n"
+        output += "\n"
+        output += "Source code directory: " + self.source_dir + "\n"
+        output += "Number of nodes: " + self.nodes_count + "\n"
+        output += "Number of edges: " + self.edges_count + "\n"
+        output += "Number of Entry Points: " + self.entry_points_count + "\n"
+        output += "Number of Exit Points: " + self.exit_points_count + "\n"
+        output += "Number of Execution Paths: " + self.execution_paths_count + "\n"
+        output += "Average Execution Path Length: " + self.average_execution_path_length + "\n"
+        output += "Median Execution Path Length: " + self.median_execution_path_length + "\n"
+        output += "Average Closeness: " + self.average_closeness + "\n"
+        output += "Median Closeness: " + self.median_closeness + "\n"
+        output += "Average Betweenness: " + self.average_betweenness + "\n"
+        output += "Median Betweenness: " + self.median_betweenness + "\n"
+        output += "Average Entry Point Clustering: " + self.entry_points_clustering + "\n"
+        output += "Average Exit Point Clustering: " + self.exit_points_clustering + "\n"
+        output += "Average Degree Centrality: " + self.average_degree_centrality + "\n"
+        output += "Median Degree Centrality: " + self.median_degree_centrality + "\n"
+        output += "Average In Degree Centrality: " + self.average_in_degree_centrality + "\n"
+        output += "Median In Degree Centrality: " + self.median_in_degree_centrality + "\n"
+        output += "Average Out Degree Centrality: " + self.average_out_degree_centrality + "\n"
+        output += "Median Out Degree Centrality: " + self.median_out_degree_centrality + "\n"
+        output += "Average Degree: " + self.average_degree + "\n"
+        output += "Median Degree: " + self.median_degree + "\n"
+        output += "Average In Degree: " + self.average_in_degree + "\n"
+        output += "Median In Degree: " + self.median_in_degree + "\n"
+        output += "Average Out Degree: " + self.average_out_degree + "\n"
+        output += "Median Out Degree: " + self.median_out_degree + "\n"
+
+        return output
+
     def write_output(self):
         output = ''
         
         output += "Attack surface report\n"
         output += "=====================\n"
-        output += ""
+        output += "\n"
         output += "Source code directory: " + self.source_dir + "\n"
         output += "\n"
 
         output += "Nodes\n"
         output += "=====================\n"
         output += "\n"
-        output += "Number of nodes: " + self.nodes_count+ "\n"
+        output += "Number of nodes: " + self.nodes_count + "\n"
         nodes = ', '.join([c.function_name for c in self.nodes])
         output += "Nodes:\n"
         output += nodes + "\n"
@@ -32,7 +67,7 @@ class TxtFormatter(BaseFormatter):
         output += "Edges\n"
         output += "=====================\n"
         output += "\n"
-        output += "Number of edges: " + self.edges_count+ "\n"
+        output += "Number of edges: " + self.edges_count + "\n"
         edges = '\n'.join([f.function_name + " ---> " + t.function_name for (f, t) in self.edges])
         output += "Edges:\n"
         output += edges + "\n"

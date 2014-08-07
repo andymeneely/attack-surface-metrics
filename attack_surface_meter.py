@@ -20,7 +20,11 @@ def main():
     call_graph = CallGraph(args.source_dir, args.reverse)
 
     formatter = formatters[args.format](call_graph)
-    print(formatter.write_output())
+
+    if args.summary:
+        print(formatter.write_summary())
+    else:
+        print(formatter.write_output())
 
 
 def parse_args():
@@ -43,6 +47,8 @@ def parse_args():
                         help="Output format of the calculated metrics.")
     parser.add_argument("-r", "--reverse", action="store_true",
                         help="When using cflow for call graph generation, use the reverse algorithm.")
+    parser.add_argument("-s", "--summary", action="store_true",
+                        help="Print only a summary of the report.")
 
     return parser.parse_args()
 

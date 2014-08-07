@@ -25,6 +25,17 @@ class BaseFormatter(object):
         """
         pass
 
+    def write_summary(self):
+        """
+
+        Args:
+            self
+
+        Returns:
+
+        """
+        pass
+
     @property
     def source_dir(self):
         """
@@ -159,6 +170,14 @@ class BaseFormatter(object):
         else:
             return self.call_graph.get_closeness().items()
 
+    @property
+    def average_closeness(self):
+        return str(self.call_graph.average_closeness)
+
+    @property
+    def median_closeness(self):
+        return str(self.call_graph.median_closeness)
+
     def get_betweenness(self, call=None):
         """
             If call is provided, returns a string representation of the betweenness of call. If not, returns a list
@@ -172,6 +191,14 @@ class BaseFormatter(object):
             return str(self.call_graph.get_betweenness(call))
         else:
             return self.call_graph.get_betweenness().items()
+
+    @property
+    def average_betweenness(self):
+        return str(self.call_graph.average_betweenness)
+
+    @property
+    def median_betweenness(self):
+        return str(self.call_graph.median_betweenness)
 
     def get_degree_centrality(self, call=None):
         """
@@ -187,6 +214,14 @@ class BaseFormatter(object):
         else:
             return self.call_graph.get_degree_centrality().items()
 
+    @property
+    def average_degree_centrality(self):
+        return str(self.call_graph.average_degree_centrality)
+
+    @property
+    def median_degree_centrality(self):
+        return str(self.call_graph.median_degree_centrality)
+
     def get_in_degree_centrality(self, call=None):
         """
             If call is provided, returns a string representation of the in degree centrality of call. If not,
@@ -200,6 +235,14 @@ class BaseFormatter(object):
             return str(self.call_graph.get_in_degree_centrality(call))
         else:
             return self.call_graph.get_in_degree_centrality().items()
+
+    @property
+    def average_in_degree_centrality(self):
+        return str(self.call_graph.average_in_degree_centrality)
+
+    @property
+    def median_in_degree_centrality(self):
+        return str(self.call_graph.median_in_degree_centrality)
 
     def get_out_degree_centrality(self, call=None):
         """
@@ -215,6 +258,14 @@ class BaseFormatter(object):
         else:
             return self.call_graph.get_out_degree_centrality().items()
 
+    @property
+    def average_out_degree_centrality(self):
+        return str(self.call_graph.average_out_degree_centrality)
+
+    @property
+    def median_out_degree_centrality(self):
+        return str(self.call_graph.median_out_degree_centrality)
+
     def get_degree(self, call=None):
         """
             If call is provided, returns a string representation of the degree of call. If not,
@@ -228,6 +279,14 @@ class BaseFormatter(object):
             return str(self.call_graph.get_degree(call))
         else:
             return self.call_graph.get_degree().items()
+
+    @property
+    def average_degree(self):
+        return str(self.call_graph.average_degree)
+
+    @property
+    def median_degree(self):
+        return str(self.call_graph.median_degree)
 
     def get_in_degree(self, call=None):
         """
@@ -243,6 +302,14 @@ class BaseFormatter(object):
         else:
             return self.call_graph.get_in_degree().items()
 
+    @property
+    def average_in_degree(self):
+        return str(self.call_graph.average_in_degree)
+
+    @property
+    def median_in_degree(self):
+        return str(self.call_graph.median_in_degree)
+
     def get_out_degree(self, call=None):
         """
             If call is provided, returns a string representation of the out degree of call. If not,
@@ -256,6 +323,14 @@ class BaseFormatter(object):
             return str(self.call_graph.get_out_degree(call))
         else:
             return self.call_graph.get_out_degree().items()
+
+    @property
+    def average_out_degree(self):
+        return str(self.call_graph.average_out_degree)
+
+    @property
+    def median_out_degree(self):
+        return str(self.call_graph.median_out_degree)
 
     def get_descendants_entry_point_ratio(self, call):
         """
