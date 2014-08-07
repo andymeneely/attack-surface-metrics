@@ -14,8 +14,8 @@ class HtmlFormatter(BaseFormatter):
         super(HtmlFormatter, self).__init__(call_graph)
 
     @staticmethod
-    def _get_template():
-        template_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "template.html")
+    def _get_template(template_file):
+        template_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), template_file)
         settings.configure()
 
         return Template(open(template_file, 'r').read())
@@ -30,8 +30,50 @@ class HtmlFormatter(BaseFormatter):
                  'function_signature': HtmlFormatter._get_signature}
                 for c in calls]
 
+    def write_summary(self):
+        template = HtmlFormatter._get_template("summary_template.html")
+
+        context = Context({
+            'directory': self.source_dir,
+
+            'nodes_count': self.nodes_count,
+            'edges_count': self.edges_count,
+
+            'entry_points_count': self.entry_points_count,
+            'exit_points_count': self.exit_points_count,
+
+            'execution_paths_count': self.execution_paths_count,
+            'execution_paths_average': self.average_execution_path_length,
+            'execution_paths_median': self.median_execution_path_length,
+
+            'average_closeness': self.average_closeness,
+            'median_closeness': self.median_closeness,
+
+            'average_betweenness': self.average_betweenness,
+            'median_betweenness': self.median_betweenness,
+
+            'entry_points_clustering': self.entry_points_clustering,
+            'exit_points_clustering': self.exit_points_clustering,
+
+            'average_degree_centrality': self.average_degree_centrality,
+            'median_degree_centrality': self.median_degree_centrality,
+            'average_in_degree_centrality': self.average_in_degree_centrality,
+            'median_in_degree_centrality': self.median_in_degree_centrality,
+            'average_out_degree_centrality': self.average_out_degree_centrality,
+            'median_out_degree_centrality': self.median_out_degree_centrality,
+
+            'average_degree': self.average_degree,
+            'median_degree': self.median_degree,
+            'average_in_degree': self.average_in_degree,
+            'median_in_degree': self.median_in_degree,
+            'average_out_degree': self.average_out_degree,
+            'median_out_degree': self.median_out_degree
+        })
+
+        return template.render(context)
+
     def write_output(self):
-        template = HtmlFormatter._get_template()
+        template = HtmlFormatter._get_template("template.html")
 
         context = Context({
             'directory': self.source_dir,
