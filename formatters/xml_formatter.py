@@ -14,6 +14,56 @@ class XmlFormatter(BaseFormatter):
     def __init__(self, call_graph):
         super(XmlFormatter, self).__init__(call_graph)
 
+    def write_summary(self):
+        root = XElement("attack_surface",
+                        {'directory': self.source_dir},
+
+                        XElement("nodes", {'count': self.nodes_count}),
+                        XElement("edges", {'count': self.edges_count}),
+                        XElement('entry_points', {'count': self.entry_points_count}),
+                        XElement('exit_points', {'count': self.exit_points_count}),
+                        XElement('execution_paths',
+                                 {
+                                     'count': self.execution_paths_count,
+                                     'average': self.average_execution_path_length,
+                                     'median': self.median_execution_path_length
+                                 }),
+                        XElement('closeness',
+                                 {
+                                     'average': self.average_closeness,
+                                     'median': self.median_closeness
+                                 }),
+                        XElement('betweenness',
+                                 {
+                                     'average': self.average_betweenness,
+                                     'median': self.median_betweenness
+                                 }),
+                        XElement('clustering',
+                                 {
+                                     'entry_points_clustering': self.entry_points_clustering,
+                                     'exit_points_clustering': self.exit_points_clustering
+                                 }),
+                        XElement('centrality',
+                                 {
+                                     'average_degree_centrality': self.average_degree_centrality,
+                                     'median_degree_centrality': self.median_degree_centrality,
+                                     'average_in_degree_centrality': self.average_in_degree_centrality,
+                                     'median_in_degree_centrality': self.median_in_degree_centrality,
+                                     'average_out_degree_centrality': self.average_out_degree_centrality,
+                                     'median_out_degree_centrality': self.median_out_degree_centrality
+                                 }),
+                        XElement('degree',
+                                 {
+                                     'average_degree': self.average_degree,
+                                     'median_degree': self.median_degree,
+                                     'average_in_degree': self.average_in_degree,
+                                     'median_in_degree': self.median_in_degree,
+                                     'average_out_degree': self.average_out_degree,
+                                     'median_out_degree': self.median_out_degree
+                                 }))
+
+        return self.prettyfy(root)
+
     def write_output(self):
         root = XElement("attack_surface",
                         {'directory': self.source_dir},
