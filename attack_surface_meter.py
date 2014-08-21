@@ -3,8 +3,7 @@ __author__ = 'kevin'
 import argparse
 
 from attacksurfacemeter import CallGraph
-from attacksurfacemeter import CflowLoader
-from attacksurfacemeter import GprofLoader
+from loaders import CflowLoader, GprofLoader
 from formatters import TxtFormatter, XmlFormatter, JsonFormatter, HtmlFormatter
 
 

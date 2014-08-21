@@ -4,8 +4,8 @@ import subprocess
 import os
 import networkx as nx
 
-from attacksurfacemeter.stack import Stack
-from attacksurfacemeter.call import Call
+from attacksurfacemeter import Stack
+from attacksurfacemeter import Call
 
 
 class CflowLoader():
