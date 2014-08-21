@@ -289,6 +289,26 @@ class CallGraphTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(expected_value, betweenness)
 
+    def test_median_betweenness(self):
+        # Arrange
+        expected_value = 0.0027472527472527475
+
+        # Act
+        betweenness = self.call_graph.median_betweenness
+
+        # Assert
+        self.assertEqual(expected_value, betweenness)
+
+    def test_average_betweenness(self):
+        # Arrange
+        expected_value = 0.005128205128205128
+
+        # Act
+        betweenness = self.call_graph.average_betweenness
+
+        # Assert
+        self.assertEqual(expected_value, betweenness)
+
     def test_all_closeness(self):
         # Arrange
         expected_content = {Call("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"): 0.0,
@@ -329,6 +349,26 @@ class CallGraphTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(expected_value, closeness)
 
+    def test_median_closeness(self):
+        # Arrange
+        expected_value = 0.07142857142857142
+
+        # Act
+        closeness = self.call_graph.median_closeness
+
+        # Assert
+        self.assertEqual(expected_value, closeness)
+
+    def test_average_closeness(self):
+        # Arrange
+        expected_value = 0.12694444444444444
+
+        # Act
+        closeness = self.call_graph.average_closeness
+
+        # Assert
+        self.assertEqual(expected_value, closeness)
+
     def test_all_degree_centrality(self):
         # Arrange
         expected_content = {Call("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"): 0.21428571428571427,
@@ -357,6 +397,26 @@ class CallGraphTestCase(unittest.TestCase):
         # Assert
         self.assertTrue(all_values_correct)
         self.assertEqual(15, len(degrees))
+        
+    def test_median_degree_centrality(self):
+        # Arrange
+        expected_value = 0.21428571428571427
+
+        # Act
+        degree_centrality = self.call_graph.median_degree_centrality
+
+        # Assert
+        self.assertEqual(expected_value, degree_centrality)
+
+    def test_average_degree_centrality(self):
+        # Arrange
+        expected_value = 0.20952380952380953
+
+        # Act
+        degree_centrality = self.call_graph.average_degree_centrality
+
+        # Assert
+        self.assertEqual(expected_value, degree_centrality)
 
     def test_all_in_degree_centrality(self):
         # Arrange
@@ -386,6 +446,26 @@ class CallGraphTestCase(unittest.TestCase):
         # Assert
         self.assertTrue(all_values_correct)
         self.assertEqual(15, len(degrees))
+        
+    def test_median_in_degree_centrality(self):
+        # Arrange
+        expected_value = 0.07142857142857142
+
+        # Act
+        in_degree_centrality = self.call_graph.median_in_degree_centrality
+
+        # Assert
+        self.assertEqual(expected_value, in_degree_centrality)
+
+    def test_average_in_degree_centrality(self):
+        # Arrange
+        expected_value = 0.10476190476190476
+
+        # Act
+        in_degree_centrality = self.call_graph.average_in_degree_centrality
+
+        # Assert
+        self.assertEqual(expected_value, in_degree_centrality)
 
     def test_all_out_degree_centrality(self):
         # Arrange
@@ -415,6 +495,26 @@ class CallGraphTestCase(unittest.TestCase):
         # Assert
         self.assertTrue(all_values_correct)
         self.assertEqual(15, len(degrees))
+        
+    def test_median_out_degree_centrality(self):
+        # Arrange
+        expected_value = 0.07142857142857142
+
+        # Act
+        out_degree_centrality = self.call_graph.median_out_degree_centrality
+
+        # Assert
+        self.assertEqual(expected_value, out_degree_centrality)
+
+    def test_average_out_degree_centrality(self):
+        # Arrange
+        expected_value = 0.10476190476190476
+
+        # Act
+        out_degree_centrality = self.call_graph.average_out_degree_centrality
+
+        # Assert
+        self.assertEqual(expected_value, out_degree_centrality)
 
     def test_node_specific_degree_centrality(self):
         # Arrange
@@ -477,6 +577,26 @@ class CallGraphTestCase(unittest.TestCase):
         # Assert
         self.assertTrue(all_values_correct)
         self.assertEqual(15, len(degrees))
+        
+    def test_median_degree(self):
+        # Arrange
+        expected_value = 3
+
+        # Act
+        degree = self.call_graph.median_degree
+
+        # Assert
+        self.assertEqual(expected_value, degree)
+
+    def test_average_degree(self):
+        # Arrange
+        expected_value = 2.933333333333333
+
+        # Act
+        degree = self.call_graph.average_degree
+
+        # Assert
+        self.assertEqual(expected_value, degree)
 
     def test_all_in_degree(self):
         # Arrange
@@ -506,6 +626,26 @@ class CallGraphTestCase(unittest.TestCase):
         # Assert
         self.assertTrue(all_values_correct)
         self.assertEqual(15, len(degrees))
+        
+    def test_median_in_degree(self):
+        # Arrange
+        expected_value = 1
+
+        # Act
+        in_degree = self.call_graph.median_in_degree
+
+        # Assert
+        self.assertEqual(expected_value, in_degree)
+
+    def test_average_in_degree(self):
+        # Arrange
+        expected_value = 1.4666666666666666
+
+        # Act
+        in_degree = self.call_graph.average_in_degree
+
+        # Assert
+        self.assertEqual(expected_value, in_degree)
 
     def test_all_out_degree(self):
         # Arrange
@@ -535,6 +675,26 @@ class CallGraphTestCase(unittest.TestCase):
         # Assert
         self.assertTrue(all_values_correct)
         self.assertEqual(15, len(degrees))
+
+    def test_median_out_degree(self):
+        # Arrange
+        expected_value = 1
+
+        # Act
+        out_degree = self.call_graph.median_out_degree
+
+        # Assert
+        self.assertEqual(expected_value, out_degree)
+
+    def test_average_out_degree(self):
+        # Arrange
+        expected_value = 1.4666666666666666
+
+        # Act
+        out_degree = self.call_graph.average_out_degree
+
+        # Assert
+        self.assertEqual(expected_value, out_degree)
 
     def test_node_specific_degree(self):
         # Arrange
