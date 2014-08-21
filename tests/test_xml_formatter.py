@@ -2,9 +2,12 @@ __author__ = 'kevin'
 
 import unittest
 import os
-from attacksurfacemeter import CallGraph, CflowLoader
-from tests.test_txt_formatter import TxtFormatterTestCase
+
+from attacksurfacemeter import CallGraph
+from loaders import CflowLoader
 from formatters import XmlFormatter
+
+from tests.test_txt_formatter import TxtFormatterTestCase
 
 
 class XmlFormatterTestCase(TxtFormatterTestCase):

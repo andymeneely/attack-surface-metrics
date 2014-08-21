@@ -2,8 +2,11 @@ __author__ = 'kevin'
 
 import unittest
 import os
+
+from attacksurfacemeter import CallGraph
+from loaders import CflowLoader
+
 from tests.test_call_graph import CallGraphTestCase
-from attacksurfacemeter import CallGraph, CflowLoader
 
 
 class CallGraphReverseTestCase(CallGraphTestCase):

@@ -2,7 +2,9 @@ __author__ = 'kevin'
 
 import unittest
 import os
-from attacksurfacemeter import Call, CallGraph, CflowLoader
+
+from attacksurfacemeter import Call, CallGraph
+from loaders import CflowLoader
 from formatters import TxtFormatter
 
 
