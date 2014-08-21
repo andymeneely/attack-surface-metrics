@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 
 from attacksurfacemeter.stack import Stack
 from attacksurfacemeter.call import Call
+from attacksurfacemeter.cflow_loader import CflowLoader
 
 
 class CallGraph():
@@ -37,85 +38,12 @@ class CallGraph():
                 A new instance of type CallGraph.
         """
         self.source_dir = source_dir
-        self.call_graph = nx.DiGraph()
+        self.call_graph = CflowLoader(self.source_dir, reverse).load_graph()
 
         self._entry_points = set()
         self._exit_points = set()
 
         self._execution_paths = list()
-
-        self._generate(reverse)
-
-    def _generate(self, is_reverse):
-        """
-            Generates the Call Graph as a networkx.DiGraph object.
-
-            Invokes the call grap generation software (cflow) and creates a networkx.DiGraph instance that represents
-            the analyzed source code's Call Graph.
-
-            Args:
-                is_reverse: Boolean specifying whether the graph generation software (cflow) should use the reverse
-                    algorithm.
-
-            Returns:
-                None
-        """
-        is_first_line = True
-        parent = Stack()
-
-        if os.path.isfile(self.source_dir):
-            raw_call_graph = open(self.source_dir)
-            readline = lambda: raw_call_graph.readline()
-
-        else:  # if os.path.isdir(self.source_dir):
-            raw_call_graph = self._exec_cflow(is_reverse)
-            readline = lambda: raw_call_graph.stdout.readline().decode(encoding='UTF-8')
-
-        while True:
-            line = readline()
-
-            if line == '':
-                break
-
-            current = Call(line)
-
-            if not is_first_line:
-                if current.level > previous.level:
-                    parent.push(previous)
-                elif current.level < previous.level:
-                    for t in range(previous.level - current.level):
-                        parent.pop()
-
-                if parent.top:
-                    if not is_reverse:
-                        self.call_graph.add_edge(parent.top, current)
-                    else:
-                        self.call_graph.add_edge(current, parent.top)
-
-            previous = current
-            is_first_line = False
-
-    def _exec_cflow(self, is_reverse):
-        """
-            Creates a subprocess.Popen instance representing the cflow call.
-        
-            Args:
-                is_reverse: Boolean specifying whether the graph generation software (cflow) should use the reverse
-                    algorithm.
-                
-            Returns:
-                A subprocess.Popen instance representing the cflow call.
-        """
-        if is_reverse:
-            cflow_exe = 'run_cflow_r.sh'
-        else:
-            cflow_exe = 'run_cflow.sh'
-
-        dirname = os.path.dirname(os.path.realpath(__file__))
-        proc = subprocess.Popen(['sh', os.path.join(dirname, cflow_exe), self.source_dir],
-                                stdout=subprocess.PIPE)
-
-        return proc
 
     def _select_nodes(self, predicate):
         """
@@ -194,16 +122,16 @@ class CallGraph():
         """
         return self.call_graph.edges()
 
-    def save_png(self):
-        """
-            Creates a graphical representation of the Call Graph and saves it.
-
-            The created image file is a png and is saved in the current directory with the name of the folder where
-            the source code for which the Call Graph was generated is located.
-        """
-        nx.draw(self.call_graph)
-        plt.savefig(os.path.basename(os.path.normpath(self.source_dir)) + ".png")
-        plt.clf()
+    # def save_png(self):
+    #     """
+    #         Creates a graphical representation of the Call Graph and saves it.
+    #
+    #         The created image file is a png and is saved in the current directory with the name of the folder where
+    #         the source code for which the Call Graph was generated is located.
+    #     """
+    #     nx.draw(self.call_graph)
+    #     plt.savefig(os.path.basename(os.path.normpath(self.source_dir)) + ".png")
+    #     plt.clf()
     
     def shortest_path(self, source, target):
         """
