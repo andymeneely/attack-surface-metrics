@@ -2,13 +2,15 @@ __author__ = 'kevin'
 
 import unittest
 import os
-from attacksurfacemeter import Call, CallGraph
+from attacksurfacemeter import Call, CallGraph, CflowLoader
 
 
 class CallGraphTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.call_graph = CallGraph(os.path.join(os.path.dirname(os.path.realpath(__file__)), "helloworld"))
+        self.call_graph = CallGraph(
+            CflowLoader(
+                os.path.join(os.path.dirname(os.path.realpath(__file__)), "helloworld")))
 
     def test_entry_points(self):
         # Arrange
@@ -19,7 +21,6 @@ class CallGraphTestCase(unittest.TestCase):
         entry_points_count = len(self.call_graph.entry_points)
         entry_points = self.call_graph.entry_points
         all_entry_points_encountered = all([c in entry_points for c in expected_content])
-
 
         # Assert
         self.assertEqual(expected_count, entry_points_count)

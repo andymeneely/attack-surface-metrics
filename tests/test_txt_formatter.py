@@ -2,7 +2,7 @@ __author__ = 'kevin'
 
 import unittest
 import os
-from attacksurfacemeter import Call, CallGraph
+from attacksurfacemeter import Call, CallGraph, CflowLoader
 from formatters import TxtFormatter
 
 
@@ -11,9 +11,8 @@ class TxtFormatterTestCase(unittest.TestCase):
     def setUp(self):
         self.formatter = TxtFormatter(
             CallGraph(
-                os.path.join(
-                    os.path.dirname(os.path.realpath(__file__)),
-                    "helloworld")))
+                CflowLoader(
+                    os.path.join(os.path.dirname(os.path.realpath(__file__)), "helloworld"))))
 
         self.formatter_output_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
@@ -37,10 +36,10 @@ class TxtFormatterTestCase(unittest.TestCase):
         expected_value = os.path.join(os.path.dirname(os.path.realpath(__file__)), "helloworld")
 
         # Act
-        source_dir = self.formatter.source_dir
+        source = self.formatter.source
 
         # Assert
-        self.assertEqual(expected_value, source_dir)
+        self.assertEqual(expected_value, source)
 
     def test_nodes_count(self):
         # Arrange
