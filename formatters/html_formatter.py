@@ -16,7 +16,9 @@ class HtmlFormatter(BaseFormatter):
     @staticmethod
     def _get_template(template_file):
         template_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), template_file)
-        settings.configure()
+
+        if not settings.configured:
+            settings.configure()
 
         return Template(open(template_file, 'r').read())
 
