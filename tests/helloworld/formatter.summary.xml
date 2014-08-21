@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<attack_surface directory="tests/helloworld">
+	<nodes count="15"/>
+	<edges count="22"/>
+	<entry_points count="1"/>
+	<exit_points count="6"/>
+	<execution_paths average="2.3333333333333335" count="3" median="2"/>
+	<closeness average="0.12694444444444444" median="0.07142857142857142"/>
+	<betweenness average="0.005128205128205128" median="0.0027472527472527475"/>
+	<clustering entry_points_clustering="0.0" exit_points_clustering="0.1111111111111111"/>
+	<centrality average_degree_centrality="0.20952380952380953" average_in_degree_centrality="0.10476190476190476" average_out_degree_centrality="0.10476190476190476" median_degree_centrality="0.21428571428571427" median_in_degree_centrality="0.07142857142857142" median_out_degree_centrality="0.07142857142857142"/>
+	<degree average_degree="2.933333333333333" average_in_degree="1.4666666666666666" average_out_degree="1.4666666666666666" median_degree="3" median_in_degree="1" median_out_degree="1"/>
+</attack_surface>
