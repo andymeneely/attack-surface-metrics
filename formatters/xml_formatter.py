@@ -16,7 +16,7 @@ class XmlFormatter(BaseFormatter):
 
     def write_summary(self):
         root = XElement("attack_surface",
-                        {'directory': self.source_dir},
+                        {'directory': self.source},
 
                         XElement("nodes", {'count': self.nodes_count}),
                         XElement("edges", {'count': self.edges_count}),
@@ -66,7 +66,7 @@ class XmlFormatter(BaseFormatter):
 
     def write_output(self):
         root = XElement("attack_surface",
-                        {'directory': self.source_dir},
+                        {'directory': self.source},
                         XElement("nodes",
                                  {'count': self.nodes_count},
                                  [self.call_to_xml(c,

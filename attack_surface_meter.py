@@ -3,6 +3,8 @@ __author__ = 'kevin'
 import argparse
 
 from attacksurfacemeter import CallGraph
+from attacksurfacemeter import CflowLoader
+from attacksurfacemeter import GprofLoader
 from formatters import TxtFormatter, XmlFormatter, JsonFormatter, HtmlFormatter
 
 
@@ -15,9 +17,16 @@ def main():
         'html': HtmlFormatter
     }
 
+    loaders = {
+        'cflow': CflowLoader,
+        'gprof': GprofLoader
+    }
+
     args = parse_args()
 
-    call_graph = CallGraph(args.source_dir, args.reverse)
+    loader = loaders[args.tool](args.source, args.reverse)
+
+    call_graph = CallGraph(loader)
 
     formatter = formatters[args.format](call_graph)
 
@@ -40,13 +49,15 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description="Analyzes a software's source code and reports various metrics related to it's attack surface.")
 
-    parser.add_argument("source_dir",
-                        help="Root directory of the source code to analyze or the text file that "
+    parser.add_argument("source",
+                        help="Can be either the root directory of the source code to analyze or the text file that "
                              "contains the raw call graph information.")
-    parser.add_argument("-f", "--format", choices=["txt", "html", "xml", "json"], default="txt",
-                        help="Output format of the calculated metrics.")
+    parser.add_argument("-t", "--tool", choices=["cflow", "gprof"], default="cflow",
+                        help="The call graph generation software to use.")
     parser.add_argument("-r", "--reverse", action="store_true",
                         help="When using cflow for call graph generation, use the reverse algorithm.")
+    parser.add_argument("-f", "--format", choices=["txt", "html", "xml", "json"], default="txt",
+                        help="Output format of the calculated metrics report.")
     parser.add_argument("-s", "--summary", action="store_true",
                         help="Print only a summary of the report.")
 

@@ -1,17 +1,12 @@
 __author__ = 'kevin'
 
-import subprocess
-import os
 import statistics as stat
 import networkx as nx
-import matplotlib.pyplot as plt
-
-from attacksurfacemeter.stack import Stack
-from attacksurfacemeter.call import Call
-from attacksurfacemeter.cflow_loader import CflowLoader
+# import matplotlib.pyplot as plt
 
 
 class CallGraph():
+    # TODO: Fix this documentation
     """
         Represents the Call Graph of a software system.
 
@@ -22,7 +17,8 @@ class CallGraph():
             call_graph: networkx.DiGraph. Internal representation of the graph data structure.
     """
 
-    def __init__(self, source_dir, reverse=False):
+    def __init__(self, loader):
+        # TODO: Fix this documentation
         """
             CallGraph constructor
 
@@ -37,8 +33,8 @@ class CallGraph():
             Returns:
                 A new instance of type CallGraph.
         """
-        self.source_dir = source_dir
-        self.call_graph = CflowLoader(self.source_dir, reverse).load_graph()
+        self.source = loader.source
+        self.call_graph = loader.load_call_graph()
 
         self._entry_points = set()
         self._exit_points = set()

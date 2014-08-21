@@ -17,7 +17,7 @@ class TxtFormatter(BaseFormatter):
         output += "Attack surface report summary\n"
         output += "=====================\n"
         output += "\n"
-        output += "Source code directory: " + self.source_dir + "\n"
+        output += "Source code directory: " + self.source + "\n"
         output += "Number of nodes: " + self.nodes_count + "\n"
         output += "Number of edges: " + self.edges_count + "\n"
         output += "Number of Entry Points: " + self.entry_points_count + "\n"
@@ -52,7 +52,7 @@ class TxtFormatter(BaseFormatter):
         output += "Attack surface report\n"
         output += "=====================\n"
         output += "\n"
-        output += "Source code directory: " + self.source_dir + "\n"
+        output += "Source code directory: " + self.source + "\n"
         output += "\n"
 
         output += "Nodes\n"

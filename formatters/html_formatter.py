@@ -34,7 +34,7 @@ class HtmlFormatter(BaseFormatter):
         template = HtmlFormatter._get_template("summary_template.html")
 
         context = Context({
-            'directory': self.source_dir,
+            'directory': self.source,
 
             'nodes_count': self.nodes_count,
             'edges_count': self.edges_count,
@@ -76,7 +76,7 @@ class HtmlFormatter(BaseFormatter):
         template = HtmlFormatter._get_template("template.html")
 
         context = Context({
-            'directory': self.source_dir,
+            'directory': self.source,
             'nodes_count': self.nodes_count,
             'nodes': [{
                           'function_name': c.function_name,

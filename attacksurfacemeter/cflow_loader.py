@@ -13,10 +13,10 @@ class CflowLoader():
 
     def __init__(self, source, reverse=False):
         """Constructor for CflowParser"""
-        self.source_dir = source
+        self.source = source
         self.is_reverse = reverse
 
-    def load_graph(self):
+    def load_call_graph(self):
         """
             Generates the Call Graph as a networkx.DiGraph object.
 
@@ -34,11 +34,11 @@ class CflowLoader():
         is_first_line = True
         parent = Stack()
 
-        if os.path.isfile(self.source_dir):
-            raw_call_graph = open(self.source_dir)
+        if os.path.isfile(self.source):
+            raw_call_graph = open(self.source)
             readline = lambda: raw_call_graph.readline()
 
-        else:  # if os.path.isdir(self.source_dir):
+        elif os.path.isdir(self.source):
             raw_call_graph = self._exec_cflow(self.is_reverse)
             readline = lambda: raw_call_graph.stdout.readline().decode(encoding='UTF-8')
 
@@ -85,7 +85,7 @@ class CflowLoader():
             cflow_exe = 'run_cflow.sh'
 
         dirname = os.path.dirname(os.path.realpath(__file__))
-        proc = subprocess.Popen(['sh', os.path.join(dirname, cflow_exe), self.source_dir],
+        proc = subprocess.Popen(['sh', os.path.join(dirname, cflow_exe), self.source],
                                 stdout=subprocess.PIPE)
 
         return proc

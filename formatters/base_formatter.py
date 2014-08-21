@@ -37,11 +37,12 @@ class BaseFormatter(object):
         pass
 
     @property
-    def source_dir(self):
+    def source(self):
+        # TODO: Fix this documentation
         """
             Returns a string representation of the root directory of the source code analyzed in the Call Graph.
         """
-        return self.call_graph.source_dir
+        return self.call_graph.source
 
     @property
     def nodes_count(self):
