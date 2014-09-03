@@ -1,7 +1,7 @@
 __author__ = 'kevin'
 
 import unittest
-from attacksurfacemeter import Stack
+from loaders import Stack
 
 
 class StackTestCase(unittest.TestCase):
