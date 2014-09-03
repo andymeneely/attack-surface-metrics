@@ -86,7 +86,5 @@ class CflowCall(Call):
 
             if match:
                 self._function_signature = match.group(0)
-            else:
-                self._function_signature = ""
 
         return self._function_signature
