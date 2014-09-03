@@ -81,9 +81,12 @@ class CflowCall(Call):
                 A String containing the function signature and file location of the call represented by this object
         """
         if not self._function_signature:
-            match = re.search(r"(<.+>)", self.function_info)
+            # match = re.search(r"(<.+>)", self.function_info)
+            match = re.search(r"(\w+\.c)", self.function_info)
 
             if match:
                 self._function_signature = match.group(0)
+            else:
+                self._function_signature = ""
 
         return self._function_signature
