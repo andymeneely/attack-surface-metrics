@@ -101,51 +101,6 @@ class Call():
         """
         return self.identity != other.identity
 
-    @property
-    def identity(self):
-        """
-            Returns a string that uniquely identifies this object.
-            
-            Returns:
-                A String that contains a unique representation of this object.
-        """
-        value = self.function_name
-
-        if self.function_signature:
-            value += ' ' + self.function_signature
-
-        return value
-
-    @property
-    def function_name(self):
-        """
-            Returns the name of the function call represented by this Call.
-
-            Returns:
-                A String containing the name of the function call represented by this object.
-        """
-        if not self._function_name:
-            self._function_name = re.search(r"(\w+\(\))", self.function_info).group(0)
-            self._function_name = self._function_name[:self._function_name.index('(')]
-
-        return self._function_name
-
-    @property
-    def function_signature(self):
-        """
-            Returns the signature and file location of the function call represented by this object.
-
-            Returns:
-                A String containing the function signature and file location of the call represented by this object
-        """
-        if not self._function_signature:
-            match = re.search(r"(<.+>)", self.function_info)
-
-            if match:
-                self._function_signature = match.group(0)
-
-        return self._function_signature
-
     def is_input_function(self):
         """
             Determines whether the function represented by this object is an input function.
@@ -173,9 +128,44 @@ class Call():
             Args:
                 function_set: A List of Strings that contain the names of the functions to test if this object is
                     present in.
-                
+
             Returns:
                 A Boolean that states whether the function represented by this object is contained in a given
                 function set.
         """
         return self.function_name in function_set
+
+    @property
+    def identity(self):
+        """
+            Returns a string that uniquely identifies this object.
+
+            Returns:
+                A String that contains a unique representation of this object.
+        """
+        value = self.function_name
+
+        if self.function_signature:
+            value += ' ' + self.function_signature
+
+        return value
+
+    @property
+    def function_name(self):
+        """
+            Returns the name of the function call represented by this Call.
+
+            Returns:
+                A String containing the name of the function call represented by this object.
+        """
+        pass
+
+    @property
+    def function_signature(self):
+        """
+            Returns the signature and file location of the function call represented by this object.
+
+            Returns:
+                A String containing the function signature and file location of the call represented by this object
+        """
+        pass

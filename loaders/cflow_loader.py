@@ -4,8 +4,8 @@ import subprocess
 import os
 import networkx as nx
 
-from attacksurfacemeter import Stack
-from attacksurfacemeter import Call
+from loaders import Stack
+from attacksurfacemeter import CflowCall
 
 
 class CflowLoader():
@@ -48,7 +48,7 @@ class CflowLoader():
             if line == '':
                 break
 
-            current = Call(line)
+            current = CflowCall(line)
 
             if not is_first_line:
                 if current.level > previous.level:
