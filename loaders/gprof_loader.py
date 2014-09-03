@@ -17,22 +17,6 @@ class GprofLoader():
         """Constructor for GprofLoader"""
         self.source = source
 
-        # re.search(r"(\[.+\]) ( +) ((\d+\.\d+) ( +)){3} (\d+) ( +) (\w+) (\(.+\)) (\[.+\])", line).group(0)
-        # line = text.split("-----------------------------------------------")[10].split("\n")[-1]
-        # list = [l for l in open("tests/helloworld/gprof-call-graph.txt")]
-        # text = "".join(list)
-
-        # >>> import re
-        # >>> for l in text.split("-----------------------------------------------")[10].split("\n"):
-        # ...     if re.search(r"(\[.+\]) ( +) ((\d+\.\d+) ( +)){3} (\d+) ( +) (\w+) (\(.+\)) (\[.+\])", l):
-        # ...         l
-
-        # >>> text.split("-----------------------------------------------")[10].split("\n").index(line)
-
-        # re.search(r"(\[.+\]) ( +) ((\d+\.\d+) ( +)){3} (\d+) ( +) (\w+) (\[.+\])", line).group(0)
-
-        pass
-
     def is_entry_line(self, line):
         return re.search(r"^\[.+\].*", line)
 
