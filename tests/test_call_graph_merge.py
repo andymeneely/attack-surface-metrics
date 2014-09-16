@@ -8,7 +8,7 @@ from loaders import CflowLoader
 from loaders import GprofLoader
 
 
-class CallGraphFileTestCase(unittest.TestCase):
+class CallGraphMergeTestCase(unittest.TestCase):
     def setUp(self):
         cflow_loader = CflowLoader(
             os.path.join(os.path.dirname(os.path.realpath(__file__)), "helloworld/callgraph.txt"),
