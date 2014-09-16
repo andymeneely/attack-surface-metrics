@@ -3,7 +3,7 @@ __author__ = 'kevin'
 import statistics as stat
 import networkx as nx
 # import matplotlib.pyplot as plt
-from attacksurfacemeter import Call
+# from attacksurfacemeter import Call
 
 
 class CallGraph():
@@ -48,36 +48,47 @@ class CallGraph():
 
         graph = nx.DiGraph()
 
-        # edges_from_cflow = [(Call(e[0].function_name, e[0].function_signature),
-        #                      Call(e[1].function_name, e[1].function_signature))
-        #                     for e in cflow_call_graph.edges]
-        #
-        # edges_from_gprof = [(Call(e[0].function_name, e[0].function_signature),
-        #                      Call(e[1].function_name, e[1].function_signature))
-        #                     for e in gprof_call_graph.edges]
-
-        # graph.add_edges_from(edges_from_cflow)
-        # graph.add_edges_from(edges_from_gprof)
-
-        # nodes = cflow_call_graph.nodes
-        # nodes_to_add = [n for n in gprof_call_graph.nodes if n not in nodes]
-        # nodes.extend(nodes_to_add)
-
+        # Combine both collections an eliminate duplicates
         nodes = set(cflow_call_graph.nodes + gprof_call_graph.nodes)
 
-        for e in cflow_call_graph.edges:
-            caller = [n for n in nodes if e[0] == n][0]
-            callee = [n for n in nodes if e[1] == n][0]
+        CallGraph._populate_graph(graph, nodes, cflow_call_graph.edges)
+        CallGraph._populate_graph(graph, nodes, gprof_call_graph.edges)
 
-            graph.add_edge(caller, callee)
-
-        for e in gprof_call_graph.edges:
-            caller = [n for n in nodes if e[0] == n][0]
-            callee = [n for n in nodes if e[1] == n][0]
-
-            graph.add_edge(caller, callee)
+        # for e in cflow_call_graph.edges:
+        #     caller, callee = CallGraph._find_edge_in_nodes(e, nodes)
+        #     graph.add_edge(caller, callee)
+        #
+        # for e in gprof_call_graph.edges:
+        #     caller, callee = CallGraph._find_edge_in_nodes(e, nodes)
+        #     graph.add_edge(caller, callee)
 
         return cls(source, graph)
+
+    @staticmethod
+    def _find_edge_in_nodes(edge, nodes):
+
+        caller = [n for n in nodes if edge[0] == n][0]
+        callee = [n for n in nodes if edge[1] == n][0]
+
+        # caller = None
+        # callee = None
+        #
+        # for n in nodes:
+        #     if caller is None or callee is None:
+        #         if n == edge[0]:
+        #             caller = n
+        #         if n == edge[1]:
+        #             callee = n
+        #     else:
+        #         break
+
+        return caller, callee
+
+    @staticmethod
+    def _populate_graph(graph, nodes, edges):
+        for e in edges:
+            caller, callee = CallGraph._find_edge_in_nodes(e, nodes)
+            graph.add_edge(caller, callee)
 
     @classmethod
     def from_loader(cls, loader):
