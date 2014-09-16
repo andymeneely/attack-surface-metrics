@@ -23,9 +23,16 @@ def main():
 
     args = parse_args()
 
-    loader = loaders[args.tool](args.source, args.reverse)
+    if args.tool == "all":
+        cflow_loader = loaders['cflow'](args.cflowfile, args.reverse)
+        gprof_loader = loaders['gprof'](args.gproffile, args.reverse)
 
-    call_graph = CallGraph(loader)
+        call_graph = CallGraph.from_merge(CallGraph.from_loader(cflow_loader),
+                                          CallGraph.from_loader(gprof_loader))
+    else:
+        loader = loaders[args.tool](args.source, args.reverse)
+
+        call_graph = CallGraph.from_loader(loader)
 
     formatter = formatters[args.format](call_graph)
 
@@ -48,11 +55,15 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description="Analyzes a software's source code and reports various metrics related to it's attack surface.")
 
-    parser.add_argument("source",
+    parser.add_argument("-src", "--source",
                         help="Can be either the root directory of the source code to analyze or the text file that "
                              "contains the raw call graph information.")
-    parser.add_argument("-t", "--tool", choices=["cflow", "gprof"], default="cflow",
-                        help="The call graph generation software to use.")
+    parser.add_argument("-cf", "--cflowfile",
+                        help="The file containing cflow's output.")
+    parser.add_argument("-gf", "--gproffile",
+                        help="The file containing gprof's output")
+    parser.add_argument("-t", "--tool", choices=["cflow", "gprof", "all"], default="cflow",
+                        help="The call graph generation software to use. Choose both to use both tools.")
     parser.add_argument("-r", "--reverse", action="store_true",
                         help="When using cflow for call graph generation, use the reverse algorithm.")
     parser.add_argument("-f", "--format", choices=["txt", "html", "xml", "json"], default="txt",

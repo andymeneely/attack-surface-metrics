@@ -1,7 +1,5 @@
 __author__ = 'kevin'
 
-import re
-
 
 class Call():
     """
@@ -37,7 +35,7 @@ class Call():
 
     indent = "    "
 
-    def __init__(self, cflow_line):
+    def __init__(self, name, signature):
         """
             Call constructor.
         
@@ -50,13 +48,8 @@ class Call():
             Returns:
                 A new instance of Call.
         """
-        split_line = cflow_line.split(Call.indent)
-
-        self.function_info = split_line[-1].strip()
-        self.level = len(split_line) - 1
-
-        self._function_name = None
-        self._function_signature = None
+        self._function_name = name
+        self._function_signature = signature
 
     def __str__(self):
         """
@@ -87,7 +80,11 @@ class Call():
                 A Boolean that says whether this instance can be considered equal to other.
         """
         # return hash(self) == hash(other)
-        return self.identity == other.identity
+
+        if self.function_signature and other.function_signature:
+            return self.identity == other.identity
+        else:
+            return self.function_name == other.function_name
 
     def __ne__(self, other):
         """
@@ -158,7 +155,7 @@ class Call():
             Returns:
                 A String containing the name of the function call represented by this object.
         """
-        pass
+        return self._function_name
 
     @property
     def function_signature(self):
@@ -168,4 +165,4 @@ class Call():
             Returns:
                 A String containing the function signature and file location of the call represented by this object
         """
-        pass
+        return self._function_signature
