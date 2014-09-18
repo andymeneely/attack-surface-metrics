@@ -9,15 +9,13 @@ class CflowCall(Call):
     """
         Represents a function/method call in a source code.
     
-        Encapsulates parsing logic for the call graph generation software's (cflow) output.
+        Encapsulates parsing logic for cflow's output.
         For each new line of output, an instance of this class is created.
 
         Attributes:
-            function_info: A String containing one single line of raw information output from the call
-                graph generation software.
-            level: The level of indentation the line represented by this instance has in the call
-                graph generation software's output. Used to determine the caller/callee relationship
-                between two calls.
+            function_info: A String containing one single line of raw information output from cflow.
+            level: The level of indentation the line represented by this instance has in cflow's output.
+                Used to determine the caller/callee relationship between two calls.
     """
 
     indent = "    "
@@ -42,21 +40,6 @@ class CflowCall(Call):
 
         self._function_name = None
         self._function_signature = None
-
-    @property
-    def identity(self):
-        """
-            Returns a string that uniquely identifies this object.
-            
-            Returns:
-                A String that contains a unique representation of this object.
-        """
-        value = self.function_name
-
-        if self.function_signature:
-            value += ' ' + self.function_signature
-
-        return value
 
     @property
     def function_name(self):

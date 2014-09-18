@@ -6,16 +6,21 @@ from attacksurfacemeter.call import Call
 
 
 class GprofCall(Call):
-    """"""
+    """
+        Represents a function/method call in a source code.
+
+        Encapsulates parsing logic for gprof's output.
+        For each new line of output, an instance of this class is created.
+    """
     def __init__(self, line):
         """
             Call constructor.
 
-            Receives a line of cflow's output and parses it for some key information such as indent level,
-            function name, signature and the point where it's defined.
+            Receives a line of gprof's output and parses it for some key information such as
+            function name and the point where it's defined.
 
             Args:
-                cflow_line: A String containing a single line of cflow's output.
+                line: A String containing one single line of raw information output from gprof.
 
             Returns:
                 A new instance of Call.
@@ -46,6 +51,15 @@ class GprofCall(Call):
                         print("exploto")
 
     def get_file_name(self, text_fragment):
+        """
+            Obtains the name of the file where the function represented is defined.
+
+            Args:
+               text_fragment: A String containing a fragment from a line of gprof's output.
+
+            Returns:
+                A String containing the name of the file where the function detailed in the fragment is defined.
+        """
         match = re.search(r"(\w+\.c)", text_fragment)
 
         if match:

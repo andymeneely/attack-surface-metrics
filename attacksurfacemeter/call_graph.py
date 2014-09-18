@@ -7,29 +7,26 @@ import networkx as nx
 
 
 class CallGraph():
-    # TODO: Fix this documentation
     """
         Represents the Call Graph of a software system.
 
         Encapsulates a graph data structure where each node is a method/function call.
 
         Attributes:
-            source_dir: String that contains the root directory of the source code that this Call Graph represents.
+            source: String that contains where the source code that this Call Graph represents comes from.
             call_graph: networkx.DiGraph. Internal representation of the graph data structure.
     """
 
     def __init__(self, source, graph):
-        # TODO: Fix this documentation
         """
             CallGraph constructor
 
             Instantiates a new CallGraph object and generates a networkx.DiGraph representing the Call Graph of
-            the source code located an the supplied source_dir.
+            a program.
 
             Args:
-                source_dir: String that contains the root directory of the source code to generate the Call Graph for.
-                reverse: Boolean specifying whether the graph generation software (cflow) should use the reverse
-                    algorithm.
+                source: String that contains where the source code that this Call Graph represents comes from.
+                graph: networkx.DiGraph. Internal representation of the graph data structure.
 
             Returns:
                 A new instance of type CallGraph.
@@ -43,7 +40,30 @@ class CallGraph():
         self._execution_paths = list()
 
     @classmethod
+    def from_loader(cls, loader):
+        """
+            Constructs a CallGraph using the given loader.
+
+            Args:
+                loader: The BaseLoader derived class used for generation of the call graph.
+
+            Returns:
+                A new CallGraph instance containing the data obtained from the loader.
+        """
+        return cls(loader.source, loader.load_call_graph())
+
+    @classmethod
     def from_merge(cls, cflow_call_graph, gprof_call_graph):
+        """
+            Constructs a CallGraph from a merge of two existing CallGraphs.
+
+            Args:
+                cflow_call_graph: A CallGraph instance that represents a call graph generated using output from cflow.
+                gprof_call_graph: A CallGraph instance that represents a call graph generated using output from gprof.
+
+            Returns:
+                A new CallGraph instance that contains the nodes and edges from both suppplied call graphs.
+        """
         source = "cflow: {0} - gprof: {1}".format(cflow_call_graph.source, gprof_call_graph.source)
 
         graph = nx.DiGraph()
@@ -69,7 +89,17 @@ class CallGraph():
 
     @staticmethod
     def _find_edge_in_nodes(edge, nodes):
+        """
+            Finds the caller and callee of a given call graph edge in a given set of nodes.
 
+            Args:
+                edge: A 2-tuple containing a caller and a callee that are going to be searched for. The first element
+                    of the tuple is the caller and the second element is the callee.
+
+            Returns:
+                caller: A Call object from the given set of nodes that equals to the caller in the given edge.
+                callee: A Call object from the given set of nodes that equals to the callee in the given edge.
+        """
         caller = [n for n in nodes if edge[0] == n][0]
         callee = [n for n in nodes if edge[1] == n][0]
 
@@ -94,13 +124,17 @@ class CallGraph():
 
     @staticmethod
     def _populate_graph(graph, nodes, edges):
+        """
+            Populates an empty graph with the given nodes and edges.
+
+            Args:
+                graph: A networkx.DiGraph instance with no nodes.
+                nodes: A collection of Call objects that will serve as nodes for the call graph.
+                edges: A collection of 2-tuples of Call that will serve as edges for the call graph.
+        """
         for e in edges:
             caller, callee = CallGraph._find_edge_in_nodes(e, nodes)
             graph.add_edge(caller, callee)
-
-    @classmethod
-    def from_loader(cls, loader):
-        return cls(loader.source, loader.load_call_graph())
 
     def _select_nodes(self, predicate):
         """

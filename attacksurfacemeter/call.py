@@ -5,15 +5,7 @@ class Call():
     """
         Represents a function/method call in a source code.
     
-        Encapsulates parsing logic for the call graph generation software's (cflow) output.
-        For each new line of output, an instance of this class is created.
-
-        Attributes:
-            function_info: A String containing one single line of raw information output from the call
-                graph generation software.
-            level: The level of indentation the line represented by this instance has in the call
-                graph generation software's output. Used to determine the caller/callee relationship
-                between two calls.
+        Provides a basic functionality for derived classes.
     """
 
     input_functions = ['canonicalize_file_name', 'catgets', 'confstr', 'ctermid', 'ctermid', 'cuserid', 'dgettext',
@@ -43,7 +35,9 @@ class Call():
             function name, signature and the point where it's defined.
         
             Args:
-                cflow_line: A String containing a single line of cflow's output.
+                name: A String containing the name of the function this Call represents.
+                signature: A piece of information associated with the function this Call represents. In the current
+                    implementation it is the name of the file where the function is defined.
                 
             Returns:
                 A new instance of Call.

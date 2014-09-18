@@ -24,6 +24,9 @@ def main():
     args = parse_args()
 
     if args.tool == "all":
+        # TODO: Maybe it would be useful to have some sort of factory method here because
+        # of different constructor signatures for different loaders. I.e. gprof doesn't
+        # support a reverse option so its not necessary to send it as a parameter.
         cflow_loader = loaders['cflow'](args.cflowfile, args.reverse)
         gprof_loader = loaders['gprof'](args.gproffile, args.reverse)
 
