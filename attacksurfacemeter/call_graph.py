@@ -49,7 +49,10 @@ class CallGraph():
         graph = nx.DiGraph()
 
         # Combine both collections an eliminate duplicates
-        nodes = set(cflow_call_graph.nodes + gprof_call_graph.nodes)
+        nodes = cflow_call_graph.nodes
+        nodes.extend([n for n in gprof_call_graph.nodes if n not in nodes])
+
+        # nodes = set(cflow_call_graph.nodes + gprof_call_graph.nodes)
 
         CallGraph._populate_graph(graph, nodes, cflow_call_graph.edges)
         CallGraph._populate_graph(graph, nodes, gprof_call_graph.edges)
@@ -81,6 +84,11 @@ class CallGraph():
         #             callee = n
         #     else:
         #         break
+
+        # nodes_in_edge = [n for n in nodes if n == edge[0] or n == edge[1]]
+        #
+        # caller = [n for n in nodes_in_edge if edge[0] == n][0]
+        # callee = [n for n in nodes_in_edge if edge[1] == n][0]
 
         return caller, callee
 
