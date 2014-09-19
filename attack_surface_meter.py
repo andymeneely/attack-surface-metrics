@@ -33,7 +33,12 @@ def main():
         call_graph = CallGraph.from_merge(CallGraph.from_loader(cflow_loader),
                                           CallGraph.from_loader(gprof_loader))
     else:
-        loader = loaders[args.tool](args.source, args.reverse)
+        input_file = {
+            'cflow': args.cflowfile,
+            'gprof': args.gproffile
+        }
+
+        loader = loaders[args.tool](input_file[args.tool], args.reverse)
 
         call_graph = CallGraph.from_loader(loader)
 
