@@ -1,345 +1,586 @@
-Attack surface report
+Attack Surface Report
 =====================
 
-Source code directory: /home/kevin/Documents/attack-surface-metrics/tests/helloworld
+Source: tests/helloworld/callgraph.txt
 
-Nodes
+Calls
 =====================
+Count: 15
 
-Number of nodes: 15
-Nodes:
-recursive_b, malloc, functionPtr, GreeterSayHi, recursive_a, new_Greeter, greet_b, GreeterSayHiTo, puts, addInt, greet_a, main, greet, gets, printf
+    Call: greet_a
+    Closeness: 0.22321428571428573
+    Betweenness: 0.008241758241758242
+    Degree Centrality: 0.21428571428571427
+    In Degree Centrality: 0.07142857142857142
+    Out Degree Centrality: 0.14285714285714285
+    Degree: 3
+    In Degree: 1
+    Out Degree: 2
+    Descendant Entry Points Ratio: 0.0
+    Descendant Exit Points Ratio: 0.6
+    Ancestor Entry Points Ratio: 0.0
+    Ancestor Exit Points Ratio: 1.0
+    
+    
+        Descendant Exit Points:
+        Count: 3
+
+        
+            greet
+        
+            recursive_b
+        
+            recursive_a
+        
+    
+    
+    
+        Ancestor Exit Points:
+        Count: 1
+
+        
+            main
+        
+    
+    ---------------------
+
+    Call: malloc
+    Closeness: 0.0
+    Betweenness: 0.0
+    Degree Centrality: 0.07142857142857142
+    In Degree Centrality: 0.07142857142857142
+    Out Degree Centrality: 0.0
+    Degree: 1
+    In Degree: 1
+    Out Degree: 0
+    Descendant Entry Points Ratio: 0.0
+    Descendant Exit Points Ratio: 0.0
+    Ancestor Entry Points Ratio: 0.0
+    Ancestor Exit Points Ratio: 0.5
+    
+    
+    
+    
+        Ancestor Exit Points:
+        Count: 1
+
+        
+            main
+        
+    
+    ---------------------
+
+    Call: main
+    Closeness: 0.6666666666666666
+    Betweenness: 0.0
+    Degree Centrality: 0.5
+    In Degree Centrality: 0.0
+    Out Degree Centrality: 0.5
+    Degree: 7
+    In Degree: 0
+    Out Degree: 7
+    Descendant Entry Points Ratio: 0.07142857142857142
+    Descendant Exit Points Ratio: 0.35714285714285715
+    Ancestor Entry Points Ratio: 0.0
+    Ancestor Exit Points Ratio: 0.0
+    
+        Descendant Entry Points:
+        Count: 1
+
+        
+            greet_b
+        
+    
+    
+        Descendant Exit Points:
+        Count: 5
+
+        
+            GreeterSayHiTo
+        
+            recursive_b
+        
+            greet
+        
+            GreeterSayHi
+        
+            recursive_a
+        
+    
+    
+    
+    ---------------------
+
+    Call: recursive_b
+    Closeness: 0.14285714285714285
+    Betweenness: 0.01098901098901099
+    Degree Centrality: 0.2857142857142857
+    In Degree Centrality: 0.14285714285714285
+    Out Degree Centrality: 0.14285714285714285
+    Degree: 4
+    In Degree: 2
+    Out Degree: 2
+    Descendant Entry Points Ratio: 0.0
+    Descendant Exit Points Ratio: 0.5
+    Ancestor Entry Points Ratio: 0.25
+    Ancestor Exit Points Ratio: 0.5
+    
+    
+        Descendant Exit Points:
+        Count: 1
+
+        
+            recursive_a
+        
+    
+    
+    
+        Ancestor Exit Points:
+        Count: 2
+
+        
+            main
+        
+            recursive_a
+        
+    
+    ---------------------
+
+    Call: greet_b
+    Closeness: 0.2857142857142857
+    Betweenness: 0.013736263736263738
+    Degree Centrality: 0.2857142857142857
+    In Degree Centrality: 0.07142857142857142
+    Out Degree Centrality: 0.21428571428571427
+    Degree: 4
+    In Degree: 1
+    Out Degree: 3
+    Descendant Entry Points Ratio: 0.0
+    Descendant Exit Points Ratio: 0.5
+    Ancestor Entry Points Ratio: 0.0
+    Ancestor Exit Points Ratio: 1.0
+    
+    
+        Descendant Exit Points:
+        Count: 3
+
+        
+            recursive_b
+        
+            greet
+        
+            recursive_a
+        
+    
+    
+    
+        Ancestor Exit Points:
+        Count: 1
+
+        
+            main
+        
+    
+    ---------------------
+
+    Call: printf
+    Closeness: 0.0
+    Betweenness: 0.0
+    Degree Centrality: 0.3571428571428571
+    In Degree Centrality: 0.3571428571428571
+    Out Degree Centrality: 0.0
+    Degree: 5
+    In Degree: 5
+    Out Degree: 0
+    Descendant Entry Points Ratio: 0.0
+    Descendant Exit Points Ratio: 0.0
+    Ancestor Entry Points Ratio: 0.125
+    Ancestor Exit Points Ratio: 0.625
+    
+    
+    
+    
+        Ancestor Exit Points:
+        Count: 5
+
+        
+            GreeterSayHiTo
+        
+            main
+        
+            recursive_b
+        
+            GreeterSayHi
+        
+            recursive_a
+        
+    
+    ---------------------
+
+    Call: GreeterSayHiTo
+    Closeness: 0.07142857142857142
+    Betweenness: 0.0027472527472527475
+    Degree Centrality: 0.14285714285714285
+    In Degree Centrality: 0.07142857142857142
+    Out Degree Centrality: 0.07142857142857142
+    Degree: 2
+    In Degree: 1
+    Out Degree: 1
+    Descendant Entry Points Ratio: 0.0
+    Descendant Exit Points Ratio: 0.0
+    Ancestor Entry Points Ratio: 0.0
+    Ancestor Exit Points Ratio: 0.5
+    
+    
+    
+    
+        Ancestor Exit Points:
+        Count: 1
+
+        
+            main
+        
+    
+    ---------------------
+
+    Call: greet
+    Closeness: 0.07142857142857142
+    Betweenness: 0.01098901098901099
+    Degree Centrality: 0.21428571428571427
+    In Degree Centrality: 0.14285714285714285
+    Out Degree Centrality: 0.07142857142857142
+    Degree: 3
+    In Degree: 2
+    Out Degree: 1
+    Descendant Entry Points Ratio: 0.0
+    Descendant Exit Points Ratio: 0.0
+    Ancestor Entry Points Ratio: 0.3333333333333333
+    Ancestor Exit Points Ratio: 0.3333333333333333
+    
+    
+    
+    
+        Ancestor Exit Points:
+        Count: 1
+
+        
+            main
+        
+    
+    ---------------------
+
+    Call: GreeterSayHi
+    Closeness: 0.07142857142857142
+    Betweenness: 0.0027472527472527475
+    Degree Centrality: 0.14285714285714285
+    In Degree Centrality: 0.07142857142857142
+    Out Degree Centrality: 0.07142857142857142
+    Degree: 2
+    In Degree: 1
+    Out Degree: 1
+    Descendant Entry Points Ratio: 0.0
+    Descendant Exit Points Ratio: 0.0
+    Ancestor Entry Points Ratio: 0.0
+    Ancestor Exit Points Ratio: 0.5
+    
+    
+    
+    
+        Ancestor Exit Points:
+        Count: 1
+
+        
+            main
+        
+    
+    ---------------------
+
+    Call: addInt
+    Closeness: 0.0
+    Betweenness: 0.0
+    Degree Centrality: 0.07142857142857142
+    In Degree Centrality: 0.07142857142857142
+    Out Degree Centrality: 0.0
+    Degree: 1
+    In Degree: 1
+    Out Degree: 0
+    Descendant Entry Points Ratio: 0.0
+    Descendant Exit Points Ratio: 0.0
+    Ancestor Entry Points Ratio: 0.0
+    Ancestor Exit Points Ratio: 1.0
+    
+    
+    
+    
+        Ancestor Exit Points:
+        Count: 1
+
+        
+            main
+        
+    
+    ---------------------
+
+    Call: new_Greeter
+    Closeness: 0.22857142857142856
+    Betweenness: 0.016483516483516484
+    Degree Centrality: 0.2857142857142857
+    In Degree Centrality: 0.07142857142857142
+    Out Degree Centrality: 0.21428571428571427
+    Degree: 4
+    In Degree: 1
+    Out Degree: 3
+    Descendant Entry Points Ratio: 0.0
+    Descendant Exit Points Ratio: 0.5
+    Ancestor Entry Points Ratio: 0.0
+    Ancestor Exit Points Ratio: 1.0
+    
+    
+        Descendant Exit Points:
+        Count: 2
+
+        
+            GreeterSayHi
+        
+            GreeterSayHiTo
+        
+    
+    
+    
+        Ancestor Exit Points:
+        Count: 1
+
+        
+            main
+        
+    
+    ---------------------
+
+    Call: puts
+    Closeness: 0.0
+    Betweenness: 0.0
+    Degree Centrality: 0.14285714285714285
+    In Degree Centrality: 0.14285714285714285
+    Out Degree Centrality: 0.0
+    Degree: 2
+    In Degree: 2
+    Out Degree: 0
+    Descendant Entry Points Ratio: 0.0
+    Descendant Exit Points Ratio: 0.0
+    Ancestor Entry Points Ratio: 0.25
+    Ancestor Exit Points Ratio: 0.5
+    
+    
+    
+    
+        Ancestor Exit Points:
+        Count: 2
+
+        
+            main
+        
+            greet
+        
+    
+    ---------------------
+
+    Call: recursive_a
+    Closeness: 0.14285714285714285
+    Betweenness: 0.01098901098901099
+    Degree Centrality: 0.2857142857142857
+    In Degree Centrality: 0.14285714285714285
+    Out Degree Centrality: 0.14285714285714285
+    Degree: 4
+    In Degree: 2
+    Out Degree: 2
+    Descendant Entry Points Ratio: 0.0
+    Descendant Exit Points Ratio: 0.5
+    Ancestor Entry Points Ratio: 0.25
+    Ancestor Exit Points Ratio: 0.5
+    
+    
+        Descendant Exit Points:
+        Count: 1
+
+        
+            recursive_b
+        
+    
+    
+    
+        Ancestor Exit Points:
+        Count: 2
+
+        
+            main
+        
+            recursive_b
+        
+    
+    ---------------------
+
+    Call: gets
+    Closeness: 0.0
+    Betweenness: 0.0
+    Degree Centrality: 0.07142857142857142
+    In Degree Centrality: 0.07142857142857142
+    Out Degree Centrality: 0.0
+    Degree: 1
+    In Degree: 1
+    Out Degree: 0
+    Descendant Entry Points Ratio: 0.0
+    Descendant Exit Points Ratio: 0.0
+    Ancestor Entry Points Ratio: 0.5
+    Ancestor Exit Points Ratio: 0.5
+    
+    
+    
+    
+        Ancestor Exit Points:
+        Count: 1
+
+        
+            main
+        
+    
+    ---------------------
+
+    Call: functionPtr
+    Closeness: 0.0
+    Betweenness: 0.0
+    Degree Centrality: 0.07142857142857142
+    In Degree Centrality: 0.07142857142857142
+    Out Degree Centrality: 0.0
+    Degree: 1
+    In Degree: 1
+    Out Degree: 0
+    Descendant Entry Points Ratio: 0.0
+    Descendant Exit Points Ratio: 0.0
+    Ancestor Entry Points Ratio: 0.0
+    Ancestor Exit Points Ratio: 1.0
+    
+    
+    
+    
+        Ancestor Exit Points:
+        Count: 1
+
+        
+            main
+        
+    
+    ---------------------
+
 
 Edges
 =====================
+Count: 22
 
-Number of edges: 22
-Edges:
-recursive_b ---> recursive_a
-recursive_b ---> printf
-GreeterSayHi ---> printf
-recursive_a ---> recursive_b
-recursive_a ---> printf
-new_Greeter ---> GreeterSayHi
-new_Greeter ---> GreeterSayHiTo
-new_Greeter ---> malloc
-greet_b ---> recursive_b
-greet_b ---> greet
-greet_b ---> gets
-GreeterSayHiTo ---> printf
-greet_a ---> greet
-greet_a ---> recursive_a
-main ---> printf
-main ---> addInt
-main ---> functionPtr
-main ---> greet_a
-main ---> greet_b
-main ---> new_Greeter
-main ---> puts
-greet ---> puts
+
+    greet_a --> greet
+
+    greet_a --> recursive_a
+
+    main --> greet_a
+
+    main --> addInt
+
+    main --> puts
+
+    main --> printf
+
+    main --> greet_b
+
+    main --> new_Greeter
+
+    main --> functionPtr
+
+    recursive_b --> recursive_a
+
+    recursive_b --> printf
+
+    greet_b --> gets
+
+    greet_b --> greet
+
+    greet_b --> recursive_b
+
+    GreeterSayHiTo --> printf
+
+    greet --> puts
+
+    GreeterSayHi --> printf
+
+    new_Greeter --> malloc
+
+    new_Greeter --> GreeterSayHi
+
+    new_Greeter --> GreeterSayHiTo
+
+    recursive_a --> recursive_b
+
+    recursive_a --> printf
+
 
 Entry Points
 =====================
+Count: 1
 
-Number of Entry Points: 1
 
-Entry Points:
-greet_b
+    greet_b
+
 
 Exit Points
 =====================
+Count: 6
 
-Number of Exit Points: 6
 
-Exit Points:
-recursive_b, GreeterSayHi, recursive_a, GreeterSayHiTo, main, greet
+    main
 
-Execution Paths
-=====================
+    recursive_b
 
-Number of Execution Paths: 3
+    GreeterSayHiTo
 
-Execution Paths:
-greet_b ---> recursive_b
-greet_b ---> recursive_b ---> recursive_a
-greet_b ---> greet
+    greet
 
-Average Execution Path Length: 2.3333333333333335
-Median Execution Path Length: 2
+    GreeterSayHi
 
-Closeness
-=====================
+    recursive_a
 
-recursive_b: 0.14285714285714285
-malloc: 0.0
-functionPtr: 0.0
-GreeterSayHi: 0.07142857142857142
-recursive_a: 0.14285714285714285
-new_Greeter: 0.22857142857142856
-puts: 0.0
-GreeterSayHiTo: 0.07142857142857142
-main: 0.6666666666666666
-addInt: 0.0
-greet_a: 0.22321428571428573
-greet_b: 0.2857142857142857
-greet: 0.07142857142857142
-gets: 0.0
-printf: 0.0
-
-Betweenness
-=====================
-
-recursive_b: 0.01098901098901099
-malloc: 0.0
-functionPtr: 0.0
-GreeterSayHi: 0.0027472527472527475
-recursive_a: 0.01098901098901099
-new_Greeter: 0.016483516483516484
-puts: 0.0
-GreeterSayHiTo: 0.0027472527472527475
-main: 0.0
-addInt: 0.0
-greet_a: 0.008241758241758242
-greet_b: 0.013736263736263738
-greet: 0.01098901098901099
-gets: 0.0
-printf: 0.0
 
 Clustering
 =====================
+Entry Points Clustering: 0.0
+Exit Points Clustering: 0.1111111111111111
 
-Average Entry Point Clustering: 0.0
-Average Exit Point Clustering: 0.1111111111111111
-
-Degree Centrality
+Execution Paths
 =====================
+Count: 3
+Average: 2.3333333333333335
+Median: 2
 
-recursive_b: 0.2857142857142857
-malloc: 0.07142857142857142
-functionPtr: 0.07142857142857142
-GreeterSayHi: 0.14285714285714285
-recursive_a: 0.2857142857142857
-new_Greeter: 0.2857142857142857
-puts: 0.14285714285714285
-GreeterSayHiTo: 0.14285714285714285
-main: 0.5
-addInt: 0.07142857142857142
-greet_a: 0.21428571428571427
-greet_b: 0.2857142857142857
-greet: 0.21428571428571427
-gets: 0.07142857142857142
-printf: 0.3571428571428571
+    Length: 2
+    
+           greet_b
+    
+           recursive_b
+    
+    ---------------------
 
-In Degree Centrality
-=====================
+    Length: 2
+    
+           greet_b
+    
+           greet
+    
+    ---------------------
 
-recursive_b: 0.14285714285714285
-malloc: 0.07142857142857142
-functionPtr: 0.07142857142857142
-GreeterSayHi: 0.07142857142857142
-recursive_a: 0.14285714285714285
-new_Greeter: 0.07142857142857142
-puts: 0.14285714285714285
-GreeterSayHiTo: 0.07142857142857142
-main: 0.0
-addInt: 0.07142857142857142
-greet_a: 0.07142857142857142
-greet_b: 0.07142857142857142
-greet: 0.14285714285714285
-gets: 0.07142857142857142
-printf: 0.3571428571428571
-
-Out Degree Centrality
-=====================
-
-recursive_b: 0.14285714285714285
-malloc: 0.0
-functionPtr: 0.0
-GreeterSayHi: 0.07142857142857142
-recursive_a: 0.14285714285714285
-new_Greeter: 0.21428571428571427
-puts: 0.0
-GreeterSayHiTo: 0.07142857142857142
-main: 0.5
-addInt: 0.0
-greet_a: 0.14285714285714285
-greet_b: 0.21428571428571427
-greet: 0.07142857142857142
-gets: 0.0
-printf: 0.0
-
-Degree
-=====================
-
-recursive_b: 4
-malloc: 1
-functionPtr: 1
-GreeterSayHi: 2
-recursive_a: 4
-new_Greeter: 4
-puts: 2
-GreeterSayHiTo: 2
-main: 7
-addInt: 1
-greet_a: 3
-greet_b: 4
-greet: 3
-gets: 1
-printf: 5
-
-In Degree
-=====================
-
-recursive_b: 2
-malloc: 1
-functionPtr: 1
-GreeterSayHi: 1
-recursive_a: 2
-new_Greeter: 1
-puts: 2
-GreeterSayHiTo: 1
-main: 0
-addInt: 1
-greet_a: 1
-greet_b: 1
-greet: 2
-gets: 1
-printf: 5
-
-Out Degree
-=====================
-
-recursive_b: 2
-malloc: 0
-functionPtr: 0
-GreeterSayHi: 1
-recursive_a: 2
-new_Greeter: 3
-puts: 0
-GreeterSayHiTo: 1
-main: 7
-addInt: 0
-greet_a: 2
-greet_b: 3
-greet: 1
-gets: 0
-printf: 0
-
-Descendant Entry Points
-=====================
-
-main: greet_b
-
-Descendant Exit Points
-=====================
-
-recursive_b: recursive_a
-recursive_a: recursive_b
-new_Greeter: GreeterSayHi, GreeterSayHiTo
-greet_b: recursive_b, recursive_a, greet
-greet_a: recursive_b, greet, recursive_a
-main: recursive_b, recursive_a, GreeterSayHi, GreeterSayHiTo, greet
-
-Ancestor Entry Points
-=====================
-
-recursive_b: greet_b
-recursive_a: greet_b
-puts: greet_b
-greet: greet_b
-gets: greet_b
-printf: greet_b
-
-Ancestor Exit Points
-=====================
-
-recursive_b: main, recursive_a
-malloc: main
-functionPtr: main
-GreeterSayHi: main
-recursive_a: recursive_b, main
-new_Greeter: main
-greet_b: main
-GreeterSayHiTo: main
-puts: main, greet
-addInt: main
-greet_a: main
-greet: main
-gets: main
-printf: recursive_b, recursive_a, GreeterSayHiTo, GreeterSayHi, main
-
-Descendant Entry Points Ratio
-=====================
-
-recursive_b: 0.0
-malloc: 0.0
-functionPtr: 0.0
-GreeterSayHi: 0.0
-recursive_a: 0.0
-new_Greeter: 0.0
-greet_b: 0.0
-GreeterSayHiTo: 0.0
-puts: 0.0
-addInt: 0.0
-greet_a: 0.0
-main: 0.07142857142857142
-greet: 0.0
-gets: 0.0
-printf: 0.0
-
-Descendant Exit Points Ratio
-=====================
-
-recursive_b: 0.5
-malloc: 0.0
-functionPtr: 0.0
-GreeterSayHi: 0.0
-recursive_a: 0.5
-new_Greeter: 0.5
-greet_b: 0.5
-GreeterSayHiTo: 0.0
-puts: 0.0
-addInt: 0.0
-greet_a: 0.6
-main: 0.35714285714285715
-greet: 0.0
-gets: 0.0
-printf: 0.0
-
-Ancestor Entry Points Ratio
-=====================
-
-recursive_b: 0.25
-malloc: 0.0
-functionPtr: 0.0
-GreeterSayHi: 0.0
-recursive_a: 0.25
-new_Greeter: 0.0
-greet_b: 0.0
-GreeterSayHiTo: 0.0
-puts: 0.25
-addInt: 0.0
-greet_a: 0.0
-main: 0.0
-greet: 0.3333333333333333
-gets: 0.5
-printf: 0.125
-
-Ancestor Exit Points Ratio
-=====================
-
-recursive_b: 0.5
-malloc: 0.5
-functionPtr: 1.0
-GreeterSayHi: 0.5
-recursive_a: 0.5
-new_Greeter: 1.0
-greet_b: 1.0
-GreeterSayHiTo: 0.5
-puts: 0.5
-addInt: 1.0
-greet_a: 1.0
-main: 0.0
-greet: 0.3333333333333333
-gets: 0.5
-printf: 0.625
+    Length: 3
+    
+           greet_b
+    
+           recursive_b
+    
+           recursive_a
+    
+    ---------------------

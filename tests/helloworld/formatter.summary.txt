@@ -1,26 +1,34 @@
-Attack surface report summary
+Attack Surface Report
+(Summary)
 =====================
+Source: tests/helloworld/callgraph.txt
 
-Source code directory: tests/helloworld
-Number of nodes: 15
-Number of edges: 22
-Number of Entry Points: 1
-Number of Exit Points: 6
-Number of Execution Paths: 3
-Average Execution Path Length: 2.3333333333333335
-Median Execution Path Length: 2
+Nodes Count: 15
+Edges Count: 22
+
+Entry Points Count: 1
+Exit Points Count: 6
+
+Execution Paths Count: 3
+Execution Paths Average: 2.3333333333333335
+Execution Paths Median: 2
+
 Average Closeness: 0.12694444444444444
 Median Closeness: 0.07142857142857142
+
 Average Betweenness: 0.005128205128205128
 Median Betweenness: 0.0027472527472527475
-Average Entry Point Clustering: 0.0
-Average Exit Point Clustering: 0.1111111111111111
+
+Entry Points Clustering: 0.0
+Exit Points Clustering: 0.1111111111111111
+
 Average Degree Centrality: 0.20952380952380953
 Median Degree Centrality: 0.21428571428571427
 Average In Degree Centrality: 0.10476190476190476
 Median In Degree Centrality: 0.07142857142857142
 Average Out Degree Centrality: 0.10476190476190476
 Median Out Degree Centrality: 0.07142857142857142
+
 Average Degree: 2.933333333333333
 Median Degree: 3
 Average In Degree: 1.4666666666666666
