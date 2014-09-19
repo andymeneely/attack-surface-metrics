@@ -1,5 +1,10 @@
 __author__ = 'kevin'
 
+import os
+
+from django.template import Template, Context
+from django.conf import settings
+
 
 class BaseFormatter(object):
     """
@@ -18,22 +23,133 @@ class BaseFormatter(object):
         """
         self.call_graph = call_graph
 
-    def write_output(self):
-        """
-            When overridden by other classes, generates a text representation of the
-            metrics extracted from a Call Graph.
-        """
-        pass
+    @staticmethod
+    def _get_template(template_file):
+        template_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), template_file)
+
+        if not settings.configured:
+            settings.configure()
+
+        return Template(open(template_file, 'r').read())
+
+    @staticmethod
+    def _get_signature(call):
+        return '' if call.function_signature is None else call.function_signature
+
+    @staticmethod
+    def _transform_calls(calls):
+        return [{'function_name': c.function_name,
+                 'function_signature': BaseFormatter._get_signature}
+                for c in calls]
 
     def write_summary(self):
-        """
+        template = BaseFormatter._get_template(self.summary_template_file)
 
-        Args:
-            self
+        context = Context({
+            'directory': self.source,
 
-        Returns:
+            'nodes_count': self.nodes_count,
+            'edges_count': self.edges_count,
 
-        """
+            'entry_points_count': self.entry_points_count,
+            'exit_points_count': self.exit_points_count,
+
+            'execution_paths_count': self.execution_paths_count,
+            'execution_paths_average': self.average_execution_path_length,
+            'execution_paths_median': self.median_execution_path_length,
+
+            'average_closeness': self.average_closeness,
+            'median_closeness': self.median_closeness,
+
+            'average_betweenness': self.average_betweenness,
+            'median_betweenness': self.median_betweenness,
+
+            'entry_points_clustering': self.entry_points_clustering,
+            'exit_points_clustering': self.exit_points_clustering,
+
+            'average_degree_centrality': self.average_degree_centrality,
+            'median_degree_centrality': self.median_degree_centrality,
+            'average_in_degree_centrality': self.average_in_degree_centrality,
+            'median_in_degree_centrality': self.median_in_degree_centrality,
+            'average_out_degree_centrality': self.average_out_degree_centrality,
+            'median_out_degree_centrality': self.median_out_degree_centrality,
+
+            'average_degree': self.average_degree,
+            'median_degree': self.median_degree,
+            'average_in_degree': self.average_in_degree,
+            'median_in_degree': self.median_in_degree,
+            'average_out_degree': self.average_out_degree,
+            'median_out_degree': self.median_out_degree
+        })
+
+        return template.render(context)
+
+    def write_output(self):
+        template = BaseFormatter._get_template(self.template_file)
+
+        context = Context({
+            'directory': self.source,
+            'nodes_count': self.nodes_count,
+            'nodes': [{
+                          'function_name': c.function_name,
+                          'function_signature': BaseFormatter._get_signature(c),
+                          'closeness': self.get_closeness(c),
+                          'betweenness': self.get_betweenness(c),
+                          'degree_centrality': self.get_degree_centrality(c),
+                          'in_degree_centrality': self.get_in_degree_centrality(c),
+                          'out_degree_centrality': self.get_out_degree_centrality(c),
+                          'degree': self.get_degree(c),
+                          'in_degree': self.get_in_degree(c),
+                          'out_degree': self.get_out_degree(c),
+                          'descendant_entry_points_ratio': self.get_descendants_entry_point_ratio(c),
+                          'descendant_exit_points_ratio': self.get_descendants_exit_point_ratio(c),
+                          'ancestor_entry_points_ratio': self.get_ancestors_entry_point_ratio(c),
+                          'ancestor_exit_points_ratio': self.get_ancestors_exit_point_ratio(c),
+
+                          'descendant_entry_points_count': self.get_descendant_entry_points_count(c),
+                          'descendant_entry_points': BaseFormatter._transform_calls(self.get_descendant_entry_points(c)),
+
+                          'descendant_exit_points_count': self.get_descendant_exit_points_count(c),
+                          'descendant_exit_points': BaseFormatter._transform_calls(self.get_descendant_exit_points(c)),
+
+                          'ancestor_entry_points_count': self.get_ancestor_entry_points_count(c),
+                          'ancestor_entry_points': BaseFormatter._transform_calls(self.get_ancestor_entry_points(c)),
+
+                          'ancestor_exit_points_count': self.get_ancestor_exit_points_count(c),
+                          'ancestor_exit_points': BaseFormatter._transform_calls(self.get_ancestor_exit_points(c))}
+                      for c in self.nodes],
+
+            'edges_count': self.edges_count,
+            'edges': [{'from': f.function_name,
+                       'to': t.function_name}
+                      for (f, t) in self.edges],
+
+            'entry_points_count': self.entry_points_count,
+            'entry_points': BaseFormatter._transform_calls(self.entry_points),
+
+            'exit_points_count': self.exit_points_count,
+            'exit_points': BaseFormatter._transform_calls(self.exit_points),
+
+            'entry_points_clustering': self.entry_points_clustering,
+            'exit_points_clustering': self.exit_points_clustering,
+
+            'execution_paths_count': self.execution_paths_count,
+            'execution_paths_average': self.average_execution_path_length,
+            'execution_paths_median': self.median_execution_path_length,
+
+            'execution_paths': [{'length': str(len(xp)),
+                                 'path': BaseFormatter._transform_calls(xp)}
+                                for xp in self.execution_paths]
+        })
+
+        return template.render(context)
+    
+    @property
+    def template_file(self):
+        pass
+    
+    @property
+    def summary_template_file(self):
         pass
 
     @property

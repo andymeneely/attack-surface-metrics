@@ -1,0 +1,37 @@
+Attack Surface Report
+(Summary)
+=====================
+Source: {{ directory }}
+
+Nodes Count: {{ nodes_count }}
+Edges Count: {{ edges_count }}
+
+Entry Points Count: {{ entry_points_count }}
+Exit Points Count: {{ exit_points_count }}
+
+Execution Paths Count: {{ execution_paths_count }}
+Execution Paths Average: {{ execution_paths_average }}
+Execution Paths Median: {{ execution_paths_median }}
+
+Average Closeness: {{ average_closeness }}
+Median Closeness: {{ median_closeness }}
+
+Average Betweenness: {{ average_betweenness }}
+Median Betweenness: {{ median_betweenness }}
+
+Entry Points Clustering: {{ entry_points_clustering }}
+Exit Points Clustering: {{ exit_points_clustering }}
+
+Average Degree Centrality: {{ average_degree_centrality }}
+Median Degree Centrality: {{ median_degree_centrality }}
+Average In Degree Centrality: {{ average_in_degree_centrality }}
+Median In Degree Centrality: {{ median_in_degree_centrality }}
+Average Out Degree Centrality: {{ average_out_degree_centrality }}
+Median Out Degree Centrality: {{ median_out_degree_centrality }}
+
+Average Degree: {{ average_degree }}
+Median Degree: {{ median_degree }}
+Average In Degree: {{ average_in_degree }}
+Median In Degree: {{ median_in_degree }}
+Average Out Degree: {{ average_out_degree }}
+Median Out Degree: {{ median_out_degree }}

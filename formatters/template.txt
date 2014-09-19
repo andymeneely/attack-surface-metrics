@@ -1,0 +1,98 @@
+Attack Surface Report
+=====================
+
+Source: {{ directory }}
+
+Calls
+=====================
+Count: {{ nodes_count }}
+{% for call in nodes %}
+    Call: {{ call.function_name }}
+    Closeness: {{ call.closeness }}
+    Betweenness: {{ call.betweenness }}
+    Degree Centrality: {{ call.degree_centrality }}
+    In Degree Centrality: {{ call.in_degree_centrality }}
+    Out Degree Centrality: {{ call.out_degree_centrality }}
+    Degree: {{ call.degree }}
+    In Degree: {{ call.in_degree }}
+    Out Degree: {{ call.out_degree }}
+    Descendant Entry Points Ratio: {{ call.descendant_entry_points_ratio }}
+    Descendant Exit Points Ratio: {{ call.descendant_exit_points_ratio }}
+    Ancestor Entry Points Ratio: {{ call.ancestor_entry_points_ratio }}
+    Ancestor Exit Points Ratio: {{ call.ancestor_exit_points_ratio }}
+    {% if call.descendant_entry_points %}
+        Descendant Entry Points:
+        Count: {{ call.descendant_entry_points_count }}
+
+        {% for entry_point in call.descendant_entry_points %}
+            {{ entry_point.function_name }}
+        {% endfor %}
+    {% endif %}
+    {% if call.descendant_exit_points %}
+        Descendant Exit Points:
+        Count: {{ call.descendant_exit_points_count }}
+
+        {% for exit_point in call.descendant_exit_points %}
+            {{ exit_point.function_name }}
+        {% endfor %}
+    {% endif %}
+    {% if ancestor_entry_points %}
+        Ancestor Entry Points:
+        Count: {{ call.ancestor_entry_points_count }}
+
+        {% for entry_point in call.ancestor_entry_points %}
+            {{ entry_point.function_name }}
+        {% endfor %}
+    {% endif %}
+    {% if call.ancestor_exit_points %}
+        Ancestor Exit Points:
+        Count: {{ call.ancestor_exit_points_count }}
+
+        {% for exit_point in call.ancestor_exit_points %}
+            {{ exit_point.function_name }}
+        {% endfor %}
+    {% endif %}
+    ---------------------
+{% endfor %}
+
+Edges
+=====================
+Count: {{ edges_count }}
+
+{% for edge in edges %}
+    {{ edge.from }} --> {{ edge.to }}
+{% endfor %}
+
+Entry Points
+=====================
+Count: {{ entry_points_count }}
+
+{% for entry_point in entry_points %}
+    {{ entry_point.function_name }}
+{% endfor %}
+
+Exit Points
+=====================
+Count: {{ exit_points_count }}
+
+{% for exit_point in exit_points %}
+    {{ exit_point.function_name }}
+{% endfor %}
+
+Clustering
+=====================
+Entry Points Clustering: {{ entry_points_clustering }}
+Exit Points Clustering: {{ exit_points_clustering }}
+
+Execution Paths
+=====================
+Count: {{ execution_paths_count }}
+Average: {{ execution_paths_average }}
+Median: {{ execution_paths_median }}
+{% for execution_path in execution_paths %}
+    Length: {{ execution_path.length }}
+    {% for path_call in execution_path.path %}
+           {{ path_call.function_name }}
+    {% endfor %}
+    ---------------------
+{% endfor %}
