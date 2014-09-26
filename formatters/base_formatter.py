@@ -39,7 +39,7 @@ class BaseFormatter(object):
     @staticmethod
     def _transform_calls(calls):
         return [{'function_name': c.function_name,
-                 'function_signature': BaseFormatter._get_signature}
+                 'function_signature': BaseFormatter._get_signature(c)}
                 for c in calls]
 
     def write_summary(self):
