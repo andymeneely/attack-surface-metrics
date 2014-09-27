@@ -69,21 +69,24 @@ class CallGraph():
         graph = nx.DiGraph()
 
         # Combine both collections an eliminate duplicates
-        nodes = cflow_call_graph.nodes
-        nodes.extend([n for n in gprof_call_graph.nodes if n not in nodes])
+        # nodes = cflow_call_graph.nodes
+        # nodes.extend([n for n in gprof_call_graph.nodes if n not in nodes])
 
-        # nodes = set(cflow_call_graph.nodes + gprof_call_graph.nodes)
+        # CallGraph._populate_graph(graph, nodes, cflow_call_graph.edges)
+        # CallGraph._populate_graph(graph, nodes, gprof_call_graph.edges)
 
-        CallGraph._populate_graph(graph, nodes, cflow_call_graph.edges)
+        nodes = gprof_call_graph.nodes
+
+        lib_calls = [n for n in cflow_call_graph.nodes
+                     if not any([e for e in cflow_call_graph.edges if e[0] == n])
+                     and n not in gprof_call_graph.nodes]
+
+        nodes.extend(lib_calls)
+
+        lib_call_edges = [e for e in cflow_call_graph.edges if e[0] in lib_calls or e[1] in lib_calls]
+
         CallGraph._populate_graph(graph, nodes, gprof_call_graph.edges)
-
-        # for e in cflow_call_graph.edges:
-        #     caller, callee = CallGraph._find_edge_in_nodes(e, nodes)
-        #     graph.add_edge(caller, callee)
-        #
-        # for e in gprof_call_graph.edges:
-        #     caller, callee = CallGraph._find_edge_in_nodes(e, nodes)
-        #     graph.add_edge(caller, callee)
+        CallGraph._populate_graph(graph, nodes, lib_call_edges)
 
         return cls(source, graph)
 
