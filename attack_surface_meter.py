@@ -33,9 +33,11 @@ def main():
         call_graph = CallGraph.from_merge(CallGraph.from_loader(cflow_loader),
                                           CallGraph.from_loader(gprof_loader))
     else:
+        if_not_none = lambda arg: arg if arg is not None else args.source
+
         input_file = {
-            'cflow': args.cflowfile,
-            'gprof': args.gproffile
+            'cflow': if_not_none(args.cflowfile),  # args.cflowfile if args.cflowfile is not None else args.source,
+            'gprof': if_not_none(args.gproffile)  # args.gproffile if args.gproffile is not None else args.source,
         }
 
         loader = loaders[args.tool](input_file[args.tool], args.reverse)
@@ -65,7 +67,8 @@ def parse_args():
 
     parser.add_argument("-src", "--source",
                         help="Can be either the root directory of the source code to analyze or the text file that "
-                             "contains the raw call graph information.")
+                             "contains the raw call graph information. Use this when specifying only one call graph "
+                             "generation tool with the -t (--tool) option.")
     parser.add_argument("-cf", "--cflowfile",
                         help="The file containing cflow's output.")
     parser.add_argument("-gf", "--gproffile",
