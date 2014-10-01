@@ -13,10 +13,10 @@ from tests.test_txt_formatter import TxtFormatterTestCase
 class HtmlFormatterTestCase(TxtFormatterTestCase):
 
     def setUp(self):
-        self.formatter = HtmlFormatter(
-            CallGraph.from_loader(
-                CflowLoader(
-                    os.path.join(os.path.dirname(os.path.realpath(__file__)), "helloworld"))))
+        self.call_graph = CallGraph.from_loader(
+            CflowLoader(os.path.join(os.path.dirname(os.path.realpath(__file__)), "helloworld")))
+
+        self.formatter = HtmlFormatter(self.call_graph)
 
         self.formatter_output_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),

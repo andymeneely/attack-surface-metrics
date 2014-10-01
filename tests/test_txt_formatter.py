@@ -11,10 +11,10 @@ from formatters import TxtFormatter
 class TxtFormatterTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.formatter = TxtFormatter(
-            CallGraph.from_loader(
-                CflowLoader(
-                    os.path.join(os.path.dirname(os.path.realpath(__file__)), "helloworld"))))
+        self.call_graph = CallGraph.from_loader(
+            CflowLoader(os.path.join(os.path.dirname(os.path.realpath(__file__)), "helloworld")))
+
+        self.formatter = TxtFormatter(self.call_graph)
 
         self.formatter_output_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
@@ -73,21 +73,7 @@ class TxtFormatterTestCase(unittest.TestCase):
     def test_nodes(self):
         # Arrange
         expected_count = 15
-        expected_content = [CflowCall("printf()"),
-                            CflowCall("puts()"),
-                            CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"),
-                            CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"),
-                            CflowCall("gets()"),
-                            CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"),
-                            CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"),
-                            CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"),
-                            CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"),
-                            CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"),
-                            CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"),
-                            CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"),
-                            CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"),
-                            CflowCall("malloc()"),
-                            CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:")]
+        expected_content = self.call_graph.nodes
 
         # Act
         nodes = self.formatter.nodes
@@ -115,7 +101,7 @@ class TxtFormatterTestCase(unittest.TestCase):
                             (CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"), CflowCall("puts()")),
                             (CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R): [see 7]")),
                             (CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>: [see 3]")),
-                            (CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), CflowCall("gets()")),
+                            (CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), CflowCall("scanf()")),
                             (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>")),
                             (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:")),
                             (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")),
@@ -246,21 +232,7 @@ class TxtFormatterTestCase(unittest.TestCase):
     def test_all_closeness(self):
         # Arrange
         expected_count = 15
-        expected_content = [(CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"), 0.0),
-                            (CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), 0.22857142857142856),
-                            (CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"), 0.14285714285714285),
-                            (CflowCall("gets()"), 0.0),
-                            (CflowCall("puts()"), 0.0),
-                            (CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"), 0.22321428571428573),
-                            (CflowCall("printf()"), 0.0),
-                            (CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"), 0.07142857142857142),
-                            (CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"), 0.0),
-                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), 0.6666666666666666),
-                            (CflowCall("malloc()"), 0.0),
-                            (CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"), 0.07142857142857142),
-                            (CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), 0.2857142857142857),
-                            (CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"), 0.07142857142857142),
-                            (CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"), 0.14285714285714285)]
+        expected_content = self.call_graph.get_closeness().items()
 
         # Act
         closenesses = self.formatter.get_closeness()
@@ -283,21 +255,7 @@ class TxtFormatterTestCase(unittest.TestCase):
 
     def test_all_betweenness(self):
         # Arrange
-        expected_content = [(CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"), 0.0),
-                            (CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), 0.016483516483516484),
-                            (CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"), 0.01098901098901099),
-                            (CflowCall("gets()"), 0.0),
-                            (CflowCall("puts()"), 0.0),
-                            (CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"), 0.008241758241758242),
-                            (CflowCall("printf()"), 0.0),
-                            (CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"), 0.0027472527472527475),
-                            (CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"), 0.0),
-                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), 0.0),
-                            (CflowCall("malloc()"), 0.0),
-                            (CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"), 0.01098901098901099),
-                            (CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), 0.013736263736263738),
-                            (CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"), 0.0027472527472527475),
-                            (CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"), 0.01098901098901099)]
+        expected_content = self.call_graph.get_betweenness().items()
 
         # Act
         betweennesses = self.formatter.get_betweenness()
@@ -340,22 +298,7 @@ class TxtFormatterTestCase(unittest.TestCase):
 
     def test_all_degree_centrality(self):
         # Arrange
-        expected_content = [(CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"), 0.21428571428571427),
-                            (CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"), 0.2857142857142857),
-                            (CflowCall("puts()"), 0.14285714285714285),
-                            (CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"), 0.2857142857142857),
-                            (CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"), 0.21428571428571427),
-                            (CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"), 0.14285714285714285),
-                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), 0.5),
-                            (CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"), 0.07142857142857142),
-                            (CflowCall("printf()"), 0.3571428571428571),
-                            (CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), 0.2857142857142857),
-                            (CflowCall("gets()"), 0.07142857142857142),
-                            (CflowCall("malloc()"), 0.07142857142857142),
-                            (CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), 0.2857142857142857),
-                            (CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"), 0.14285714285714285),
-                            (CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"), 0.07142857142857142)]
-
+        expected_content = self.call_graph.get_degree_centrality().items()
         # Act
         degrees = self.formatter.get_degree_centrality()
         all_values_correct = all([c in expected_content for c in degrees])
@@ -377,21 +320,7 @@ class TxtFormatterTestCase(unittest.TestCase):
 
     def test_all_in_degree_centrality(self):
         # Arrange
-        expected_content = [(CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"), 0.14285714285714285),
-                            (CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"), 0.07142857142857142),
-                            (CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), 0.07142857142857142),
-                            (CflowCall("puts()"), 0.14285714285714285),
-                            (CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"), 0.14285714285714285),
-                            (CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"), 0.07142857142857142),
-                            (CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"), 0.07142857142857142),
-                            (CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"), 0.07142857142857142),
-                            (CflowCall("gets()"), 0.07142857142857142),
-                            (CflowCall("printf()"), 0.3571428571428571),
-                            (CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"), 0.14285714285714285),
-                            (CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), 0.07142857142857142),
-                            (CflowCall("malloc()"), 0.07142857142857142),
-                            (CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"), 0.07142857142857142),
-                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), 0.0)]
+        expected_content = self.call_graph.get_in_degree_centrality().items()
 
         # Act
         degrees = self.formatter.get_in_degree_centrality()
@@ -414,22 +343,7 @@ class TxtFormatterTestCase(unittest.TestCase):
 
     def test_all_out_degree_centrality(self):
         # Arrange
-        expected_content = [(CflowCall("malloc()"), 0.0),
-                            (CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), 0.21428571428571427),
-                            (CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"), 0.14285714285714285),
-                            (CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"), 0.07142857142857142),
-                            (CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), 0.21428571428571427),
-                            (CflowCall("puts()"), 0.0),
-                            (CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"), 0.0),
-                            (CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"), 0.0),
-                            (CflowCall("gets()"), 0.0),
-                            (CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"), 0.14285714285714285),
-                            (CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"), 0.07142857142857142),
-                            (CflowCall("printf()"), 0.0),
-                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), 0.5),
-                            (CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"), 0.14285714285714285),
-                            (CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"), 0.07142857142857142)]
-
+        expected_content = self.call_graph.get_out_degree_centrality().items()
         # Act
         degrees = self.formatter.get_out_degree_centrality()
         all_values_correct = all([c in expected_content for c in degrees])
@@ -451,21 +365,8 @@ class TxtFormatterTestCase(unittest.TestCase):
 
     def test_all_degree(self):
         # Arrange
-        expected_content = [(CflowCall("malloc()"), 1),
-                            (CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), 4),
-                            (CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"), 3),
-                            (CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"), 2),
-                            (CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), 4),
-                            (CflowCall("puts()"), 2),
-                            (CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"), 1),
-                            (CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"), 1),
-                            (CflowCall("gets()"), 1),
-                            (CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"), 4),
-                            (CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"), 2),
-                            (CflowCall("printf()"), 5),
-                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), 7),
-                            (CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"), 4),
-                            (CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"), 3)]
+        expected_content = self.call_graph.get_degree().items()
+
         # Act
         degrees = self.formatter.get_degree()
         all_values_correct = all([c in expected_content for c in degrees])
@@ -487,22 +388,7 @@ class TxtFormatterTestCase(unittest.TestCase):
 
     def test_all_in_degree(self):
         # Arrange
-        expected_content = [(CflowCall("malloc()"), 1),
-                            (CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), 1),
-                            (CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"), 1),
-                            (CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"), 1),
-                            (CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), 1),
-                            (CflowCall("puts()"), 2),
-                            (CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"), 1),
-                            (CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"), 1),
-                            (CflowCall("gets()"), 1),
-                            (CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"), 2),
-                            (CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"), 1),
-                            (CflowCall("printf()"), 5),
-                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), 0),
-                            (CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"), 2),
-                            (CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"), 2)]
-
+        expected_content = self.call_graph.get_in_degree().items()
         # Act
         degrees = self.formatter.get_in_degree()
         all_values_correct = all([c in expected_content for c in degrees])
@@ -524,21 +410,8 @@ class TxtFormatterTestCase(unittest.TestCase):
 
     def test_all_out_degree(self):
         # Arrange
-        expected_content = [(CflowCall("malloc()"), 0),
-                            (CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), 3),
-                            (CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"), 2),
-                            (CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"), 1),
-                            (CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), 3),
-                            (CflowCall("puts()"), 0),
-                            (CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"), 0),
-                            (CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"), 0),
-                            (CflowCall("gets()"), 0),
-                            (CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"), 2),
-                            (CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"), 1),
-                            (CflowCall("printf()"), 0),
-                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), 7),
-                            (CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"), 2),
-                            (CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"), 1)]
+        expected_content = self.call_graph.get_out_degree().items()
+
         # Act
         degrees = self.formatter.get_out_degree()
         all_values_correct = all([c in expected_content for c in degrees])
