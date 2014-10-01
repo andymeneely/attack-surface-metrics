@@ -11,11 +11,11 @@ from loaders import GprofLoader
 class CallGraphMergeTestCase(unittest.TestCase):
     def setUp(self):
         cflow_loader = CflowLoader(
-            os.path.join(os.path.dirname(os.path.realpath(__file__)), "helloworld/callgraph.txt"),
+            os.path.join(os.path.dirname(os.path.realpath(__file__)), "helloworld/cflow.callgraph.txt"),
             False)
 
         gprof_loader = GprofLoader(
-            os.path.join(os.path.dirname(os.path.realpath(__file__)), "helloworld/helloworld.stats"),
+            os.path.join(os.path.dirname(os.path.realpath(__file__)), "helloworld/gprof.callgraph.txt"),
             False)
 
         cflow_call_graph = CallGraph.from_loader(cflow_loader)
