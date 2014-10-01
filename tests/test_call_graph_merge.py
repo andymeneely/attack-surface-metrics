@@ -39,7 +39,7 @@ class CallGraphMergeTestCase(unittest.TestCase):
                             Call("GreeterSayHiTo", ""),
                             Call("new_Greeter", "helloworld.c"),
                             Call("puts", ""),
-                            Call("gets", ""),
+                            Call("scanf", ""),
                             Call("greet_b", ""),
                             Call("functionPtr", "helloworld.c"),
                             Call("greet", "greetings.c")]
@@ -59,7 +59,7 @@ class CallGraphMergeTestCase(unittest.TestCase):
     def test_edges(self):
         # Arrange
         expected_content = [(Call("new_Greeter", ""), Call("malloc", "")),
-                            (Call("greet_b", ""), Call("gets", "")),
+                            (Call("greet_b", ""), Call("scanf", "")),
                             (Call("greet_b", ""), Call("recursive_b", "")),
                             (Call("greet_b", ""), Call("greet", "")),
                             (Call("GreeterSayHi", ""), Call("printf", "")),

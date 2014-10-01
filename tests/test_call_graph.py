@@ -76,7 +76,7 @@ class CallGraphTestCase(unittest.TestCase):
                             CflowCall("puts()"),
                             CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"),
                             CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"),
-                            CflowCall("gets()"),
+                            CflowCall("scanf()"),
                             CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"),
                             CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"),
                             CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"),
@@ -101,28 +101,28 @@ class CallGraphTestCase(unittest.TestCase):
 
     def test_edges(self):
         # Arrange
-        expected_content = [(CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"), CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (recursive: see 5) [see 5]")),
-                            (CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"), CflowCall("printf()")),
-                            (CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"), CflowCall("puts()")),
-                            (CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R): [see 7]")),
-                            (CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>: [see 3]")),
-                            (CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), CflowCall("gets()")),
+        expected_content = [(CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"), CflowCall("printf()")),
                             (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>")),
-                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:")),
-                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")),
-                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), CflowCall("printf()")),
-                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")),
+                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:87>:")),
                             (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>")),
+                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:93>:")),
+                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")),
+                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), CflowCall("printf()")),
                             (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), CflowCall("puts()")),
-                            (CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), CflowCall("malloc()")),
-                            (CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:")),
-                            (CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:")),
-                            (CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"), CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:")),
-                            (CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"), CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")),
+                            (CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:93>:"), CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>: [see 3]")),
+                            (CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:93>:"), CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R): [see 7]")),
+                            (CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:93>:"), CflowCall("scanf()")),
+                            (CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"), CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (recursive: see 5) [see 5]")),
+                            (CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"), CflowCall("printf()")),
                             (CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"), CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):")),
                             (CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"), CflowCall("printf()")),
-                            (CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"), CflowCall("printf()")),
-                            (CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"), CflowCall("printf()"))]
+                            (CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:87>:"), CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:")),
+                            (CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:87>:"), CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")),
+                            (CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:")),
+                            (CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:")),
+                            (CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), CflowCall("malloc()")),
+                            (CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"), CflowCall("puts()")),
+                            (CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"), CflowCall("printf()"))]
 
         # Act
         edges = self.call_graph.edges
@@ -251,28 +251,29 @@ class CallGraphTestCase(unittest.TestCase):
 
     def test_all_betweenness(self):
         # Arrange
-        expected_content = {CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"): 0.0,
-                            CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"): 0.016483516483516484,
-                            CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"): 0.01098901098901099,
-                            CflowCall("gets()"): 0.0,
+        expected_content = {CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:87>:"): 0.008241758241758242,
                             CflowCall("puts()"): 0.0,
-                            CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"): 0.008241758241758242,
+                            CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 0.01098901098901099,
+                            CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"): 0.016483516483516484,
+                            CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"): 0.0,
+                            CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:93>:"): 0.013736263736263738,
+                            CflowCall("scanf()"): 0.0,
+                            CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"): 0.01098901098901099,
+                            CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"): 0.01098901098901099,
+                            CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"): 0.0,
+                            CflowCall("malloc()"): 0.0,
                             CflowCall("printf()"): 0.0,
                             CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"): 0.0027472527472527475,
-                            CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 0.0,
-                            CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"): 0.0,
-                            CflowCall("malloc()"): 0.0,
-                            CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 0.01098901098901099,
-                            CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"): 0.013736263736263738,
                             CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"): 0.0027472527472527475,
-                            CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"): 0.01098901098901099}
+                            CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 0.0}
 
         # Act
         betweennesses = self.call_graph.get_betweenness()
-        all_values_correct = all([betweennesses[c] == expected_content[c] for c in betweennesses])
 
-        # for c in betweennesses:
-        #     print('CflowCall("' + c.function_info + '"): ' + str(g.get_betweenness()[c]) + ',')
+        # for call, betweenness in betweennesses.items():
+        #     print('CflowCall("' + call.function_info + '"): ' + str(betweenness) + ',')
+
+        all_values_correct = all([betweennesses[c] == expected_content[c] for c in betweennesses])
 
         # Assert
         self.assertTrue(all_values_correct)
@@ -311,28 +312,29 @@ class CallGraphTestCase(unittest.TestCase):
 
     def test_all_closeness(self):
         # Arrange
-        expected_content = {CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"): 0.0,
-                            CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"): 0.22857142857142856,
-                            CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"): 0.14285714285714285,
-                            CflowCall("gets()"): 0.0,
-                            CflowCall("puts()"): 0.0,
-                            CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"): 0.22321428571428573,
-                            CflowCall("printf()"): 0.0,
-                            CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"): 0.07142857142857142,
-                            CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 0.0,
-                            CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"): 0.6666666666666666,
-                            CflowCall("malloc()"): 0.0,
-                            CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 0.07142857142857142,
-                            CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"): 0.2857142857142857,
+        expected_content = {CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"): 0.07142857142857142,
                             CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"): 0.07142857142857142,
-                            CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"): 0.14285714285714285}
+                            CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 0.0,
+                            CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"): 0.14285714285714285,
+                            CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"): 0.22857142857142856,
+                            CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"): 0.14285714285714285,
+                            CflowCall("malloc()"): 0.0,
+                            CflowCall("scanf()"): 0.0,
+                            CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"): 0.6666666666666666,
+                            CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:93>:"): 0.2857142857142857,
+                            CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 0.07142857142857142,
+                            CflowCall("printf()"): 0.0,
+                            CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"): 0.0,
+                            CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:87>:"): 0.22321428571428573,
+                            CflowCall("puts()"): 0.0}
 
         # Act
         closenesses = self.call_graph.get_closeness()
-        all_values_correct = all([closenesses[c] == expected_content[c] for c in closenesses])
 
-        # for c in closenesses:
-        #     print('CflowCall("' + c.function_info + '"): ' + str(g.get_closeness()[c]) + ',')
+        # for call, closeness in closenesses.items():
+        #     print('CflowCall("' + call.function_info + '"): ' + str(closeness) + ',')
+
+        all_values_correct = all([closenesses[c] == expected_content[c] for c in closenesses])
 
         # Assert
         self.assertTrue(all_values_correct)
@@ -371,28 +373,29 @@ class CallGraphTestCase(unittest.TestCase):
 
     def test_all_degree_centrality(self):
         # Arrange
-        expected_content = {CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"): 0.21428571428571427,
-                            CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"): 0.2857142857142857,
-                            CflowCall("puts()"): 0.14285714285714285,
-                            CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"): 0.2857142857142857,
+        expected_content = {CflowCall("puts()"): 0.14285714285714285,
+                            CflowCall("printf()"): 0.3571428571428571,
+                            CflowCall("malloc()"): 0.07142857142857142,
+                            CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"): 0.5,
                             CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 0.21428571428571427,
                             CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"): 0.14285714285714285,
-                            CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"): 0.5,
+                            CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:87>:"): 0.21428571428571427,
+                            CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"): 0.2857142857142857,
+                            CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:93>:"): 0.2857142857142857,
                             CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 0.07142857142857142,
-                            CflowCall("printf()"): 0.3571428571428571,
-                            CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"): 0.2857142857142857,
-                            CflowCall("gets()"): 0.07142857142857142,
-                            CflowCall("malloc()"): 0.07142857142857142,
-                            CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"): 0.2857142857142857,
+                            CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"): 0.07142857142857142,
+                            CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"): 0.2857142857142857,
+                            CflowCall("scanf()"): 0.07142857142857142,
                             CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"): 0.14285714285714285,
-                            CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"): 0.07142857142857142}
+                            CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"): 0.2857142857142857}
 
         # Act
         degrees = self.call_graph.get_degree_centrality()
-        all_values_correct = all([degrees[c] == expected_content[c] for c in degrees])
 
-        # for c in degrees:
-        #     print('CflowCall("' + c.function_info + '"): ' + str(g.get_degree_centrality()[c]) + ',')
+        # for call, degree_centrality in degrees.items():
+        #     print('CflowCall("' + call.function_info + '"): ' + str(degree_centrality) + ',')
+
+        all_values_correct = all([degrees[c] == expected_content[c] for c in degrees])
 
         # Assert
         self.assertTrue(all_values_correct)
@@ -420,28 +423,29 @@ class CallGraphTestCase(unittest.TestCase):
 
     def test_all_in_degree_centrality(self):
         # Arrange
-        expected_content = {CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 0.14285714285714285,
+        expected_content = {CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 0.07142857142857142,
                             CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"): 0.07142857142857142,
-                            CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"): 0.07142857142857142,
+                            CflowCall("malloc()"): 0.07142857142857142,
+                            CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:93>:"): 0.07142857142857142,
+                            CflowCall("scanf()"): 0.07142857142857142,
+                            CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"): 0.07142857142857142,
+                            CflowCall("printf()"): 0.3571428571428571,
                             CflowCall("puts()"): 0.14285714285714285,
                             CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"): 0.14285714285714285,
-                            CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"): 0.07142857142857142,
-                            CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"): 0.07142857142857142,
-                            CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 0.07142857142857142,
-                            CflowCall("gets()"): 0.07142857142857142,
-                            CflowCall("printf()"): 0.3571428571428571,
-                            CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"): 0.14285714285714285,
                             CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"): 0.07142857142857142,
-                            CflowCall("malloc()"): 0.07142857142857142,
+                            CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"): 0.14285714285714285,
+                            CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 0.14285714285714285,
+                            CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:87>:"): 0.07142857142857142,
                             CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"): 0.07142857142857142,
                             CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"): 0.0}
 
         # Act
         degrees = self.call_graph.get_in_degree_centrality()
-        all_values_correct = all([degrees[c] == expected_content[c] for c in degrees])
 
-        # for c in degrees:
-        #     print('CflowCall("' + c.function_info + '"): ' + str(g.get_degree_centrality()[c]) + ',')
+        # for call, in_degree_centrality in degrees.items():
+        #     print('CflowCall("' + call.function_info + '"): ' + str(in_degree_centrality) + ',')
+
+        all_values_correct = all([degrees[c] == expected_content[c] for c in degrees])
 
         # Assert
         self.assertTrue(all_values_correct)
@@ -469,28 +473,29 @@ class CallGraphTestCase(unittest.TestCase):
 
     def test_all_out_degree_centrality(self):
         # Arrange
-        expected_content = {CflowCall("malloc()"): 0.0,
-                            CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"): 0.21428571428571427,
-                            CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"): 0.14285714285714285,
-                            CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"): 0.07142857142857142,
-                            CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"): 0.21428571428571427,
+        expected_content = {CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 0.0,
+                            CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"): 0.07142857142857142,
+                            CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"): 0.14285714285714285,
                             CflowCall("puts()"): 0.0,
                             CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"): 0.0,
-                            CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 0.0,
-                            CflowCall("gets()"): 0.0,
+                            CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"): 0.07142857142857142,
+                            CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 0.07142857142857142,
                             CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"): 0.14285714285714285,
-                            CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"): 0.07142857142857142,
-                            CflowCall("printf()"): 0.0,
                             CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"): 0.5,
-                            CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"): 0.14285714285714285,
-                            CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 0.07142857142857142}
+                            CflowCall("scanf()"): 0.0,
+                            CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"): 0.21428571428571427,
+                            CflowCall("printf()"): 0.0,
+                            CflowCall("malloc()"): 0.0,
+                            CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:87>:"): 0.14285714285714285,
+                            CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:93>:"): 0.21428571428571427}
 
         # Act
         degrees = self.call_graph.get_out_degree_centrality()
-        all_values_correct = all([degrees[c] == expected_content[c] for c in degrees])
 
-        # for c in degrees:
-        #     print('CflowCall("' + c.function_info + '"): ' + str(g.get_degree_centrality()[c]) + ',')
+        # for call, out_degree_centrality in degrees.items():
+        #     print('CflowCall("' + call.function_info + '"): ' + str(out_degree_centrality) + ',')
+
+        all_values_correct = all([degrees[c] == expected_content[c] for c in degrees])
 
         # Assert
         self.assertTrue(all_values_correct)
@@ -551,28 +556,29 @@ class CallGraphTestCase(unittest.TestCase):
 
     def test_all_degree(self):
         # Arrange
-        expected_content = {CflowCall("malloc()"): 1,
-                            CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"): 4,
-                            CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"): 3,
+        expected_content = {CflowCall("puts():"): 2,
+                            CflowCall("main() <int main (void) at ./src/helloworld.c:58>"): 7,
                             CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"): 2,
                             CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"): 4,
-                            CflowCall("puts()"): 2,
-                            CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"): 1,
-                            CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 1,
-                            CflowCall("gets()"): 1,
+                            CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 3,
+                            CflowCall("malloc():"): 1,
+                            CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:93>:"): 4,
+                            CflowCall("printf():"): 5,
+                            CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>:"): 1,
                             CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"): 4,
-                            CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"): 2,
-                            CflowCall("printf()"): 5,
-                            CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"): 7,
+                            CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>:"): 1,
                             CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"): 4,
-                            CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 3}
+                            CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"): 2,
+                            CflowCall("scanf():"): 1,
+                            CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:87>:"): 3}
 
         # Act
         degrees = self.call_graph.get_degree()
-        all_values_correct = all([degrees[c] == expected_content[c] for c in degrees])
 
-        # for c in degrees:
-        #     print('CflowCall("' + c.function_info + '"): ' + str(g.get_degree_centrality()[c]) + ',')
+        # for call, degree in degrees.items():
+        #     print('CflowCall("' + call.function_info + '"): ' + str(degree) + ',')
+
+        all_values_correct = all([degrees[c] == expected_content[c] for c in degrees])
 
         # Assert
         self.assertTrue(all_values_correct)
@@ -600,28 +606,29 @@ class CallGraphTestCase(unittest.TestCase):
 
     def test_all_in_degree(self):
         # Arrange
-        expected_content = {CflowCall("malloc()"): 1,
-                            CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"): 1,
-                            CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"): 1,
-                            CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"): 1,
-                            CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"): 1,
-                            CflowCall("puts()"): 2,
+        expected_content = {CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"): 1,
                             CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"): 1,
-                            CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 1,
-                            CflowCall("gets()"): 1,
-                            CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"): 2,
-                            CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"): 1,
+                            CflowCall("puts()"): 2,
+                            CflowCall("scanf()"): 1,
+                            CflowCall("malloc()"): 1,
+                            CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"): 1,
                             CflowCall("printf()"): 5,
+                            CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 1,
+                            CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 2,
                             CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"): 0,
                             CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"): 2,
-                            CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 2}
+                            CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:93>:"): 1,
+                            CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:87>:"): 1,
+                            CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"): 2,
+                            CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"): 1}
 
         # Act
         degrees = self.call_graph.get_in_degree()
-        all_values_correct = all([degrees[c] == expected_content[c] for c in degrees])
 
-        # for c in degrees:
-        #     print('CflowCall("' + c.function_info + '"): ' + str(g.get_degree_centrality()[c]) + ',')
+        # for call, in_degree in degrees.items():
+        #     print('CflowCall("' + call.function_info + '"): ' + str(in_degree) + ',')
+
+        all_values_correct = all([degrees[c] == expected_content[c] for c in degrees])
 
         # Assert
         self.assertTrue(all_values_correct)
@@ -649,28 +656,30 @@ class CallGraphTestCase(unittest.TestCase):
 
     def test_all_out_degree(self):
         # Arrange
-        expected_content = {CflowCall("malloc()"): 0,
-                            CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"): 3,
-                            CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"): 2,
+        expected_content = {CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"): 7,
+                            CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 0,
+                            CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:87>:"): 2,
+                            CflowCall("printf()"): 0,
                             CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"): 1,
                             CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"): 3,
                             CflowCall("puts()"): 0,
-                            CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"): 0,
-                            CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>"): 0,
-                            CflowCall("gets()"): 0,
-                            CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"): 2,
-                            CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"): 1,
-                            CflowCall("printf()"): 0,
-                            CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"): 7,
+                            CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:93>:"): 3,
+                            CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 1,
                             CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"): 2,
-                            CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"): 1}
+                            CflowCall("scanf()"): 0,
+                            CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"): 2,
+                            CflowCall("malloc()"): 0,
+                            CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"): 1,
+                            CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>"): 0}
 
         # Act
         degrees = self.call_graph.get_out_degree()
+
+        # for call, out_degree in degrees.items():
+        #     print('CflowCall("' + call.function_info + '"): ' + str(out_degree) + ',')
+
         all_values_correct = all([degrees[c] == expected_content[c] for c in degrees])
 
-        # for c in degrees:
-        #     print('CflowCall("' + c.function_info + '"): ' + str(g.get_degree_centrality()[c]) + ',')
 
         # Assert
         self.assertTrue(all_values_correct)
