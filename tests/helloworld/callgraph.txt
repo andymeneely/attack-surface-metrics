@@ -1,5 +1,5 @@
 main() <int main (void) at ./src/helloworld.c:58>:
-    greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:
+    greet_a() <void greet_a (int i) at ./src/helloworld.c:87>:
         greet() <void greet (int greeting_code) at ./src/greetings.c:14>:
             puts()
         recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):
@@ -7,8 +7,8 @@ main() <int main (void) at ./src/helloworld.c:58>:
             recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):
                 printf()
                 recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (recursive: see 5) [see 5]
-    greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:
-        gets()
+    greet_b() <void greet_b (int i) at ./src/helloworld.c:93>:
+        scanf()
         greet() <void greet (int greeting_code) at ./src/greetings.c:14>: [see 3]
         recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R): [see 7]
     puts()
