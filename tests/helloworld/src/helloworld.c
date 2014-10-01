@@ -47,12 +47,12 @@ Greeter new_Greeter()
 
 void GreeterSayHi()
 {
-    printf("Hello from greeter!!");
+    printf("Hello from greeter!! \n");
 }
 
 void GreeterSayHiTo(int value)
 {
-    printf("Hello %d from greeter!!", value);
+    printf("Hello %d from greeter!! \n", value);
 }
 
 int main(void)
@@ -64,7 +64,7 @@ int main(void)
 
 	functionPtr = addInt;
 	int sum = functionPtr(2, 3); // sum == 5
-	printf("---> %d", sum);
+	printf("---> %d \n", sum);
 
 	Greeter g = new_Greeter();
 	g->SayHi();
@@ -72,7 +72,18 @@ int main(void)
 
 	return EXIT_SUCCESS;
 }
+/*
+void not_called()
+{
+	called_by_not_called();
+	return;
+}
 
+void called_by_not_called()
+{
+	return;
+}
+*/
 void greet_a(int i)
 {
 	greet(0);
@@ -81,8 +92,8 @@ void greet_a(int i)
 
 void greet_b(int i)
 {
-	char c;
-	gets(c);
+	char c = 'c';
+	scanf("%c",&c);
 
 	greet(0);
 	recursive_b(i);
