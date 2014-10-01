@@ -36,8 +36,8 @@ def main():
         if_not_none = lambda arg: arg if arg is not None else args.source
 
         input_file = {
-            'cflow': if_not_none(args.cflowfile),  # args.cflowfile if args.cflowfile is not None else args.source,
-            'gprof': if_not_none(args.gproffile)  # args.gproffile if args.gproffile is not None else args.source,
+            'cflow': if_not_none(args.cflowfile),
+            'gprof': if_not_none(args.gproffile)
         }
 
         loader = loaders[args.tool](input_file[args.tool], args.reverse)
