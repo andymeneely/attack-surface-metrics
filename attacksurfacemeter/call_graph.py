@@ -817,3 +817,10 @@ class CallGraph():
         """
         return self._ratio_of_containment(self.get_ancestors(call),
                                           self.exit_points)
+
+    # TODO:
+    def is_connected(self):
+        return nx.is_connected(self.call_graph.to_undirected())
+
+    def get_clusters(self):
+        return nx.connected_components(self.call_graph.to_undirected())
