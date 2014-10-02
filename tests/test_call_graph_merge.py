@@ -41,7 +41,6 @@ class CallGraphMergeTestCase(unittest.TestCase):
                             Call("puts", ""),
                             Call("scanf", ""),
                             Call("greet_b", ""),
-                            Call("functionPtr", "helloworld.c"),
                             Call("greet", "greetings.c")]
 
         # Act
@@ -53,7 +52,7 @@ class CallGraphMergeTestCase(unittest.TestCase):
         #           (c.function_signature if c.function_signature else "") + '"),')
 
         # Assert
-        self.assertEqual(15, len(nodes))
+        self.assertEqual(14, len(nodes))
         self.assertTrue(all_calls_found)
 
     def test_edges(self):
@@ -73,7 +72,6 @@ class CallGraphMergeTestCase(unittest.TestCase):
                             (Call("main", ""), Call("puts", "")),
                             (Call("main", ""), Call("GreeterSayHiTo", "")),
                             (Call("main", ""), Call("greet_b", "")),
-                            (Call("main", ""), Call("functionPtr", "helloworld.c")),
                             (Call("main", ""), Call("GreeterSayHi", "")),
                             (Call("main", ""), Call("printf", "")),
                             (Call("main", ""), Call("greet_a", "")),
@@ -90,7 +88,7 @@ class CallGraphMergeTestCase(unittest.TestCase):
         #            'Call("' + e[1].function_name + '", "' + (e[1].function_signature if e[1].function_signature else "") + '")),')
 
         # Assert
-        self.assertEqual(22, len(edges))
+        self.assertEqual(21, len(edges))
         self.assertTrue(all_calls_found)
 
 
