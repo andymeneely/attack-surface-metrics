@@ -78,12 +78,12 @@ class CallGraph():
         nodes = gprof_call_graph.nodes
 
         lib_calls = [n for n in cflow_call_graph.nodes
-                     if not any([e for e in cflow_call_graph.edges if e[0] == n])
-                     and n not in gprof_call_graph.nodes]
+                     if n.is_library_call()]  # any([e for e in cflow_call_graph.edges if e[0] == n])
+                     # and n not in gprof_call_graph.nodes] Assume gprof doesn't identify library calls
 
         nodes.extend(lib_calls)
 
-        lib_call_edges = [e for e in cflow_call_graph.edges if e[0] in lib_calls or e[1] in lib_calls]
+        lib_call_edges = [e for e in cflow_call_graph.edges if e[1] in lib_calls]
 
         CallGraph._populate_graph(graph, nodes, gprof_call_graph.edges)
         CallGraph._populate_graph(graph, nodes, lib_call_edges)

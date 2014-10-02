@@ -71,3 +71,6 @@ class CflowCall(Call):
                 self._function_signature = match.group(0)
 
         return self._function_signature
+
+    def is_library_call(self):
+        return self._function_signature is None
