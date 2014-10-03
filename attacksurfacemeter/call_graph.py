@@ -91,7 +91,7 @@ class CallGraph():
         CallGraph._populate_graph(graph, nodes, gprof_call_graph.edges)
         CallGraph._populate_graph(graph, nodes, lib_call_edges)
 
-        return cls(source, graph)
+        return cls(source, graph, cflow_call_graph.errors + gprof_call_graph.errors)
 
     @staticmethod
     def _find_edge_in_nodes(edge, nodes):
