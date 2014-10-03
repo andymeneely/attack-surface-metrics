@@ -29,7 +29,8 @@ class GprofCall(Call):
                                 0.00    0.00  131072/147456      get_bits (get_bits.h:262 @ 6d16df) [269306]
                 [4]      0.0    0.00    0.00  147456         read_tree (bink.c:245 @ 7003f0) [4]
         """
-        match = re.search(r"(\[.+\])( +)((\d+\.\d+)( +)){3}(\d+)( +)(\w+)( +)(.*)", line)
+        self.raw_line = line
+        match = re.search(r"(\[.+\])( +)((\d+\.\d+)( +)){3}(\d*)( +)(\w+)( +)(.*)", line)
 
         if match:
             self._function_name = match.group(8)
@@ -48,7 +49,9 @@ class GprofCall(Call):
                         self._function_name = match.group(4)
                         self._function_signature = self.get_file_name(match.group(6))
                     except:
-                        print("exploto")
+                        raise ValueError("Can not parse a call from the recieved text.")
+                else:
+                    raise ValueError("Can not parse a call from the recieved text.")
 
     def get_file_name(self, text_fragment):
         """

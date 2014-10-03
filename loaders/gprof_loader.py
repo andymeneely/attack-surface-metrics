@@ -74,9 +74,12 @@ class GprofLoader():
                         break
 
                     else:
-                        if is_caller:
-                            callers.append(GprofCall(line))
-                        else:
-                            callees.append(GprofCall(line))
+                        try:
+                            if is_caller:
+                                callers.append(GprofCall(line))
+                            else:
+                                callees.append(GprofCall(line))
+                        except ValueError as e:
+                            print(str(e) + " - " + line)
 
         return call_graph
