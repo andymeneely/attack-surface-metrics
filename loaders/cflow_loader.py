@@ -5,12 +5,12 @@ import os
 import networkx as nx
 
 from loaders import Stack
+from loaders import BaseLoader
 from attacksurfacemeter import CflowCall
 
 
-class CflowLoader():
+class CflowLoader(BaseLoader):
     """"""
-
     def __init__(self, source, reverse=False):
         """Constructor for CflowParser"""
         self.source = source

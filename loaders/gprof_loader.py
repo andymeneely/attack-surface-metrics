@@ -3,10 +3,11 @@ __author__ = 'kevin'
 import re
 import networkx as nx
 
+from loaders import BaseLoader
 from attacksurfacemeter import GprofCall
 
 
-class GprofLoader():
+class GprofLoader(BaseLoader):
     """"""
 
     header = "index % time    self  children    called     name\n"
@@ -16,6 +17,12 @@ class GprofLoader():
     def __init__(self, source, reverse):
         """Constructor for GprofLoader"""
         self.source = source
+
+        self._error_messages = list()
+
+    @property
+    def error_messages(self):
+        return self._error_messages
 
     def is_entry_line(self, line):
         return re.search(r"^\[.+\].*", line)
@@ -80,6 +87,6 @@ class GprofLoader():
                             else:
                                 callees.append(GprofCall(line))
                         except ValueError as e:
-                            print(str(e) + " - " + line)
+                            self._error_messages.append("Error: " + str(e) + " Input line: " + line)
 
         return call_graph
