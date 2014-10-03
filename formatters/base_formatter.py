@@ -1,6 +1,7 @@
 __author__ = 'kevin'
 
 import os
+from statistics import StatisticsError
 
 from django.template import Template, Context
 from django.conf import settings
@@ -240,14 +241,20 @@ class BaseFormatter(object):
         """
             Returns a string representation of the average of Execution Paths length present in the Call Graph.
         """
-        return str(self.call_graph.avg_execution_path_length)
+        try:
+            return str(self.call_graph.avg_execution_path_length)
+        except StatisticsError as e:
+            return "Error: " + str(e)
 
     @property
     def median_execution_path_length(self):
         """
             Returns a string representation of the median of Execution Paths length present in the Call Graph.
         """
-        return str(self.call_graph.median_execution_path_length)
+        try:
+            return str(self.call_graph.median_execution_path_length)
+        except StatisticsError as e:
+            return "Error: " + str(e)
 
     @property
     def execution_paths(self):
@@ -264,14 +271,20 @@ class BaseFormatter(object):
         """
             Returns a string representation of the clustering of Entry Points present in the Call Graph.
         """
-        return str(self.call_graph.entry_points_clustering)
+        try:
+            return str(self.call_graph.entry_points_clustering)
+        except ZeroDivisionError as e:
+            return "Error: " + str(e)
 
     @property
     def exit_points_clustering(self):
         """
             Returns a string representation of the clustering of Exit Points present in the Call Graph.
         """
-        return str(self.call_graph.exit_points_clustering)
+        try:
+            return str(self.call_graph.exit_points_clustering)
+        except ZeroDivisionError as e:
+            return "Error: " + str(e)
 
     def get_closeness(self, call=None):
         """
