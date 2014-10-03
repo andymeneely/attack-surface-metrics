@@ -51,6 +51,10 @@ def main():
     else:
         print(formatter.write_output())
 
+    if args.show_errors:
+        for m in call_graph.errors:
+            print(m)
+
 
 def parse_args():
     """
@@ -81,6 +85,8 @@ def parse_args():
                         help="Output format of the calculated metrics report.")
     parser.add_argument("-s", "--summary", action="store_true",
                         help="Print only a summary of the report.")
+    parser.add_argument("-e", "--show_errors", action="store_true",
+                        help="Print all parsing error messages at the end of the report")
 
     return parser.parse_args()
 
