@@ -33,7 +33,7 @@ def main():
         call_graph = CallGraph.from_merge(CallGraph.from_loader(cflow_loader),
                                           CallGraph.from_loader(gprof_loader))
     else:
-        if_not_none = lambda arg: arg if arg is not None else args.source
+        if_not_none = lambda file: file if file is not None else args.source
 
         input_file = {
             'cflow': if_not_none(args.cflowfile),
