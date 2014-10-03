@@ -3,7 +3,6 @@ __author__ = 'kevin'
 import statistics as stat
 import networkx as nx
 # import matplotlib.pyplot as plt
-# from attacksurfacemeter import Call
 
 
 class CallGraph():
@@ -17,7 +16,7 @@ class CallGraph():
             call_graph: networkx.DiGraph. Internal representation of the graph data structure.
     """
 
-    def __init__(self, source, graph):
+    def __init__(self, source, graph, generation_errors=None):
         """
             CallGraph constructor
 
@@ -33,6 +32,7 @@ class CallGraph():
         """
         self.source = source
         self.call_graph = graph
+        self.errors = generation_errors
 
         self._entry_points = set()
         self._exit_points = set()
@@ -50,7 +50,10 @@ class CallGraph():
             Returns:
                 A new CallGraph instance containing the data obtained from the loader.
         """
-        return cls(loader.source, loader.load_call_graph())
+        graph = loader.load_call_graph()
+        errors = loader.error_messages
+
+        return cls(loader.source, graph, errors)
 
     @classmethod
     def from_merge(cls, cflow_call_graph, gprof_call_graph):
@@ -818,7 +821,9 @@ class CallGraph():
         return self._ratio_of_containment(self.get_ancestors(call),
                                           self.exit_points)
 
-    # TODO:
+    # TODO: Converting the graph to undirected is not good for our purposes.
+    # Calls to standard libraries are very common and by those, must clusters (components)
+    # will be connected.
     def is_connected(self):
         return nx.is_connected(self.call_graph.to_undirected())
 
