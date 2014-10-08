@@ -25,7 +25,8 @@ class GprofLoader(BaseLoader):
         return self._error_messages
 
     def is_entry_line(self, line):
-        return re.search(r"^\[.+\].*", line)
+        return line.startswith("[")
+        # return re.search(r"^\[\d+.*", line)
 
     def load_call_graph(self):
         """
@@ -51,9 +52,14 @@ class GprofLoader(BaseLoader):
         callers = list()
         callees = list()
 
+        line_count = 0
+
         with open(self.source) as raw_call_graph:
             while True:
                 line = raw_call_graph.readline()
+                line_count += 1
+                print(line_count)
+                # print(line)
 
                 if not header_passed:
                     if line == GprofLoader.header:
@@ -62,7 +68,11 @@ class GprofLoader(BaseLoader):
 
                 else:  # if header_passed:
                     if self.is_entry_line(line):
-                        entry = GprofCall(line)
+                        try:
+                            entry = GprofCall(line)
+                        except ValueError as e:
+                            raise e
+
                         call_graph.add_node(entry)
                         is_caller = False
 

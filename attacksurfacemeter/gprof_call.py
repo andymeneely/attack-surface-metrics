@@ -30,13 +30,16 @@ class GprofCall(Call):
                 [4]      0.0    0.00    0.00  147456         read_tree (bink.c:245 @ 7003f0) [4]
         """
         self.raw_line = line
-        match = re.search(r"(\[.+\])( +)((\d+\.\d+)( +)){3}(\d*)( +)(\w+)( +)(.*)", line)
+        match = re.search(r"(\[\d+\])( +)((\d+\.\d+)( +)){3}(\d*)( +)([\w.]+)( +)(.*)", line)
+
+        if not match:
+            match = re.search(r"(\[\d+)( +)((\d+\.\d+)( +)){3}(\d*)( +)([\w.]+)( +)(.*)", line)
 
         if match:
             self._function_name = match.group(8)
             self._function_signature = self.get_file_name(match.group(10))
         else:
-            match = re.search(r"( +)((\d+\.\d+)( +)){2}(\d+/\d+)( +)(\w+)( +)(.*)", line)
+            match = re.search(r"( +)((\d+\.\d+)( +)){2}(\d+/\d+)( +)([\w.]+)( +)(.*)", line)
 
             if match:
                 self._function_name = match.group(7)
@@ -49,9 +52,9 @@ class GprofCall(Call):
                         self._function_name = match.group(4)
                         self._function_signature = self.get_file_name(match.group(6))
                     except:
-                        raise ValueError("Can not parse a call from the recieved text.")
+                        raise ValueError("Can not parse a call from the received text.")
                 else:
-                    raise ValueError("Can not parse a call from the recieved text.")
+                    raise ValueError("Can not parse a call from the received text.")
 
     def get_file_name(self, text_fragment):
         """
@@ -63,10 +66,12 @@ class GprofCall(Call):
             Returns:
                 A String containing the name of the file where the function detailed in the fragment is defined.
         """
-        match = re.search(r"(\w+\.c)", text_fragment)
+        regex = r"(\w+\.c)|(\w+\.asm)"
+
+        match = re.search(regex, text_fragment)
 
         if match:
-            return re.search(r"(\w+\.c)", text_fragment).group(0)
+            return re.search(regex, text_fragment).group(0)
         else:
             return ""
 
