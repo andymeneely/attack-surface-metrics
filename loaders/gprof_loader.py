@@ -52,13 +52,13 @@ class GprofLoader(BaseLoader):
         callers = list()
         callees = list()
 
-        line_count = 0
+        # line_count = 0
 
         with open(self.source) as raw_call_graph:
             while True:
                 line = raw_call_graph.readline()
-                line_count += 1
-                print(line_count)
+                # line_count += 1
+                # print(line_count)
                 # print(line)
 
                 if not header_passed:
