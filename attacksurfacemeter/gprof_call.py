@@ -28,9 +28,13 @@ class GprofCall(Call):
             Sample lines:
                                 0.00    0.00  131072/147456      get_bits (get_bits.h:262 @ 6d16df) [269306]
                 [4]      0.0    0.00    0.00  147456         read_tree (bink.c:245 @ 7003f0) [4]
+
+            Some identified special cases:
+                [28]     0.0    0.00    0.00      58+8       avg_cavs_qpel8or16_v1_3dnow (cavsdsp_mmx.c:429 @ 9afb10) [28]'
+                [18977   0.0    0.00    0.00                 ff_choose_timebase (mux.c:106 @ 54fd80) [189777]
         """
         self.raw_line = line
-        match = re.search(r"(\[\d+\])( +)((\d+\.\d+)( +)){3}(\d*)( +)([\w.]+)( +)(.*)", line)
+        match = re.search(r"(\[\d+\])( +)((\d+\.\d+)( +)){3}(\d*\+*\d*)( +)([\w.]+)( +)(.*)", line)
 
         if not match:
             match = re.search(r"(\[\d+)( +)((\d+\.\d+)( +)){3}(\d*)( +)([\w.]+)( +)(.*)", line)
