@@ -6,7 +6,8 @@ import networkx as nx
 
 from loaders import Stack
 from loaders import BaseLoader
-from attacksurfacemeter import CflowCall
+from loaders.cflow_line_parser import CflowLineParser
+from attacksurfacemeter import Call
 
 
 class CflowLoader(BaseLoader):
@@ -48,7 +49,7 @@ class CflowLoader(BaseLoader):
             if line == '':
                 break
 
-            current = CflowCall(line)
+            current = Call.from_cflow(line, CflowLineParser.get_instance())
 
             if not is_first_line:
                 if current.level > previous.level:

@@ -106,8 +106,42 @@ class CallGraph():
                 caller: A Call object from the given set of nodes that equals to the caller in the given edge.
                 callee: A Call object from the given set of nodes that equals to the callee in the given edge.
         """
-        caller = [n for n in nodes if edge[0] == n][0]
-        callee = [n for n in nodes if edge[1] == n][0]
+
+        try:
+            caller = [n for n in nodes if edge[0] == n][0]
+        except IndexError as er:
+            print(er)
+
+            # for n in nodes:
+            #     print(n.function_name + " " + n.function_signature)
+
+            print(edge[0].function_name)
+            print(".")
+            print(edge[0].function_signature)
+            print("->")
+            print(edge[1].function_name)
+            print(".")
+            print(edge[1].function_signature)
+
+            raise er
+
+        try:
+            callee = [n for n in nodes if edge[1] == n][0]
+        except IndexError as er:
+            print(er)
+
+            # for n in nodes:
+            #     print(n.function_name + " " + n.function_signature)
+
+            print(edge[0].function_name)
+            print(".")
+            print(edge[0].function_signature)
+            print("->")
+            print(edge[1].function_name)
+            print(".")
+            print(edge[1].function_signature)
+
+            raise er
 
         # caller = None
         # callee = None
