@@ -4,7 +4,9 @@ import re
 import networkx as nx
 
 from loaders import BaseLoader
-from attacksurfacemeter import GprofCall
+# from attacksurfacemeter import GprofCall
+from attacksurfacemeter import Call
+from loaders.gprof_line_parser import GprofLineParser
 
 
 class GprofLoader(BaseLoader):
@@ -69,7 +71,7 @@ class GprofLoader(BaseLoader):
                 else:  # if header_passed:
                     if self.is_entry_line(line):
                         try:
-                            entry = GprofCall(line)
+                            entry = Call.from_gprof(line, GprofLineParser.get_instance())
                         except ValueError as e:
                             raise e
 
@@ -93,9 +95,9 @@ class GprofLoader(BaseLoader):
                     else:
                         try:
                             if is_caller:
-                                callers.append(GprofCall(line))
+                                callers.append(Call.from_gprof(line, GprofLineParser.get_instance()))
                             else:
-                                callees.append(GprofCall(line))
+                                callees.append(Call.from_gprof(line, GprofLineParser.get_instance()))
                         except ValueError as e:
                             self._error_messages.append("Error: " + str(e) + " Input line: " + line)
 

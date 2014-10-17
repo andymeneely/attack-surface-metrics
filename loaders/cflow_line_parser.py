@@ -17,22 +17,21 @@ class CflowLineParser():
     indent = "    "
 
     def __init__(self):
-        self._function_info = ""
         self._function_name = ""
         self._function_signature = ""
         self._level = 0
 
     def load(self, cflow_line):
         split_line = cflow_line.split(CflowLineParser.indent)
-        self._function_info = split_line[-1].strip()
+        function_info = split_line[-1].strip()
         self._level = len(split_line) - 1
 
         # function name
-        function_name = re.search(r"(\w+\(\))", self._function_info).group(0)
+        function_name = re.search(r"(\w+\(\))", function_info).group(0)
         self._function_name = function_name[:function_name.index('(')]
 
         # function signature
-        match = re.search(r"(\w+\.c)", self._function_info)
+        match = re.search(r"(\w+\.c)", function_info)
         if match:
             self._function_signature = match.group(0)
 
@@ -47,10 +46,6 @@ class CflowLineParser():
     def get_level(self, cflow_line=None):
         self._load_if_new(cflow_line)
         return self._level
-
-    def get_function_info(self, cflow_line=None):
-        self._load_if_new(cflow_line)
-        return self._function_info
 
     def _load_if_new(self, cflow_line):
         if cflow_line is not None:

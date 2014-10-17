@@ -47,102 +47,25 @@ class Call():
         self._function_name = name
         self._function_signature = signature
 
-    # ini Cflow Stuff
-
     @classmethod
     def from_cflow(cls, cflow_line, cflow_line_parser):
-
-        # split_line = cflow_line.split(Call.indent)
-        #
-        # function_info = split_line[-1].strip()
-        #
-        # # function name
-        # function_name = re.search(r"(\w+\(\))", function_info).group(0)
-        # function_name = function_name[:function_name.index('(')]
-        #
-        # # function signature
-        # match = re.search(r"(\w+\.c)", function_info)
-        # if match:
-        #     function_signature = match.group(0)
-        #
-        # new_instance = cls(function_name, function_signature)
-        # new_instance.level = len(split_line) - 1
-        # new_instance.function_info = function_info
-
         cflow_line_parser.load(cflow_line)
 
         new_instance = cls(cflow_line_parser.get_function_name(), cflow_line_parser.get_function_signature())
         new_instance.level = cflow_line_parser.get_level()
-        new_instance.function_info = cflow_line_parser.get_function_info()
 
         return new_instance
 
     def is_library_call(self):
         return self._function_signature is None
 
-    # end Cflow Stuff
-
-    # ini Gprof stuff
-
     @classmethod
     def from_gprof(cls, gprof_line, gprof_line_parser):
-        # match = re.search(r"(\[\d+\])( +)((\d+\.\d+)( +)){3}(\d*\+*\d*)( +)([\w.]+)( +)(.*)", gprof_line)
-        #
-        # if not match:
-        #     match = re.search(r"(\[\d+)( +)((\d+\.\d+)( +)){3}(\d*)( +)([\w.]+)( +)(.*)", gprof_line)
-        #
-        # if match:
-        #     _function_name = match.group(8)
-        #     _function_signature = Call.get_file_name(match.group(10))
-        # else:
-        #     match = re.search(r"( +)((\d+\.\d+)( +)){2}(\d+/\d+)( +)([\w.]+)( +)(.*)", gprof_line)
-        #
-        #     if match:
-        #         _function_name = match.group(7)
-        #         _function_signature = Call.get_file_name(match.group(9))
-        #     else:
-        #         match = re.search(r"( +)(\d+)( +)(\w+)( +)(.*)", gprof_line)
-        #
-        #         if match:
-        #             try:
-        #                 _function_name = match.group(4)
-        #                 _function_signature = Call.get_file_name(match.group(6))
-        #             except:
-        #                 raise ValueError("Can not parse a call from the received text.")
-        #         else:
-        #             raise ValueError("Can not parse a call from the received text.")
-        #
-        # new_instance = Call(_function_name, _function_signature)
-        # new_instance.raw_line = gprof_line
-
         gprof_line_parser.load(gprof_line)
 
         new_instance = Call(gprof_line_parser.get_function_name(), gprof_line_parser.get_function_signature())
-        new_instance.raw_line = gprof_line_parser.get_raw_line()
 
         return new_instance
-
-    @staticmethod
-    def get_file_name(self, text_fragment):
-        """
-            Obtains the name of the file where the function represented is defined.
-
-            Args:
-               text_fragment: A String containing a fragment from a line of gprof's output.
-
-            Returns:
-                A String containing the name of the file where the function detailed in the fragment is defined.
-        """
-        regex = r"(\w+\.c)|(\w+\.asm)"
-
-        match = re.search(regex, text_fragment)
-
-        if match:
-            return re.search(regex, text_fragment).group(0)
-        else:
-            return ""
-
-    # end Gprof stuff
 
     def __str__(self):
         """
