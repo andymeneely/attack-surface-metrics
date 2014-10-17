@@ -3,18 +3,9 @@ __author__ = 'kevin'
 
 class BaseLineParser(object):
     """"""
-    _instance = None
-
     @staticmethod
     def get_instance():
         pass
-
-    @staticmethod
-    def _lazy_load_instance(constructor):
-        if BaseLineParser._instance is None:
-            BaseLineParser._instance = constructor()
-
-        return BaseLineParser._instance
 
     def __init__(self):
         """"""

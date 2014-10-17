@@ -7,15 +7,20 @@ from loaders import BaseLineParser
 
 class CflowLineParser(BaseLineParser):
     """"""
+    _instance = None
+
+    @staticmethod
+    def get_instance():
+        if CflowLineParser._instance is None:
+            CflowLineParser._instance = CflowLineParser()
+
+        return CflowLineParser._instance
+
     indent = "    "
 
     def __init__(self):
         super(CflowLineParser, self).__init__()
         self._level = 0
-
-    @staticmethod
-    def get_instance():
-        return CflowLineParser._lazy_load_instance(CflowLineParser)
 
     def load(self, cflow_line):
         split_line = cflow_line.split(CflowLineParser.indent)

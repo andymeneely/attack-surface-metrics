@@ -7,12 +7,24 @@ from loaders import BaseLineParser
 
 class GprofLineParser(BaseLineParser):
     """"""
+    _instance = None
+
+    @staticmethod
+    def get_instance():
+        if GprofLineParser._instance is None:
+            GprofLineParser._instance = GprofLineParser()
+
+        return GprofLineParser._instance
+
     def __init__(self):
         super(GprofLineParser, self).__init__()
 
     @staticmethod
     def get_instance():
-        return GprofLineParser._lazy_load_instance(GprofLineParser)
+        if GprofLineParser._instance is None:
+            GprofLineParser._instance = GprofLineParser()
+
+        return GprofLineParser._instance
 
     def load(self, gprof_line):
         match = re.search(r"(\[\d+\])( +)((\d+\.\d+)( +)){3}(\d*\+*\d*)( +)([\w.]+)( +)(.*)", gprof_line)
