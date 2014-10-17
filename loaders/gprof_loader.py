@@ -1,12 +1,10 @@
 __author__ = 'kevin'
 
-import re
 import networkx as nx
 
 from loaders import BaseLoader
-# from attacksurfacemeter import GprofCall
+from loaders import GprofLineParser
 from attacksurfacemeter import Call
-from loaders.gprof_line_parser import GprofLineParser
 
 
 class GprofLoader(BaseLoader):

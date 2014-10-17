@@ -6,7 +6,7 @@ import networkx as nx
 
 from loaders import Stack
 from loaders import BaseLoader
-from loaders.cflow_line_parser import CflowLineParser
+from loaders import CflowLineParser
 from attacksurfacemeter import Call
 
 

@@ -2,21 +2,17 @@ __author__ = 'kevin'
 
 import re
 
+from loaders import BaseLineParser
 
-class GprofLineParser():
+
+class GprofLineParser(BaseLineParser):
     """"""
-    _instance = None
+    def __init__(self):
+        super(GprofLineParser, self).__init__()
 
     @staticmethod
     def get_instance():
-        if GprofLineParser._instance is None:
-            GprofLineParser._instance = GprofLineParser()
-
-        return GprofLineParser._instance
-
-    def __init__(self):
-        self._function_name = ""
-        self._function_signature = ""
+        return GprofLineParser._lazy_load_instance(GprofLineParser)
 
     def load(self, gprof_line):
         match = re.search(r"(\[\d+\])( +)((\d+\.\d+)( +)){3}(\d*\+*\d*)( +)([\w.]+)( +)(.*)", gprof_line)
@@ -64,15 +60,3 @@ class GprofLineParser():
             return re.search(regex, text_fragment).group(0)
         else:
             return ""
-
-    def get_function_name(self, gprof_line=None):
-        self._load_if_new(gprof_line)
-        return self._function_name
-
-    def get_function_signature(self, gprof_line=None):
-        self._load_if_new(gprof_line)
-        return self._function_signature
-
-    def _load_if_new(self, gprof_line):
-        if gprof_line is not None:
-            self.load(gprof_line)
