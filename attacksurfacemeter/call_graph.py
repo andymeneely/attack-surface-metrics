@@ -74,110 +74,16 @@ class CallGraph():
         graph.add_edges_from(cflow_call_graph.edges)
         graph.add_edges_from(gprof_call_graph.edges)
 
-        # Combine both collections an eliminate duplicates
-        # nodes = cflow_call_graph.nodes
-        # nodes.extend([n for n in gprof_call_graph.nodes if n not in nodes])
-
-        # CallGraph._populate_graph(graph, nodes, cflow_call_graph.edges)
-        # CallGraph._populate_graph(graph, nodes, gprof_call_graph.edges)
-
+        # Could come in handy!
         # nodes = gprof_call_graph.nodes
         #
         # lib_calls = [n for n in cflow_call_graph.nodes
         #              if n.is_library_call()]  # any([e for e in cflow_call_graph.edges if e[0] == n])
         #              # and n not in gprof_call_graph.nodes] Assume gprof doesn't identify library calls
         #
-        # nodes.extend(lib_calls)
-        #
         # lib_call_edges = [e for e in cflow_call_graph.edges if e[1] in lib_calls]
-        #
-        # CallGraph._populate_graph(graph, nodes, gprof_call_graph.edges)
-        # CallGraph._populate_graph(graph, nodes, lib_call_edges)
 
         return cls(source, graph, cflow_call_graph.errors + gprof_call_graph.errors)
-
-    @staticmethod
-    def _find_edge_in_nodes(edge, nodes):
-        """
-            Finds the caller and callee of a given call graph edge in a given set of nodes.
-
-            Args:
-                edge: A 2-tuple containing a caller and a callee that are going to be searched for. The first element
-                    of the tuple is the caller and the second element is the callee.
-
-            Returns:
-                caller: A Call object from the given set of nodes that equals to the caller in the given edge.
-                callee: A Call object from the given set of nodes that equals to the callee in the given edge.
-        """
-
-        try:
-            caller = [n for n in nodes if edge[0] == n][0]
-        except IndexError as er:
-            print(er)
-
-            # for n in nodes:
-            #     print(n.function_name + " " + n.function_signature)
-
-            print(edge[0].function_name)
-            print(".")
-            print(edge[0].function_signature)
-            print("->")
-            print(edge[1].function_name)
-            print(".")
-            print(edge[1].function_signature)
-
-            raise er
-
-        try:
-            callee = [n for n in nodes if edge[1] == n][0]
-        except IndexError as er:
-            print(er)
-
-            # for n in nodes:
-            #     print(n.function_name + " " + n.function_signature)
-
-            print(edge[0].function_name)
-            print(".")
-            print(edge[0].function_signature)
-            print("->")
-            print(edge[1].function_name)
-            print(".")
-            print(edge[1].function_signature)
-
-            raise er
-
-        # caller = None
-        # callee = None
-        #
-        # for n in nodes:
-        #     if caller is None or callee is None:
-        #         if n == edge[0]:
-        #             caller = n
-        #         if n == edge[1]:
-        #             callee = n
-        #     else:
-        #         break
-
-        # nodes_in_edge = [n for n in nodes if n == edge[0] or n == edge[1]]
-        #
-        # caller = [n for n in nodes_in_edge if edge[0] == n][0]
-        # callee = [n for n in nodes_in_edge if edge[1] == n][0]
-
-        return caller, callee
-
-    @staticmethod
-    def _populate_graph(graph, nodes, edges):
-        """
-            Populates an empty graph with the given nodes and edges.
-
-            Args:
-                graph: A networkx.DiGraph instance with no nodes.
-                nodes: A collection of Call objects that will serve as nodes for the call graph.
-                edges: A collection of 2-tuples of Call that will serve as edges for the call graph.
-        """
-        for e in edges:
-            caller, callee = CallGraph._find_edge_in_nodes(e, nodes)
-            graph.add_edge(caller, callee)
 
     def _select_nodes(self, predicate):
         """
