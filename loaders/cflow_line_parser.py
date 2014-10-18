@@ -2,7 +2,7 @@ __author__ = 'kevin'
 
 import re
 
-from loaders import BaseLineParser
+from loaders.base_line_parser import BaseLineParser
 
 
 class CflowLineParser(BaseLineParser):

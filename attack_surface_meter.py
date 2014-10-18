@@ -2,9 +2,13 @@ __author__ = 'kevin'
 
 import argparse
 
-from attacksurfacemeter import CallGraph
-from loaders import CflowLoader, GprofLoader
-from formatters import TxtFormatter, XmlFormatter, JsonFormatter, HtmlFormatter
+from attacksurfacemeter.call_graph import CallGraph
+from loaders.cflow_loader import CflowLoader
+from loaders.gprof_loader import GprofLoader
+from formatters.txt_formatter import TxtFormatter
+from formatters.xml_formatter import XmlFormatter
+from formatters.json_formatter import JsonFormatter
+from formatters.html_formatter import HtmlFormatter
 
 
 def main():

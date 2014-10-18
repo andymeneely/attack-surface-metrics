@@ -4,8 +4,8 @@ import subprocess
 import os
 import networkx as nx
 
-from loaders import Stack
-from loaders import BaseLoader
+from loaders.stack import Stack
+from loaders.base_loader import BaseLoader
 from attacksurfacemeter.call import Call
 
 

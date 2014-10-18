@@ -1,7 +1,7 @@
 __author__ = 'kevin'
 
-from loaders import CflowLineParser
-from loaders import GprofLineParser
+from loaders.cflow_line_parser import CflowLineParser
+from loaders.gprof_line_parser import GprofLineParser
 
 
 class Call():
