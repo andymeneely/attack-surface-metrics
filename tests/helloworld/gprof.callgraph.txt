@@ -4,41 +4,41 @@
 granularity: each sample hit covers 2 byte(s) no time propagated
 
 index % time    self  children    called     name
-                                   8             recursive_a <cycle 1> [3]
-                0.00    0.00       1/2           greet_b [9]
-[2]      0.0    0.00    0.00       9         recursive_b <cycle 1> [2]
-                                   7             recursive_a <cycle 1> [3]
+                                   8             recursive_a <cycle 1> (greetings.c:38 @ 581033) [3]
+                0.00    0.00       1/2           greet_b (helloworld.c:38 @ 581033) [9]
+[2]      0.0    0.00    0.00       9         recursive_b <cycle 1> (greetings.c:38 @ 581033) [2]
+                                   7             recursive_a <cycle 1> (greetings.c:38 @ 581033) [3]
 -----------------------------------------------
-                                   7             recursive_b <cycle 1> [2]
-                0.00    0.00       1/2           greet_a [8]
-[3]      0.0    0.00    0.00       8         recursive_a <cycle 1> [3]
-                                   8             recursive_b <cycle 1> [2]
+                                   7             recursive_b <cycle 1> (greetings.c:38 @ 581033) [2]
+                0.00    0.00       1/2           greet_a (helloworld.c:38 @ 581033) [8]
+[3]      0.0    0.00    0.00       8         recursive_a <cycle 1> (greetings.c:38 @ 581033) [3]
+                                   8             recursive_b <cycle 1> (greetings.c:38 @ 581033) [2]
 -----------------------------------------------
-                0.00    0.00       1/2           greet_a [8]
-                0.00    0.00       1/2           greet_b [9]
-[4]      0.0    0.00    0.00       2         greet [4]
+                0.00    0.00       1/2           greet_a (helloworld.c:38 @ 581033) [8]
+                0.00    0.00       1/2           greet_b (helloworld.c:38 @ 581033) [9]
+[4]      0.0    0.00    0.00       2         greet (greetings.c:38 @ 581033) [4]
 -----------------------------------------------
-                0.00    0.00       1/1           main [15]
-[5]      0.0    0.00    0.00       1         GreeterSayHi [5]
+                0.00    0.00       1/1           main (helloworld.c:38 @ 581033) [15]
+[5]      0.0    0.00    0.00       1         GreeterSayHi (helloworld.c:38 @ 581033) [5]
 -----------------------------------------------
-                0.00    0.00       1/1           main [15]
-[6]      0.0    0.00    0.00       1         GreeterSayHiTo [6]
+                0.00    0.00       1/1           main (helloworld.c:38 @ 581033) [15]
+[6]      0.0    0.00    0.00       1         GreeterSayHiTo (helloworld.c:38 @ 581033) [6]
 -----------------------------------------------
-                0.00    0.00       1/1           main [15]
-[7]      0.0    0.00    0.00       1         addInt [7]
+                0.00    0.00       1/1           main (helloworld.c:38 @ 581033) [15]
+[7]      0.0    0.00    0.00       1         addInt (helloworld.c:38 @ 581033) [7]
 -----------------------------------------------
-                0.00    0.00       1/1           main [15]
-[8]      0.0    0.00    0.00       1         greet_a [8]
-                0.00    0.00       1/2           greet [4]
-                0.00    0.00       1/2           recursive_a <cycle 1> [3]
+                0.00    0.00       1/1           main (helloworld.c:38 @ 581033) [15]
+[8]      0.0    0.00    0.00       1         greet_a (helloworld.c:38 @ 581033) [8]
+                0.00    0.00       1/2           greet (greetings.c:38 @ 581033) [4]
+                0.00    0.00       1/2           recursive_a <cycle 1> (greetings.c:38 @ 581033) [3]
 -----------------------------------------------
-                0.00    0.00       1/1           main [15]
-[9]      0.0    0.00    0.00       1         greet_b [9]
-                0.00    0.00       1/2           greet [4]
-                0.00    0.00       1/2           recursive_b <cycle 1> [2]
+                0.00    0.00       1/1           main (helloworld.c:38 @ 581033) [15]
+[9]      0.0    0.00    0.00       1         greet_b (helloworld.c:38 @ 581033) [9]
+                0.00    0.00       1/2           greet (greetings.c:38 @ 581033) [4]
+                0.00    0.00       1/2           recursive_b <cycle 1> (greetings.c:38 @ 581033) [2]
 -----------------------------------------------
-                0.00    0.00       1/1           main [15]
-[10]     0.0    0.00    0.00       1         new_Greeter [10]
+                0.00    0.00       1/1           main (helloworld.c:38 @ 581033) [15]
+[10]     0.0    0.00    0.00       1         new_Greeter (helloworld.c:38 @ 581033) [10]
 -----------------------------------------------
 
 Index by function name
