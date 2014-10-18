@@ -1,5 +1,8 @@
 __author__ = 'kevin'
 
+from loaders import CflowLineParser
+from loaders import GprofLineParser
+
 
 class Call():
     """
@@ -46,8 +49,8 @@ class Call():
         self._function_signature = signature
 
     @classmethod
-    def from_cflow(cls, cflow_line, cflow_line_parser):
-        cflow_line_parser.load(cflow_line)
+    def from_cflow(cls, cflow_line):
+        cflow_line_parser = CflowLineParser.get_instance(cflow_line)
 
         new_instance = cls(cflow_line_parser.get_function_name(), cflow_line_parser.get_function_signature())
         new_instance.level = cflow_line_parser.get_level()
@@ -58,10 +61,10 @@ class Call():
         return self._function_signature is None
 
     @classmethod
-    def from_gprof(cls, gprof_line, gprof_line_parser):
-        gprof_line_parser.load(gprof_line)
+    def from_gprof(cls, gprof_line):
+        gprof_line_parser = GprofLineParser.get_instance(gprof_line)
 
-        new_instance = Call(gprof_line_parser.get_function_name(), gprof_line_parser.get_function_signature())
+        new_instance = cls(gprof_line_parser.get_function_name(), gprof_line_parser.get_function_signature())
 
         return new_instance
 

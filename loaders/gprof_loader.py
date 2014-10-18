@@ -3,8 +3,7 @@ __author__ = 'kevin'
 import networkx as nx
 
 from loaders import BaseLoader
-from loaders import GprofLineParser
-from attacksurfacemeter import Call
+from attacksurfacemeter.call import Call
 
 
 class GprofLoader(BaseLoader):
@@ -69,7 +68,7 @@ class GprofLoader(BaseLoader):
                 else:  # if header_passed:
                     if self.is_entry_line(line):
                         try:
-                            entry = Call.from_gprof(line, GprofLineParser.get_instance())
+                            entry = Call.from_gprof(line)
                         except ValueError as e:
                             raise e
 
@@ -93,9 +92,9 @@ class GprofLoader(BaseLoader):
                     else:
                         try:
                             if is_caller:
-                                callers.append(Call.from_gprof(line, GprofLineParser.get_instance()))
+                                callers.append(Call.from_gprof(line))
                             else:
-                                callees.append(Call.from_gprof(line, GprofLineParser.get_instance()))
+                                callees.append(Call.from_gprof(line))
                         except ValueError as e:
                             self._error_messages.append("Error: " + str(e) + " Input line: " + line)
 

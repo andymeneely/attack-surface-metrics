@@ -10,21 +10,16 @@ class GprofLineParser(BaseLineParser):
     _instance = None
 
     @staticmethod
-    def get_instance():
+    def get_instance(gprof_line=None):
         if GprofLineParser._instance is None:
             GprofLineParser._instance = GprofLineParser()
+
+        GprofLineParser._instance.load(gprof_line)
 
         return GprofLineParser._instance
 
     def __init__(self):
         super(GprofLineParser, self).__init__()
-
-    @staticmethod
-    def get_instance():
-        if GprofLineParser._instance is None:
-            GprofLineParser._instance = GprofLineParser()
-
-        return GprofLineParser._instance
 
     def load(self, gprof_line):
         match = re.search(r"(\[\d+\])( +)((\d+\.\d+)( +)){3}(\d*\+*\d*)( +)([\w.]+)( +)(.*)", gprof_line)

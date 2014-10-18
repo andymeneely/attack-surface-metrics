@@ -10,9 +10,11 @@ class CflowLineParser(BaseLineParser):
     _instance = None
 
     @staticmethod
-    def get_instance():
+    def get_instance(cflow_line=None):
         if CflowLineParser._instance is None:
             CflowLineParser._instance = CflowLineParser()
+
+        CflowLineParser._instance.load(cflow_line)
 
         return CflowLineParser._instance
 
