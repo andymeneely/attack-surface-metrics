@@ -22,6 +22,8 @@ class GprofLineParser(BaseLineParser):
         super(GprofLineParser, self).__init__()
 
     def load(self, gprof_line):
+        self.__init__()
+
         match = re.search(r"(\[\d+\])( +)((\d+\.\d+)( +)){3}(\d*\+*\d*)( +)([\w.]+)( +)(.*)", gprof_line)
 
         if not match:

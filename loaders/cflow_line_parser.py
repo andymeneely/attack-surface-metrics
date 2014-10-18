@@ -25,6 +25,8 @@ class CflowLineParser(BaseLineParser):
         self._level = 0
 
     def load(self, cflow_line):
+        self.__init__()
+
         split_line = cflow_line.split(CflowLineParser.indent)
         function_info = split_line[-1].strip()
         self._level = len(split_line) - 1
