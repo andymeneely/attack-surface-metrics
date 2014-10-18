@@ -71,6 +71,9 @@ class CallGraph():
 
         graph = nx.DiGraph()
 
+        graph.add_edges_from(cflow_call_graph.edges)
+        graph.add_edges_from(gprof_call_graph.edges)
+
         # Combine both collections an eliminate duplicates
         # nodes = cflow_call_graph.nodes
         # nodes.extend([n for n in gprof_call_graph.nodes if n not in nodes])
@@ -78,18 +81,18 @@ class CallGraph():
         # CallGraph._populate_graph(graph, nodes, cflow_call_graph.edges)
         # CallGraph._populate_graph(graph, nodes, gprof_call_graph.edges)
 
-        nodes = gprof_call_graph.nodes
-
-        lib_calls = [n for n in cflow_call_graph.nodes
-                     if n.is_library_call()]  # any([e for e in cflow_call_graph.edges if e[0] == n])
-                     # and n not in gprof_call_graph.nodes] Assume gprof doesn't identify library calls
-
-        nodes.extend(lib_calls)
-
-        lib_call_edges = [e for e in cflow_call_graph.edges if e[1] in lib_calls]
-
-        CallGraph._populate_graph(graph, nodes, gprof_call_graph.edges)
-        CallGraph._populate_graph(graph, nodes, lib_call_edges)
+        # nodes = gprof_call_graph.nodes
+        #
+        # lib_calls = [n for n in cflow_call_graph.nodes
+        #              if n.is_library_call()]  # any([e for e in cflow_call_graph.edges if e[0] == n])
+        #              # and n not in gprof_call_graph.nodes] Assume gprof doesn't identify library calls
+        #
+        # nodes.extend(lib_calls)
+        #
+        # lib_call_edges = [e for e in cflow_call_graph.edges if e[1] in lib_calls]
+        #
+        # CallGraph._populate_graph(graph, nodes, gprof_call_graph.edges)
+        # CallGraph._populate_graph(graph, nodes, lib_call_edges)
 
         return cls(source, graph, cflow_call_graph.errors + gprof_call_graph.errors)
 
