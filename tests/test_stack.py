@@ -1,7 +1,7 @@
 __author__ = 'kevin'
 
 import unittest
-from loaders import Stack
+from loaders.stack import Stack
 
 
 class StackTestCase(unittest.TestCase):

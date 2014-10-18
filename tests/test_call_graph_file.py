@@ -3,8 +3,8 @@ __author__ = 'kevin'
 import unittest
 import os
 
-from attacksurfacemeter import CallGraph
-from loaders import CflowLoader
+from attacksurfacemeter.call_graph import CallGraph
+from loaders.cflow_loader import CflowLoader
 
 from tests.test_call_graph import CallGraphTestCase
 

@@ -3,9 +3,10 @@ __author__ = 'kevin'
 import unittest
 import os
 
-from attacksurfacemeter import CflowCall, CallGraph
-from loaders import CflowLoader
-from formatters import TxtFormatter
+from attacksurfacemeter.call import Call
+from attacksurfacemeter.call_graph import CallGraph
+from loaders.cflow_loader import CflowLoader
+from formatters.txt_formatter import TxtFormatter
 
 
 class TxtFormatterTestCase(unittest.TestCase):
@@ -96,28 +97,28 @@ class TxtFormatterTestCase(unittest.TestCase):
     def test_edges(self):
         # Arrange
         expected_count = 22
-        expected_content = [(CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"), CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (recursive: see 5) [see 5]")),
-                            (CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"), CflowCall("printf()")),
-                            (CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"), CflowCall("puts()")),
-                            (CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R): [see 7]")),
-                            (CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>: [see 3]")),
-                            (CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), CflowCall("scanf()")),
-                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), CflowCall("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>")),
-                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:")),
-                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")),
-                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), CflowCall("printf()")),
-                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")),
-                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), CflowCall("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>")),
-                            (CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"), CflowCall("puts()")),
-                            (CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), CflowCall("malloc()")),
-                            (CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:")),
-                            (CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:")),
-                            (CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"), CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:")),
-                            (CflowCall("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"), CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")),
-                            (CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"), CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):")),
-                            (CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"), CflowCall("printf()")),
-                            (CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"), CflowCall("printf()")),
-                            (CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"), CflowCall("printf()"))]
+        expected_content = [(Call.from_cflow("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"), Call.from_cflow("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (recursive: see 5) [see 5]")),
+                            (Call.from_cflow("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"), Call.from_cflow("printf()")),
+                            (Call.from_cflow("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"), Call.from_cflow("puts()")),
+                            (Call.from_cflow("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), Call.from_cflow("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R): [see 7]")),
+                            (Call.from_cflow("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), Call.from_cflow("greet() <void greet (int greeting_code) at ./src/greetings.c:14>: [see 3]")),
+                            (Call.from_cflow("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"), Call.from_cflow("scanf()")),
+                            (Call.from_cflow("main() <int main (void) at ./src/helloworld.c:58>:"), Call.from_cflow("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>")),
+                            (Call.from_cflow("main() <int main (void) at ./src/helloworld.c:58>:"), Call.from_cflow("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:")),
+                            (Call.from_cflow("main() <int main (void) at ./src/helloworld.c:58>:"), Call.from_cflow("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")),
+                            (Call.from_cflow("main() <int main (void) at ./src/helloworld.c:58>:"), Call.from_cflow("printf()")),
+                            (Call.from_cflow("main() <int main (void) at ./src/helloworld.c:58>:"), Call.from_cflow("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")),
+                            (Call.from_cflow("main() <int main (void) at ./src/helloworld.c:58>:"), Call.from_cflow("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>")),
+                            (Call.from_cflow("main() <int main (void) at ./src/helloworld.c:58>:"), Call.from_cflow("puts()")),
+                            (Call.from_cflow("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), Call.from_cflow("malloc()")),
+                            (Call.from_cflow("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), Call.from_cflow("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:")),
+                            (Call.from_cflow("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"), Call.from_cflow("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:")),
+                            (Call.from_cflow("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"), Call.from_cflow("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:")),
+                            (Call.from_cflow("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:"), Call.from_cflow("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")),
+                            (Call.from_cflow("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"), Call.from_cflow("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):")),
+                            (Call.from_cflow("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"), Call.from_cflow("printf()")),
+                            (Call.from_cflow("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"), Call.from_cflow("printf()")),
+                            (Call.from_cflow("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"), Call.from_cflow("printf()"))]
 
         # Act
         edges = self.formatter.edges
@@ -140,7 +141,7 @@ class TxtFormatterTestCase(unittest.TestCase):
     def test_entry_points(self):
         # Arrange
         expected_count = 1
-        expected_content = [CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")]
+        expected_content = [Call.from_cflow("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")]
 
         # Act
         entry_points_count = len(self.formatter.entry_points)
@@ -164,12 +165,12 @@ class TxtFormatterTestCase(unittest.TestCase):
     def test_exit_points(self):
         # Arrange
         expected_count = 6
-        expected_content = [CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"),
-                            CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"),
-                            CflowCall("main() <int main (void) at ./src/helloworld.c:58>:"),
-                            CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"),
-                            CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"),
-                            CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):")]
+        expected_content = [Call.from_cflow("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"),
+                            Call.from_cflow("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:"),
+                            Call.from_cflow("main() <int main (void) at ./src/helloworld.c:58>:"),
+                            Call.from_cflow("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"),
+                            Call.from_cflow("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"),
+                            Call.from_cflow("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):")]
 
         # Act
         exit_points_count = len(self.formatter.exit_points)
@@ -193,13 +194,13 @@ class TxtFormatterTestCase(unittest.TestCase):
     def test_execution_paths(self):
         # Arrange
         expected_count = 3
-        expected_content = [[CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"),
-                             CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"),
-                             CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")],
-                            [CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"),
-                             CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R): [see 7]")],
-                            [CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"),
-                             CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>: [see 3]")]]
+        expected_content = [[Call.from_cflow("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"),
+                             Call.from_cflow("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"),
+                             Call.from_cflow("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")],
+                            [Call.from_cflow("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"),
+                             Call.from_cflow("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R): [see 7]")],
+                            [Call.from_cflow("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"),
+                             Call.from_cflow("greet() <void greet (int greeting_code) at ./src/greetings.c:14>: [see 3]")]]
 
         # Act
         paths = self.formatter.execution_paths
@@ -245,7 +246,7 @@ class TxtFormatterTestCase(unittest.TestCase):
     def test_node_specific_closeness(self):
         # Arrange
         expected_value = "0.22857142857142856"
-        call = CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
+        call = Call.from_cflow("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
 
         # Act
         closeness = self.formatter.get_closeness(call)
@@ -268,7 +269,7 @@ class TxtFormatterTestCase(unittest.TestCase):
     def test_node_specific_betweenness(self):
         # Arrange
         expected_value = "0.016483516483516484"
-        call = CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
+        call = Call.from_cflow("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
 
         # Act
         betweenness = self.formatter.get_betweenness(call)
@@ -310,7 +311,7 @@ class TxtFormatterTestCase(unittest.TestCase):
     def test_node_specific_degree_centrality(self):
         # Arrange
         expected_value = "0.2857142857142857"
-        call = CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
+        call = Call.from_cflow("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
 
         # Act
         degree = self.formatter.get_degree_centrality(call)
@@ -333,7 +334,7 @@ class TxtFormatterTestCase(unittest.TestCase):
     def test_node_specific_in_degree_centrality(self):
         # Arrange
         expected_value = "0.07142857142857142"
-        call = CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
+        call = Call.from_cflow("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
 
         # Act
         degree = self.formatter.get_in_degree_centrality(call)
@@ -355,7 +356,7 @@ class TxtFormatterTestCase(unittest.TestCase):
     def test_node_specific_out_degree_centrality(self):
         # Arrange
         expected_value = "0.21428571428571427"
-        call = CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
+        call = Call.from_cflow("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
 
         # Act
         degree = self.formatter.get_out_degree_centrality(call)
@@ -378,7 +379,7 @@ class TxtFormatterTestCase(unittest.TestCase):
     def test_node_specific_degree(self):
         # Arrange
         expected_value = "4"
-        call = CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
+        call = Call.from_cflow("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
 
         # Act
         degree = self.formatter.get_degree(call)
@@ -400,7 +401,7 @@ class TxtFormatterTestCase(unittest.TestCase):
     def test_node_specific_in_degree(self):
         # Arrange
         expected_value = "1"
-        call = CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
+        call = Call.from_cflow("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
 
         # Act
         degree = self.formatter.get_in_degree(call)
@@ -423,7 +424,7 @@ class TxtFormatterTestCase(unittest.TestCase):
     def test_node_specific_out_degree(self):
         # Arrange
         expected_value = "3"
-        call = CflowCall("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
+        call = Call.from_cflow("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:")
 
         # Act
         degree = self.formatter.get_out_degree(call)
@@ -433,9 +434,9 @@ class TxtFormatterTestCase(unittest.TestCase):
 
     def test_descendant_entry_points(self):
         # Arrange
-        call = CflowCall("main() <int main (void) at ./src/helloworld.c:58>:")
+        call = Call.from_cflow("main() <int main (void) at ./src/helloworld.c:58>:")
         expected_count = 1
-        expected_content = [CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")]
+        expected_content = [Call.from_cflow("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")]
 
         # Act
         descendant_entry_points = self.formatter.get_descendant_entry_points(call)
@@ -449,19 +450,19 @@ class TxtFormatterTestCase(unittest.TestCase):
 
     def test_descendant_exit_points(self):
         # Arrange
-        call = CflowCall("main() <int main (void) at ./src/helloworld.c:58>:")
+        call = Call.from_cflow("main() <int main (void) at ./src/helloworld.c:58>:")
         expected_count = 5
-        expected_content = [CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"),
-                            CflowCall("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"),
-                            CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"),
-                            CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"),
-                            CflowCall("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:")]
+        expected_content = [Call.from_cflow("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"),
+                            Call.from_cflow("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"),
+                            Call.from_cflow("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"),
+                            Call.from_cflow("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"),
+                            Call.from_cflow("GreeterSayHi() <void GreeterSayHi () at ./src/helloworld.c:48>:")]
 
         # Act
         descendant_exit_points = self.formatter.get_descendant_exit_points(call)
         all_found = all([c in descendant_exit_points for c in expected_content])
 
-        # [print('CflowCall("' + n.function_info + '"),') for n in self.call_graph.get_descendant_exit_points(call)]
+        # [print('Call.from_cflow("' + n.function_info + '"),') for n in self.call_graph.get_descendant_exit_points(call)]
 
         # Assert
         self.assertEqual(expected_count, len(descendant_exit_points))
@@ -469,7 +470,7 @@ class TxtFormatterTestCase(unittest.TestCase):
 
     def test_descendants_entry_point_ratio(self):
         # Arrange
-        call = CflowCall("main() <int main (void) at ./src/helloworld.c:58>:")
+        call = Call.from_cflow("main() <int main (void) at ./src/helloworld.c:58>:")
         expected_value = "0.07142857142857142"
 
         # Act
@@ -480,7 +481,7 @@ class TxtFormatterTestCase(unittest.TestCase):
 
     def test_descendants_exit_point_ratio(self):
         # Arrange
-        call = CflowCall("main() <int main (void) at ./src/helloworld.c:58>:")
+        call = Call.from_cflow("main() <int main (void) at ./src/helloworld.c:58>:")
         expected_value = "0.35714285714285715"
 
         # Act
@@ -491,9 +492,9 @@ class TxtFormatterTestCase(unittest.TestCase):
 
     def test_ancestor_entry_points(self):
         # Arrange
-        call = CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:")
+        call = Call.from_cflow("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:")
         expected_count = 1
-        expected_content = [CflowCall("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")]
+        expected_content = [Call.from_cflow("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")]
 
         # Act
         ancestor_entry_points = self.formatter.get_ancestor_entry_points(call)
@@ -505,10 +506,10 @@ class TxtFormatterTestCase(unittest.TestCase):
 
     def test_ancestor_exit_points(self):
         # Arrange
-        call = CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):")
+        call = Call.from_cflow("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):")
         expected_count = 2
-        expected_content = [CflowCall("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"),
-                            CflowCall("main() <int main (void) at ./src/helloworld.c:58>:")]
+        expected_content = [Call.from_cflow("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"),
+                            Call.from_cflow("main() <int main (void) at ./src/helloworld.c:58>:")]
 
         # Act
         ancestor_exit_points = self.formatter.get_ancestor_exit_points(call)
@@ -520,7 +521,7 @@ class TxtFormatterTestCase(unittest.TestCase):
 
     def test_ancestors_entry_point_ratio(self):
         # Arrange
-        call = CflowCall("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:")
+        call = Call.from_cflow("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:")
         expected_value = "0.3333333333333333"
 
         # Act
@@ -531,7 +532,7 @@ class TxtFormatterTestCase(unittest.TestCase):
 
     def test_ancestors_exit_point_ratio(self):
         # Arrange
-        call = CflowCall("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):")
+        call = Call.from_cflow("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):")
         expected_value = "0.5"
 
         # Act

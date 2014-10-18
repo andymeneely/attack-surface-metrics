@@ -3,9 +3,9 @@ __author__ = 'kevin'
 import unittest
 import os
 
-from attacksurfacemeter import CallGraph
-from loaders import CflowLoader
-from formatters import JsonFormatter
+from attacksurfacemeter.call_graph import CallGraph
+from loaders.cflow_loader import CflowLoader
+from formatters.json_formatter import JsonFormatter
 
 
 class JsonFormatterTestCase(unittest.TestCase):

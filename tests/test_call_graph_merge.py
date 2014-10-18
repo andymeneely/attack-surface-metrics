@@ -3,9 +3,11 @@ __author__ = 'kevin'
 import unittest
 import os
 
-from attacksurfacemeter import CallGraph, Call
-from loaders import CflowLoader
-from loaders import GprofLoader
+from attacksurfacemeter.call import Call
+
+from attacksurfacemeter.call_graph import CallGraph
+from loaders.cflow_loader import CflowLoader
+from loaders.gprof_loader import GprofLoader
 
 
 class CallGraphMergeTestCase(unittest.TestCase):
@@ -28,20 +30,21 @@ class CallGraphMergeTestCase(unittest.TestCase):
 
     def test_nodes(self):
         # Arrange
-        expected_content = [Call("recursive_b", "greetings.c"),
-                            Call("malloc", ""),
-                            Call("greet_a", ""),
-                            Call("printf", ""),
-                            Call("recursive_a", "greetings.c"),
-                            Call("GreeterSayHi", "helloworld.c"),
-                            Call("addInt", "helloworld.c"),
-                            Call("main", "helloworld.c"),
-                            Call("GreeterSayHiTo", ""),
-                            Call("new_Greeter", "helloworld.c"),
-                            Call("puts", ""),
+        expected_content = [Call("malloc", ""),
                             Call("scanf", ""),
-                            Call("greet_b", ""),
-                            Call("greet", "greetings.c")]
+                            Call("GreeterSayHiTo", "helloworld.c"),
+                            Call("functionPtr", "helloworld.c"),
+                            Call("greet", "greetings.c"),
+                            Call("recursive_a", "greetings.c"),
+                            Call("greet_a", "helloworld.c"),
+                            Call("addInt", "helloworld.c"),
+                            Call("recursive_b", "greetings.c"),
+                            Call("new_Greeter", "helloworld.c"),
+                            Call("printf", ""),
+                            Call("greet_b", "helloworld.c"),
+                            Call("GreeterSayHi", "helloworld.c"),
+                            Call("main", "helloworld.c"),
+                            Call("puts", "")]
 
         # Act
         nodes = self.call_graph.nodes
@@ -52,32 +55,35 @@ class CallGraphMergeTestCase(unittest.TestCase):
         #           (c.function_signature if c.function_signature else "") + '"),')
 
         # Assert
-        self.assertEqual(14, len(nodes))
+        self.assertEqual(15, len(nodes))
         self.assertTrue(all_calls_found)
 
     def test_edges(self):
         # Arrange
-        expected_content = [(Call("new_Greeter", ""), Call("malloc", "")),
-                            (Call("greet_b", ""), Call("scanf", "")),
-                            (Call("greet_b", ""), Call("recursive_b", "")),
-                            (Call("greet_b", ""), Call("greet", "")),
-                            (Call("GreeterSayHi", ""), Call("printf", "")),
-                            (Call("GreeterSayHiTo", ""), Call("printf", "")),
-                            (Call("greet", ""), Call("puts", "")),
-                            (Call("recursive_a", ""), Call("printf", "")),
-                            (Call("recursive_a", ""), Call("recursive_b", "")),
-                            (Call("recursive_b", ""), Call("printf", "")),
-                            (Call("recursive_b", ""), Call("recursive_a", "")),
-                            (Call("main", ""), Call("new_Greeter", "")),
-                            (Call("main", ""), Call("puts", "")),
-                            (Call("main", ""), Call("GreeterSayHiTo", "")),
-                            (Call("main", ""), Call("greet_b", "")),
-                            (Call("main", ""), Call("GreeterSayHi", "")),
-                            (Call("main", ""), Call("printf", "")),
-                            (Call("main", ""), Call("greet_a", "")),
-                            (Call("main", ""), Call("addInt", "")),
-                            (Call("greet_a", ""), Call("recursive_a", "")),
-                            (Call("greet_a", ""), Call("greet", ""))]
+        expected_content = [(Call("GreeterSayHi", "helloworld.c"), Call("printf", "")),
+                            (Call("greet", "greetings.c"), Call("puts", "")),
+                            (Call("new_Greeter", "helloworld.c"), Call("malloc", "")),
+                            (Call("new_Greeter", "helloworld.c"), Call("GreeterSayHi", "helloworld.c")),
+                            (Call("new_Greeter", "helloworld.c"), Call("GreeterSayHiTo", "helloworld.c")),
+                            (Call("recursive_b", "greetings.c"), Call("recursive_a", "greetings.c")),
+                            (Call("recursive_b", "greetings.c"), Call("printf", "")),
+                            (Call("main", "helloworld.c"), Call("functionPtr", "helloworld.c")),
+                            (Call("main", "helloworld.c"), Call("puts", "")),
+                            (Call("main", "helloworld.c"), Call("greet_b", "helloworld.c")),
+                            (Call("main", "helloworld.c"), Call("GreeterSayHi", "helloworld.c")),
+                            (Call("main", "helloworld.c"), Call("new_Greeter", "helloworld.c")),
+                            (Call("main", "helloworld.c"), Call("greet_a", "helloworld.c")),
+                            (Call("main", "helloworld.c"), Call("GreeterSayHiTo", "helloworld.c")),
+                            (Call("main", "helloworld.c"), Call("printf", "")),
+                            (Call("main", "helloworld.c"), Call("addInt", "helloworld.c")),
+                            (Call("greet_b", "helloworld.c"), Call("greet", "greetings.c")),
+                            (Call("greet_b", "helloworld.c"), Call("recursive_b", "greetings.c")),
+                            (Call("greet_b", "helloworld.c"), Call("scanf", "")),
+                            (Call("recursive_a", "greetings.c"), Call("recursive_b", "greetings.c")),
+                            (Call("recursive_a", "greetings.c"), Call("printf", "")),
+                            (Call("greet_a", "helloworld.c"), Call("greet", "greetings.c")),
+                            (Call("greet_a", "helloworld.c"), Call("recursive_a", "greetings.c")),
+                            (Call("GreeterSayHiTo", "helloworld.c"), Call("printf", ""))]
 
         # Act
         edges = self.call_graph.edges
@@ -88,7 +94,7 @@ class CallGraphMergeTestCase(unittest.TestCase):
         #            'Call("' + e[1].function_name + '", "' + (e[1].function_signature if e[1].function_signature else "") + '")),')
 
         # Assert
-        self.assertEqual(21, len(edges))
+        self.assertEqual(24, len(edges))
         self.assertTrue(all_calls_found)
 
 
