@@ -5,6 +5,7 @@ import subprocess
 import os
 import re
 
+
 def main():
     args = parse_args()
 
@@ -70,19 +71,29 @@ def main():
 
 
 def find_function(line_number, file):
-    with open(file) as f:
-        file_lines = f.readlines()
+    # ctags -x --c-kinds=f <FILE NAME>
+    # http://ctags.sourceforge.net/ctags.html
+    ctags = subprocess.Popen(["ctags",
+                              "-x",
+                              "--c-kinds=f",
+                              file],
+                             stdout=subprocess.PIPE)
 
-    file_lines = file_lines[:line_number]
+    ctags_output = ctags.stdout.read().decode(encoding='UTF-8').splitlines()
 
-    file_fragment = "\n".join(file_lines)
+    functions_in_file = list()
 
-    # find all the function definitions
-    functions = re.findall(r"\w+\s+\w+\s*\(\s*\w+\s+\w+\s*\)", file_fragment)
+    for line in ctags_output:
+        # line = 'GreeterSayHi     function     48 tests/helloworld/src/helloworld.c void GreeterSayHi()'
+        functions_in_file.append({
+            'name': line.split()[0],
+            'line_number': int(line.split()[2])
+        })
 
-    last_function = functions[-1]
+    functions_in_file = [f for f in functions_in_file if f['line_number'] < line_number]
+    functions_in_file.sort(key=lambda func: func['line_number'])
 
-    return last_function
+    return functions_in_file[-1]['name']
 
 
 def parse_args():
