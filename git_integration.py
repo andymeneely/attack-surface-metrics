@@ -12,10 +12,7 @@ def main():
     os.chdir(args.repo_root)
 
     # git checkout <COMMIT SHA1>
-    subprocess.Popen(['git',
-                      'checkout',
-                      args.commit],
-                     stdout=subprocess.PIPE)
+    subprocess.call(['git', 'checkout', args.commit])
 
     # git show --pretty="format:" --name-only <COMMIT SHA1>
     proc = subprocess.Popen(['git',
@@ -44,6 +41,8 @@ def main():
         diff_lines = changed_file_diff.splitlines()
         reached_diff = False
 
+
+
         for diff_line in diff_lines:
             if not reached_diff:
                 if diff_line.startswith('@@'):
@@ -59,7 +58,7 @@ def main():
                     # '12'
                     # >>> re.search(reg_ex, text).group(6)
                     # '4'
-                    match = re.search(r"(@@ )([-+]\d+,\d+)( )([-+](\d+),(\d+))( @@)(.*)", diff_line)
+                    match = re.search(r"(@@ )([-]\d+,\d+)( )([+](\d+),(\d+))( @@)(.*)", diff_line)
                     diff_start_line = int(match.group(5))
                     # diff_count_line = int(match.group(6))
 
@@ -75,15 +74,12 @@ def main():
     for function_name in modified_functions:
         print(function_name)
 
-    subprocess.Popen(['git',
-                      'checkout',
-                      'origin/master'],
-                     stdout=subprocess.PIPE)
+    subprocess.call(['git', 'checkout', 'origin/master'])
 
 
 def find_function(line_number, file):
 
-    function_in_line = None
+    function_for_line = None
 
     # ctags -x --c-kinds=f <FILE NAME>
     # http://ctags.sourceforge.net/ctags.html
@@ -95,24 +91,15 @@ def find_function(line_number, file):
 
     ctags_output = ctags.stdout.read().decode(encoding='UTF-8').splitlines()
 
-    # functions_in_file = list()
-    #
-    # for line in ctags_output:
-    #     # line = 'GreeterSayHi     function     48 tests/helloworld/src/helloworld.c void GreeterSayHi()'
-    #     functions_in_file.append({
-    #         'name': line.split()[0],
-    #         'line_number': int(line.split()[2])
-    #     })
-
     # line = 'GreeterSayHi     function     48 tests/helloworld/src/helloworld.c void GreeterSayHi()'
     functions_in_file = [{'name': line.split()[0], 'line_number': int(line.split()[2])} for line in ctags_output]
     functions_in_file = [f for f in functions_in_file if f['line_number'] <= line_number]
 
     if functions_in_file:
         functions_in_file.sort(key=lambda func: func['line_number'])
-        function_in_line = functions_in_file[-1]['name']
+        function_for_line = functions_in_file[-1]['name']
 
-    return function_in_line
+    return function_for_line
 
 
 def parse_args():
