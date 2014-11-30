@@ -41,28 +41,25 @@ def main():
         diff_lines = changed_file_diff.splitlines()
         reached_diff = False
 
-
-
         for diff_line in diff_lines:
-            if not reached_diff:
-                if diff_line.startswith('@@'):
-                    reached_diff = True
-                    idx = 0
 
-                    # @@ -12,35 +12,4 @@ void greet(int);
-                    # @@ from-file-line-numbers to-file-line-numbers @@
-                    # @@ start,count start,count @@
-                    # >>> re.search(reg_ex, text).group(4)
-                    # '+12,4'
-                    # >>> re.search(reg_ex, text).group(5)
-                    # '12'
-                    # >>> re.search(reg_ex, text).group(6)
-                    # '4'
-                    match = re.search(r"(@@ )([-]\d+,\d+)( )([+](\d+),(\d+))( @@)(.*)", diff_line)
-                    diff_start_line = int(match.group(5))
-                    # diff_count_line = int(match.group(6))
+            # @@ -12,35 +12,4 @@ void greet(int);
+            # @@ from-file-line-numbers to-file-line-numbers @@
+            # @@ start,count start,count @@
+            # >>> re.search(reg_ex, text).group(4)
+            # '+12,4'
+            # >>> re.search(reg_ex, text).group(5)
+            # '12'
+            # >>> re.search(reg_ex, text).group(6)
+            # '4'
+            match = re.search(r"(@@ )([-]\d+,\d+)( )([+](\d+),(\d+))( @@)(.*)", diff_line)
 
-            else:
+            if match:
+                reached_diff = True
+                idx = 0
+                diff_start_line = int(match.group(5))
+
+            elif reached_diff:
                 if diff_line.startswith('+') or diff_line.startswith('-'):
                     function_for_line = find_function(diff_start_line + idx, changed_file)
 
@@ -107,7 +104,6 @@ def parse_args():
     parser = argparse.ArgumentParser(description="")
 
     parser.add_argument("-c", "--commit", help="")
-    parser.add_argument("-d", "--diff", help="")
     parser.add_argument("-rr", "--repo_root", help="")
 
     return parser.parse_args()
