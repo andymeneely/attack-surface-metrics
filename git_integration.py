@@ -12,7 +12,8 @@ def main():
     os.chdir(args.repo_root)
 
     # git checkout <COMMIT SHA1>
-    subprocess.call(['git', 'checkout', args.commit])
+    # somehow sending stderr=subprocess.PIPE prevents git from printing to this program's output
+    subprocess.call(['git', 'checkout', args.commit], stderr=subprocess.PIPE)
 
     # git show --pretty="format:" --name-only <COMMIT SHA1>
     proc = subprocess.Popen(['git',
@@ -71,7 +72,7 @@ def main():
     for function_name in modified_functions:
         print(function_name)
 
-    subprocess.call(['git', 'checkout', 'origin/master'])
+    subprocess.call(['git', 'checkout', 'origin/master'], stderr=subprocess.PIPE)
 
 
 def find_function(line_number, file):
