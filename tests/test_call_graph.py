@@ -891,5 +891,39 @@ class CallGraphTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(expected_value, ratio)
 
+    def test_entry_point_reachability(self):
+        # Arrange
+        call = Call.from_cflow("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")
+        expected_value = 0.4
+
+        # Act
+        entry_point_reachability = self.call_graph.get_entry_point_reachability(call)
+
+        # Assert
+        self.assertEqual(expected_value, entry_point_reachability)
+
+    def test_exit_point_reachability(self):
+        # Arrange
+        call = Call.from_cflow("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")
+        expected_value = 0.26666666666666666
+
+        # Act
+        exit_point_reachability = self.call_graph.get_exit_point_reachability(call)
+
+        # Assert
+        self.assertEqual(expected_value, exit_point_reachability)
+
+    def test_shallow_risk(self):
+        # Arrange
+        call = Call.from_cflow("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")
+        expected_value = 0.2
+
+        # Act
+        exit_point_reachability = self.call_graph.get_shallow_risk(call)
+
+        # Assert
+        self.assertEqual(expected_value, exit_point_reachability)
+
+
 if __name__ == '__main__':
     unittest.main()
