@@ -772,3 +772,45 @@ class CallGraph():
 
     def get_clusters(self):
         return nx.connected_components(self.call_graph.to_undirected())
+
+    def get_entry_point_reachability(self, call):
+        """
+            Returns the ratio of descendants of a call to the total number of nodes in the call graph.
+
+            Args:
+                call: A Call object that represents an Entry Point.
+
+            Returns:
+                A Float that represents the calculated ratio.
+        """
+        return len(self.get_descendants(call)) / len(self.nodes)
+
+    def get_exit_point_reachability(self, call):
+        """
+            Returns the ratio of ancestors of a call to the total number of nodes in the call graph.
+
+            Args:
+                call: A Call object that represents an Exit Point.
+
+            Returns:
+                A Float that represents the calculated ratio.
+        """
+        return len(self.get_ancestors(call)) / len(self.nodes)
+
+    def get_shallow_risk(self, call, depth=1):
+        """
+            Returns the ratio of descendants of a call that are reachable within a specified depth to
+            the total number of nodes in the call graph.
+
+            Args:
+                call: A Call object that represents an Entry Point.
+
+            Returns:
+                A Float that represents the calculated ratio.
+        """
+        nearest_descendants = set()
+        for nearest_descendant in nx.single_source_shortest_path(self.call_graph, call, cutoff=depth):
+            if nearest_descendant.function_name != call.function_name:
+                nearest_descendants.add(nearest_descendant)
+
+        return len(nearest_descendants) / len(self.nodes)
