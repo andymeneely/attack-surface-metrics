@@ -814,3 +814,110 @@ class CallGraph():
                 nearest_descendants.add(nearest_descendant)
 
         return len(nearest_descendants) / len(self.nodes)
+
+    # TODO: Refactor code so that both get_proximity_to_* and get_association_with_* use a single loop
+    def get_proximity_to_entry(self, call):
+        """
+            Returns the average of the shortest path lengths between all entry points and a specified
+            call, if a path exists.
+
+            Args:
+                call: A Call object that represents a function call in the call graph.
+
+            Returns:
+                0, if the Call object is an Entry Point.
+                None, if there is no path between any of the entry points and the Call object.
+                Otherwise, a decimal value that represents the calculated proximity.
+        """
+        proximity_to_entry = None
+        if call in self.entry_points:
+            proximity_to_entry = 0
+        else:
+            entry_path_lengths = []
+            for en in self.entry_points:
+                if nx.has_path(self.call_graph, source=en, target=call):
+                    entry_path_lengths.append(nx.shortest_path_length(self.call_graph, source=en, target=call))
+
+            if entry_path_lengths:
+                proximity_to_entry = stat.mean(entry_path_lengths)
+
+        return proximity_to_entry
+
+    def get_proximity_to_exit(self, call):
+        """
+            Returns the average of the shortest path lengths between a specfied call and all exit points,
+            if a path exists.
+
+            Args:
+                call: A Call object that represents a function call in the call graph.
+
+            Returns:
+                0, if the Call object is an Exit Point.
+                None, if there is no path between the Call object and any of the exit points.
+                Otherwise, a decimal value that represents the calculated proximity.
+        """
+        proximity_to_exit = None
+        if call in self.exit_points:
+            proximity_to_exit = 0
+        else:
+            exit_path_lengths = []
+            for ex in self.exit_points:
+                if nx.has_path(self.call_graph, source=call, target=ex):
+                    exit_path_lengths.append(nx.shortest_path_length(self.call_graph, source=call, target=ex))
+
+            if exit_path_lengths:
+                proximity_to_exit = stat.mean(exit_path_lengths)
+
+        return proximity_to_exit
+
+    def get_association_with_entry(self, call):
+        """
+            Returns the number of entry points for which a path to the specified call exists.
+
+            Args:
+                call: A Call object that represents a function call in the call graph.
+
+            Returns:
+                0, if the Call object is an Entry Point.
+                None, if there is no path between any of the entry points and the Call object.
+                Otherwise, a positive integer that represents the calculated association.
+        """
+        association_with_entry = None
+        if call in self.entry_points:
+            association_with_entry = 0
+        else:
+            entry_path_lengths = []
+            for en in self.entry_points:
+                if nx.has_path(self.call_graph, source=en, target=call):
+                    entry_path_lengths.append(nx.shortest_path_length(self.call_graph, source=en, target=call))
+
+            if entry_path_lengths:
+                association_with_entry = len(entry_path_lengths)
+
+        return association_with_entry
+
+    def get_association_with_exit(self, call):
+        """
+            Returns the number of exit points that the specified call has a path to.
+
+            Args:
+                call: A Call object that represents a function call in the call graph.
+
+            Returns:
+                0, if the Call object is an Exit Point.
+                None, if there is no path between the Call object and any of the exit points.
+                Otherwise, a positive integer that represents the calculated proximity.
+        """
+        association_with_exit = None
+        if call in self.exit_points:
+            association_with_exit = 0
+        else:
+            exit_path_lengths = []
+            for ex in self.exit_points:
+                if nx.has_path(self.call_graph, source=call, target=ex):
+                    exit_path_lengths.append(nx.shortest_path_length(self.call_graph, source=call, target=ex))
+
+            if exit_path_lengths:
+                association_with_exit = len(exit_path_lengths)
+
+        return association_with_exit

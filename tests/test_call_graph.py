@@ -924,6 +924,118 @@ class CallGraphTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(expected_value, exit_point_reachability)
 
+    def test_proximity_to_entry(self):
+        # Arrange
+        expected_values = list()
+        expected_values.append({'node': 'greet_a', 'value': None})
+        expected_values.append({'node': 'recursive_a', 'value': 2})
+        expected_values.append({'node': 'greet', 'value': 1})
+        expected_values.append({'node': 'new_Greeter', 'value': None})
+        expected_values.append({'node': 'GreeterSayHiTo', 'value': None})
+        expected_values.append({'node': 'GreeterSayHi', 'value': None})
+        expected_values.append({'node': 'malloc', 'value': None})
+        expected_values.append({'node': 'main', 'value': None})
+        expected_values.append({'node': 'addInt', 'value': None})
+        expected_values.append({'node': 'greet_b', 'value': 0})
+        expected_values.append({'node': 'printf', 'value': 2})
+        expected_values.append({'node': 'functionPtr', 'value': None})
+        expected_values.append({'node': 'puts', 'value': 2})
+        expected_values.append({'node': 'recursive_b', 'value': 1})
+        expected_values.append({'node': 'scanf', 'value': 1})
+
+        for expected_value in expected_values:
+            call = next(node for node in self.call_graph.nodes if node.function_name == expected_value['node'])
+
+            # Act
+            actual_value = self.call_graph.get_proximity_to_entry(call)
+
+            # Assert
+            self.assertEqual(expected_value['value'], actual_value)
+
+    def test_proximity_to_exit(self):
+        # Arrange
+        expected_values = list()
+        expected_values.append({'node': 'greet_a', 'value': 1.3333333333333333})
+        expected_values.append({'node': 'recursive_a', 'value': 0})
+        expected_values.append({'node': 'greet', 'value': 0})
+        expected_values.append({'node': 'new_Greeter', 'value': 1})
+        expected_values.append({'node': 'GreeterSayHiTo', 'value': 0})
+        expected_values.append({'node': 'GreeterSayHi', 'value': 0})
+        expected_values.append({'node': 'malloc', 'value': None})
+        expected_values.append({'node': 'main', 'value': 0})
+        expected_values.append({'node': 'addInt', 'value': None})
+        expected_values.append({'node': 'greet_b', 'value': 1.3333333333333333})
+        expected_values.append({'node': 'printf', 'value': None})
+        expected_values.append({'node': 'functionPtr', 'value': None})
+        expected_values.append({'node': 'puts', 'value': None})
+        expected_values.append({'node': 'recursive_b', 'value': 0})
+        expected_values.append({'node': 'scanf', 'value': None})
+
+        for expected_value in expected_values:
+            call = next(node for node in self.call_graph.nodes if node.function_name == expected_value['node'])
+
+            # Act
+            actual_value = self.call_graph.get_proximity_to_exit(call)
+
+            # Assert
+            self.assertEqual(expected_value['value'], actual_value)
+
+    def test_association_with_entry(self):
+        # Arrange
+        expected_values = list()
+        expected_values.append({'node': 'greet_a', 'value': None})
+        expected_values.append({'node': 'recursive_a', 'value': 1})
+        expected_values.append({'node': 'greet', 'value': 1})
+        expected_values.append({'node': 'new_Greeter', 'value': None})
+        expected_values.append({'node': 'GreeterSayHiTo', 'value': None})
+        expected_values.append({'node': 'GreeterSayHi', 'value': None})
+        expected_values.append({'node': 'malloc', 'value': None})
+        expected_values.append({'node': 'main', 'value': None})
+        expected_values.append({'node': 'addInt', 'value': None})
+        expected_values.append({'node': 'greet_b', 'value': 0})
+        expected_values.append({'node': 'printf', 'value': 1})
+        expected_values.append({'node': 'functionPtr', 'value': None})
+        expected_values.append({'node': 'puts', 'value': 1})
+        expected_values.append({'node': 'recursive_b', 'value': 1})
+        expected_values.append({'node': 'scanf', 'value': 1})
+
+        for expected_value in expected_values:
+            call = next(node for node in self.call_graph.nodes if node.function_name == expected_value['node'])
+
+            # Act
+            actual_value = self.call_graph.get_association_with_entry(call)
+
+            # Assert
+            self.assertEqual(expected_value['value'], actual_value)
+
+    def test_association_with_exit(self):
+        # Arrange
+        expected_values = list()
+        expected_values.append({'node': 'greet_a', 'value': 3})
+        expected_values.append({'node': 'recursive_a', 'value': 0})
+        expected_values.append({'node': 'greet', 'value': 0})
+        expected_values.append({'node': 'new_Greeter', 'value': 2})
+        expected_values.append({'node': 'GreeterSayHiTo', 'value': 0})
+        expected_values.append({'node': 'GreeterSayHi', 'value': 0})
+        expected_values.append({'node': 'malloc', 'value': None})
+        expected_values.append({'node': 'main', 'value': 0})
+        expected_values.append({'node': 'addInt', 'value': None})
+        expected_values.append({'node': 'greet_b', 'value': 3})
+        expected_values.append({'node': 'printf', 'value': None})
+        expected_values.append({'node': 'functionPtr', 'value': None})
+        expected_values.append({'node': 'puts', 'value': None})
+        expected_values.append({'node': 'recursive_b', 'value': 0})
+        expected_values.append({'node': 'scanf', 'value': None})
+
+        for expected_value in expected_values:
+            call = next(node for node in self.call_graph.nodes if node.function_name == expected_value['node'])
+
+            # Act
+            actual_value = self.call_graph.get_association_with_exit(call)
+
+            # Assert
+            self.assertEqual(expected_value['value'], actual_value)
+
 
 if __name__ == '__main__':
     unittest.main()
