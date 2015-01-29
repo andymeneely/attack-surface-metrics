@@ -11,7 +11,7 @@ class Call():
         Provides a basic functionality for derived classes.
     """
 
-    input_functions = ['canonicalize_file_name', 'catgets', 'confstr', 'ctermid', 'ctermid', 'cuserid', 'dgettext',
+    input_functions = ['canonicalize_file_name', 'catgets', 'confstr', 'ctermid', 'cuserid', 'dgettext',
                        'dngettext', 'fgetc', 'fgetc_unlocked', 'fgets', 'fgets_unlocked', 'fpathconf', 'fread',
                        'fread_unlocked', 'fscanf', 'getc', 'getchar', 'getchar_unlocked', 'getc_unlocked',
                        'get_current_dir_name', 'getcwd', 'getdelim', '__getdelim', 'getdelim', 'getdents', 'getenv',
