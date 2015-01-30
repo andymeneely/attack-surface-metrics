@@ -100,6 +100,27 @@ class CallGraphTestCase(unittest.TestCase):
         self.assertEqual(15, len(nodes))
         self.assertTrue(all_calls_found)
 
+    def test_attack_surface_graph_nodes(self):
+        # Arrange
+        expected_content = [Call.from_cflow("printf()"),
+                            Call.from_cflow("puts()"),
+                            Call.from_cflow("greet() <void greet (int greeting_code) at ./src/greetings.c:14>:"),
+                            Call.from_cflow("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:"),
+                            Call.from_cflow("scanf()"),
+                            Call.from_cflow("recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):"),
+                            Call.from_cflow("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):"),
+                            Call.from_cflow("main() <int main (void) at ./src/helloworld.c:58>:"),
+                            Call.from_cflow("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:"),
+                            Call.from_cflow("greet_a() <void greet_a (int i) at ./src/helloworld.c:76>:")]
+
+        # Act
+        nodes = self.call_graph.attack_surface_graph_nodes
+        all_calls_found = all([c in nodes for c in expected_content])
+
+        # Assert
+        self.assertEqual(10, len(nodes))
+        self.assertTrue(all_calls_found)
+
     def test_edges(self):
         # Arrange
         expected_content = [(Call.from_cflow("GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:"), Call.from_cflow("printf()")),
@@ -765,6 +786,26 @@ class CallGraphTestCase(unittest.TestCase):
         self.assertEqual(expected_count, len(descendants))
         self.assertTrue(all_descendants_found)
 
+    def test_get_descendants_within(self):
+        # Arrange
+        expected_count = 7
+        expected_content = [Call.from_cflow("greet_b() <void greet_b (int i) at ./src/helloworld.c:93>: [see 13]"),
+                            Call.from_cflow("greet_a() <void greet_a (int i) at ./src/helloworld.c:87>: [see 11]"),
+                            Call.from_cflow("new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>: [see 2]"),
+                            Call.from_cflow("addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>:"),
+                            Call.from_cflow("functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>:"),
+                            Call.from_cflow("printf():"),
+                            Call.from_cflow("puts():")]
+        call = Call.from_cflow("main() <int main (void) at ./src/helloworld.c:58> [see 3]")
+
+        # Act
+        descendants = self.call_graph.get_descendants_within(call, depth=1)
+        actual_content = all([c in descendants for c in expected_content])
+
+        # Assert
+        self.assertEqual(expected_count, len(descendants))
+        self.assertTrue(actual_content)
+
     def test_get_ancestors(self):
         # Arrange
         expected_count = 1
@@ -894,7 +935,7 @@ class CallGraphTestCase(unittest.TestCase):
     def test_entry_point_reachability(self):
         # Arrange
         call = Call.from_cflow("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")
-        expected_value = 0.4
+        expected_value = 0.6
 
         # Act
         entry_point_reachability = self.call_graph.get_entry_point_reachability(call)
@@ -905,7 +946,7 @@ class CallGraphTestCase(unittest.TestCase):
     def test_exit_point_reachability(self):
         # Arrange
         call = Call.from_cflow("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")
-        expected_value = 0.26666666666666666
+        expected_value = 0.4
 
         # Act
         exit_point_reachability = self.call_graph.get_exit_point_reachability(call)
@@ -913,16 +954,16 @@ class CallGraphTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(expected_value, exit_point_reachability)
 
-    def test_shallow_risk(self):
+    def test_shallow_entry_point_reachability(self):
         # Arrange
         call = Call.from_cflow("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")
-        expected_value = 0.2
+        expected_value = 0.3
 
         # Act
-        exit_point_reachability = self.call_graph.get_shallow_risk(call)
+        shallow_entry_point_reachability = self.call_graph.get_shallow_entry_point_reachability(call, depth=1)
 
         # Assert
-        self.assertEqual(expected_value, exit_point_reachability)
+        self.assertEqual(expected_value, shallow_entry_point_reachability)
 
     def test_proximity_to_entry(self):
         # Arrange
@@ -937,7 +978,7 @@ class CallGraphTestCase(unittest.TestCase):
         expected_values.append({'node': 'main', 'value': None})
         expected_values.append({'node': 'addInt', 'value': None})
         expected_values.append({'node': 'greet_b', 'value': 0})
-        expected_values.append({'node': 'printf', 'value': 2})
+        expected_values.append({'node': 'printf', 'value': 2.5})
         expected_values.append({'node': 'functionPtr', 'value': None})
         expected_values.append({'node': 'puts', 'value': 2})
         expected_values.append({'node': 'recursive_b', 'value': 1})
@@ -950,7 +991,7 @@ class CallGraphTestCase(unittest.TestCase):
             actual_value = self.call_graph.get_proximity_to_entry(call)
 
             # Assert
-            self.assertEqual(expected_value['value'], actual_value)
+            self.assertEqual(expected_value['value'], actual_value, msg='%s' % expected_value['node'])
 
     def test_proximity_to_exit(self):
         # Arrange
@@ -978,9 +1019,9 @@ class CallGraphTestCase(unittest.TestCase):
             actual_value = self.call_graph.get_proximity_to_exit(call)
 
             # Assert
-            self.assertEqual(expected_value['value'], actual_value)
+            self.assertEqual(expected_value['value'], actual_value, msg='%s' % expected_value['node'])
 
-    def test_association_with_entry(self):
+    def test_surface_coupling_with_entry(self):
         # Arrange
         expected_values = list()
         expected_values.append({'node': 'greet_a', 'value': None})
@@ -993,7 +1034,7 @@ class CallGraphTestCase(unittest.TestCase):
         expected_values.append({'node': 'main', 'value': None})
         expected_values.append({'node': 'addInt', 'value': None})
         expected_values.append({'node': 'greet_b', 'value': 0})
-        expected_values.append({'node': 'printf', 'value': 1})
+        expected_values.append({'node': 'printf', 'value': 2})
         expected_values.append({'node': 'functionPtr', 'value': None})
         expected_values.append({'node': 'puts', 'value': 1})
         expected_values.append({'node': 'recursive_b', 'value': 1})
@@ -1003,12 +1044,12 @@ class CallGraphTestCase(unittest.TestCase):
             call = next(node for node in self.call_graph.nodes if node.function_name == expected_value['node'])
 
             # Act
-            actual_value = self.call_graph.get_association_with_entry(call)
+            actual_value = self.call_graph.get_surface_coupling_with_entry(call)
 
             # Assert
-            self.assertEqual(expected_value['value'], actual_value)
+            self.assertEqual(expected_value['value'], actual_value, msg='%s' % expected_value['node'])
 
-    def test_association_with_exit(self):
+    def test_surface_coupling_with_exit(self):
         # Arrange
         expected_values = list()
         expected_values.append({'node': 'greet_a', 'value': 3})
@@ -1031,10 +1072,10 @@ class CallGraphTestCase(unittest.TestCase):
             call = next(node for node in self.call_graph.nodes if node.function_name == expected_value['node'])
 
             # Act
-            actual_value = self.call_graph.get_association_with_exit(call)
+            actual_value = self.call_graph.get_surface_coupling_with_exit(call)
 
             # Assert
-            self.assertEqual(expected_value['value'], actual_value)
+            self.assertEqual(expected_value['value'], actual_value, msg='%s' % expected_value['node'])
 
 
 if __name__ == '__main__':
