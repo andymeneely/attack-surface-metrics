@@ -39,6 +39,18 @@ class CallGraph():
 
         self._execution_paths = list()
 
+        # Sub-graphing only those nodes connected to the attack surface
+        attack_surface_nodes = set()
+        for en in self.entry_points:
+            for des in self.get_descendants(en):
+                attack_surface_nodes.add(des)
+
+        for ex in self.exit_points:
+            for anc in self.get_ancestors(ex):
+                attack_surface_nodes.add(anc)
+
+        self.attack_surface_graph = nx.subgraph(self.call_graph, attack_surface_nodes)
+
     @classmethod
     def from_loader(cls, loader):
         """
@@ -177,6 +189,15 @@ class CallGraph():
             Each node is a Call object with the information of a specific function/method call.
         """
         return self.call_graph.nodes()
+
+    @property
+    def attack_surface_graph_nodes(self):
+        """
+            Returns all the nodes present in the Attack Surface Call Graph.
+
+            Each node is a Call object with the information of a specific function/method call.
+        """
+        return self.attack_surface_graph.nodes()
 
     @property
     def edges(self):
@@ -644,6 +665,26 @@ class CallGraph():
         """
         return list(nx.descendants(self.call_graph, call))
 
+    def get_descendants_within(self, call, depth=1):
+        """
+            Returns all the descendants of a given Call reachable within a specified number
+            of hops from Call.
+
+            Args:
+                call: A Call instance whose descendants will be returned.
+                depth: Number of hops to stop looking for descendants.
+
+            Returns:
+                A List of Call objects that represent all of call's descendants reachable
+                within a specified depth.
+        """
+        descendants = set()
+        for descendant in nx.single_source_shortest_path(self.call_graph, call, cutoff=depth):
+            if descendant.function_name != call.function_name:
+                descendants.add(descendant)
+
+        return list(descendants)
+
     def get_ancestors(self, call):
         """
             Returns all the ancestors of a given Call.
@@ -809,7 +850,7 @@ class CallGraph():
             Returns:
                 A Float that represents the calculated ratio.
         """
-        return len(self.get_descendants(call)) / len(self.nodes)
+        return len(self.get_descendants(call)) / len(self.attack_surface_graph_nodes)
 
     def get_exit_point_reachability(self, call):
         """
@@ -821,9 +862,9 @@ class CallGraph():
             Returns:
                 A Float that represents the calculated ratio.
         """
-        return len(self.get_ancestors(call)) / len(self.nodes)
+        return len(self.get_ancestors(call)) / len(self.attack_surface_graph_nodes)
 
-    def get_shallow_risk(self, call, depth=1):
+    def get_shallow_entry_point_reachability(self, call, depth=1):
         """
             Returns the ratio of descendants of a call that are reachable within a specified depth to
             the total number of nodes in the call graph.
@@ -834,17 +875,13 @@ class CallGraph():
             Returns:
                 A Float that represents the calculated ratio.
         """
-        nearest_descendants = set()
-        for nearest_descendant in nx.single_source_shortest_path(self.call_graph, call, cutoff=depth):
-            if nearest_descendant.function_name != call.function_name:
-                nearest_descendants.add(nearest_descendant)
 
-        return len(nearest_descendants) / len(self.nodes)
+        return len(self.get_descendants_within(call, depth)) / len(self.attack_surface_graph_nodes)
 
     # TODO: Refactor code so that both get_proximity_to_* and get_association_with_* use a single loop
     def get_proximity_to_entry(self, call):
         """
-            Returns the average of the shortest path lengths between all entry points and a specified
+            Returns the average of the length of simple paths between all entry points and a specified
             call, if a path exists.
 
             Args:
@@ -861,8 +898,9 @@ class CallGraph():
         else:
             entry_path_lengths = []
             for en in self.entry_points:
-                if nx.has_path(self.call_graph, source=en, target=call):
-                    entry_path_lengths.append(nx.shortest_path_length(self.call_graph, source=en, target=call))
+                simple_paths = nx.all_simple_paths(self.call_graph, source=en, target=call)
+                for simple_path in simple_paths:
+                    entry_path_lengths.append(len(simple_path) - 1) # Path length is one less than the number of nodes
 
             if entry_path_lengths:
                 proximity_to_entry = stat.mean(entry_path_lengths)
@@ -871,7 +909,7 @@ class CallGraph():
 
     def get_proximity_to_exit(self, call):
         """
-            Returns the average of the shortest path lengths between a specfied call and all exit points,
+            Returns the average of the length of simple paths between a specfied call and all exit points,
             if a path exists.
 
             Args:
@@ -888,17 +926,18 @@ class CallGraph():
         else:
             exit_path_lengths = []
             for ex in self.exit_points:
-                if nx.has_path(self.call_graph, source=call, target=ex):
-                    exit_path_lengths.append(nx.shortest_path_length(self.call_graph, source=call, target=ex))
+                simple_paths = nx.all_simple_paths(self.call_graph, source=call, target=ex)
+                for simple_path in simple_paths:
+                    exit_path_lengths.append(len(simple_path) - 1) # Path length is one less than the number of nodes
 
             if exit_path_lengths:
                 proximity_to_exit = stat.mean(exit_path_lengths)
 
         return proximity_to_exit
 
-    def get_association_with_entry(self, call):
+    def get_surface_coupling_with_entry(self, call):
         """
-            Returns the number of entry points for which a path to the specified call exists.
+            Returns the sum of number of simple paths from each entry point to a specified call.
 
             Args:
                 call: A Call object that represents a function call in the call graph.
@@ -906,25 +945,26 @@ class CallGraph():
             Returns:
                 0, if the Call object is an Entry Point.
                 None, if there is no path between any of the entry points and the Call object.
-                Otherwise, a positive integer that represents the calculated association.
+                Otherwise, a positive integer that represents the calculated surface coupling.
         """
-        association_with_entry = None
+        surface_coupling_with_entry = None
         if call in self.entry_points:
-            association_with_entry = 0
+            surface_coupling_with_entry = 0
         else:
-            entry_path_lengths = []
+            num_paths = 0
             for en in self.entry_points:
-                if nx.has_path(self.call_graph, source=en, target=call):
-                    entry_path_lengths.append(nx.shortest_path_length(self.call_graph, source=en, target=call))
+                simple_paths = nx.all_simple_paths(self.call_graph, source=en, target=call)
+                for simple_path in simple_paths:
+                    num_paths += 1
+            
+            if num_paths != 0:
+                surface_coupling_with_entry = num_paths
+            
+        return surface_coupling_with_entry
 
-            if entry_path_lengths:
-                association_with_entry = len(entry_path_lengths)
-
-        return association_with_entry
-
-    def get_association_with_exit(self, call):
+    def get_surface_coupling_with_exit(self, call):
         """
-            Returns the number of exit points that the specified call has a path to.
+            Returns the sum of number of simple paths to each exit point from a specified call.
 
             Args:
                 call: A Call object that represents a function call in the call graph.
@@ -932,18 +972,19 @@ class CallGraph():
             Returns:
                 0, if the Call object is an Exit Point.
                 None, if there is no path between the Call object and any of the exit points.
-                Otherwise, a positive integer that represents the calculated proximity.
+                Otherwise, a positive integer that represents the calculated surface coupling.
         """
-        association_with_exit = None
+        surface_coupling_with_exit = None
         if call in self.exit_points:
-            association_with_exit = 0
+            surface_coupling_with_exit = 0
         else:
-            exit_path_lengths = []
+            num_paths = 0
             for ex in self.exit_points:
-                if nx.has_path(self.call_graph, source=call, target=ex):
-                    exit_path_lengths.append(nx.shortest_path_length(self.call_graph, source=call, target=ex))
+                simple_paths = nx.all_simple_paths(self.call_graph, source=call, target=ex)
+                for simple_path in simple_paths:
+                    num_paths += 1
 
-            if exit_path_lengths:
-                association_with_exit = len(exit_path_lengths)
+            if num_paths != 0:
+                surface_coupling_with_exit = num_paths
 
-        return association_with_exit
+        return surface_coupling_with_exit
