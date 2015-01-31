@@ -1,0 +1,37 @@
+GreeterSayHi():
+    new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>:
+        main() <int main (void) at ./src/helloworld.c:58>
+GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>:
+    new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>: [see 2]
+addInt() <int addInt (int n, int m) at ./src/helloworld.c:18>:
+    main() <int main (void) at ./src/helloworld.c:58> [see 3]
+functionPtr() <int (*functionPtr) (int, int) at ./src/helloworld.c:23>:
+    main() <int main (void) at ./src/helloworld.c:58> [see 3]
+greet() <void greet (int greeting_code) at ./src/greetings.c:14>:
+    greet_a() <void greet_a (int i) at ./src/helloworld.c:87>:
+        main() <int main (void) at ./src/helloworld.c:58> [see 3]
+    greet_b() <void greet_b (int i) at ./src/helloworld.c:93>:
+        main() <int main (void) at ./src/helloworld.c:58> [see 3]
+greet_a() <void greet_a (int i) at ./src/helloworld.c:87>: [see 11]
+greet_b() <void greet_b (int i) at ./src/helloworld.c:93>: [see 13]
+main() <int main (void) at ./src/helloworld.c:58> [see 3]
+malloc():
+    new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>: [see 2]
+new_Greeter() <Greeter new_Greeter () at ./src/helloworld.c:38>: [see 2]
+printf():
+    recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):
+        recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R):
+            recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (recursive: see 22) [see 22]
+            greet_b() <void greet_b (int i) at ./src/helloworld.c:93>: [see 13]
+        greet_a() <void greet_a (int i) at ./src/helloworld.c:87>: [see 11]
+    recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R): [see 23]
+    GreeterSayHi(): [see 1]
+    GreeterSayHiTo() <void GreeterSayHiTo (int value) at ./src/helloworld.c:53>: [see 4]
+    main() <int main (void) at ./src/helloworld.c:58> [see 3]
+puts():
+    greet() <void greet (int greeting_code) at ./src/greetings.c:14>: [see 10]
+    main() <int main (void) at ./src/helloworld.c:58> [see 3]
+recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R): [see 22]
+recursive_b() <void recursive_b (int i) at ./src/greetings.c:32> (R): [see 23]
+scanf():
+    greet_b() <void greet_b (int i) at ./src/helloworld.c:93>: [see 13]
