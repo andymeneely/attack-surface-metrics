@@ -182,4 +182,14 @@ class Call():
             Returns:
                 A String containing the function signature and file location of the call represented by this object
         """
+        # TODO: This should be renamed to something like file or file_location or file_name.
         return self._function_signature
+
+    def set_function_signature(self, new_function_signature):
+        """
+            Sets the function_signature property.
+
+        Args:
+            new_function_signature: A dtring representing the new function signature to set.
+        """
+        self._function_signature = new_function_signature

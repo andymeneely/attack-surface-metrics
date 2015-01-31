@@ -65,9 +65,11 @@ class CallGraph():
                 gprof_call_graph: A CallGraph instance that represents a call graph generated using output from gprof.
 
             Returns:
-                A new CallGraph instance that contains the nodes and edges from both suppplied call graphs.
+                A new CallGraph instance that contains the nodes and edges from both supplied call graphs.
         """
         source = "cflow: {0} - gprof: {1}".format(cflow_call_graph.source, gprof_call_graph.source)
+
+        CallGraph._fix_cflow_call_graph(cflow_call_graph, gprof_call_graph)
 
         graph = nx.DiGraph()
 
@@ -98,6 +100,30 @@ class CallGraph():
                 A List of all the nodes in the cal graph for which predicate is true.
         """
         return [n for n in self.call_graph.nodes() if predicate(n)]
+
+    @staticmethod
+    def _fix_cflow_call_graph(cflow_call_graph, gprof_call_graph):
+        """
+            Going through the cflow nodes and find those which do not have file names (function_signature) and find
+            the corresponding gprof node and put that node's function_signature into the file-name-lacking cflow node's
+            function_signature.
+
+            This cleanup is done so that later when merging the two call graph's sets of edges, networkx doesn't
+            think the cflow and gprof calls are different only because one of them (the cflow one) doesn't have a
+            file name assiciated to it.
+
+        Args:
+                cflow_call_graph: A CallGraph instance that represents a call graph generated using output from cflow.
+                gprof_call_graph: A CallGraph instance that represents a call graph generated using output from gprof.
+
+        """
+        cflow_calls_with_no_signature = [c for c in cflow_call_graph.nodes if not c.function_signature]
+
+        for cflow_call in cflow_calls_with_no_signature:
+            gprof_call = [c for c in gprof_call_graph.nodes if c.function_name == cflow_call.function_name]
+
+            if gprof_call:
+                cflow_call.set_function_signature(gprof_call[0].function_signature)
 
     @property
     def entry_points(self):
