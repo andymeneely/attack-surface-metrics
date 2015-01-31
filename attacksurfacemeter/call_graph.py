@@ -878,113 +878,72 @@ class CallGraph():
 
         return len(self.get_descendants_within(call, depth)) / len(self.attack_surface_graph_nodes)
 
-    # TODO: Refactor code so that both get_proximity_to_* and get_association_with_* use a single loop
-    def get_proximity_to_entry(self, call):
+    def get_entry_surface_metrics(self, call):
         """
-            Returns the average of the length of simple paths between all entry points and a specified
-            call, if a path exists.
+            Returns two function-level metrics associated with the entry surface of a software system:
+                Proximity - average of the length of simple paths between all entry points and a specified
+                call, if a path exists.
+                Surface Coupling - sum of number of simple paths from each entry point to a specified call.
 
             Args:
                 call: A Call object that represents a function call in the call graph.
 
             Returns:
-                0, if the Call object is an Entry Point.
-                None, if there is no path between any of the entry points and the Call object.
-                Otherwise, a decimal value that represents the calculated proximity.
+                A dictionary with the keys proximity and surface coupling. Possible values are:
+                    0, if the Call object is an Entry Point.
+                    None, if there is no path between any of the entry points and the Call object.
+                    Otherwise, a decimal (positive integer) value that represents the calculated proximity
+                    (surface coupling).
         """
-        proximity_to_entry = None
+        proximity_to_entry = surface_coupling_with_entry = None
         if call in self.entry_points:
-            proximity_to_entry = 0
+            proximity_to_entry = surface_coupling_with_entry = 0
         else:
             entry_path_lengths = []
+            num_paths = 0
             for en in self.entry_points:
                 simple_paths = nx.all_simple_paths(self.call_graph, source=en, target=call)
                 for simple_path in simple_paths:
+                    num_paths += 1
                     entry_path_lengths.append(len(simple_path) - 1) # Path length is one less than the number of nodes
 
-            if entry_path_lengths:
+            if entry_path_lengths and num_paths != 0:
                 proximity_to_entry = stat.mean(entry_path_lengths)
+                surface_coupling_with_entry = num_paths
 
-        return proximity_to_entry
+        return {'proximity': proximity_to_entry, 'surface_coupling': surface_coupling_with_entry}
 
-    def get_proximity_to_exit(self, call):
+    def get_exit_surface_metrics(self, call):
         """
-            Returns the average of the length of simple paths between a specfied call and all exit points,
-            if a path exists.
+            Returns two function-level metrics associated with the exit surface of a software syste:
+                Proximity - average of the length of simple paths between a specfied call and all exit points,
+                if a path exists.
+                Surface Coupling - sum of number of simple paths to each exit point from a specified call.
 
             Args:
                 call: A Call object that represents a function call in the call graph.
 
             Returns:
-                0, if the Call object is an Exit Point.
-                None, if there is no path between the Call object and any of the exit points.
-                Otherwise, a decimal value that represents the calculated proximity.
+                A dictionary with the keys proximity and surface coupling. Possible values are:
+                    0, if the Call object is an Exit Point.
+                    None, if there is no path between the Call object and any of the exit points.
+                    Otherwise, a decimal (positive integer) value that represents the calculated proximity
+                    (surface coupling).
         """
-        proximity_to_exit = None
+        proximity_to_exit = surface_coupling_with_exit = None
         if call in self.exit_points:
-            proximity_to_exit = 0
+            proximity_to_exit = surface_coupling_with_exit = 0
         else:
             exit_path_lengths = []
+            num_paths = 0
             for ex in self.exit_points:
                 simple_paths = nx.all_simple_paths(self.call_graph, source=call, target=ex)
                 for simple_path in simple_paths:
+                    num_paths += 1
                     exit_path_lengths.append(len(simple_path) - 1) # Path length is one less than the number of nodes
 
-            if exit_path_lengths:
+            if exit_path_lengths and num_paths != 0:
                 proximity_to_exit = stat.mean(exit_path_lengths)
-
-        return proximity_to_exit
-
-    def get_surface_coupling_with_entry(self, call):
-        """
-            Returns the sum of number of simple paths from each entry point to a specified call.
-
-            Args:
-                call: A Call object that represents a function call in the call graph.
-
-            Returns:
-                0, if the Call object is an Entry Point.
-                None, if there is no path between any of the entry points and the Call object.
-                Otherwise, a positive integer that represents the calculated surface coupling.
-        """
-        surface_coupling_with_entry = None
-        if call in self.entry_points:
-            surface_coupling_with_entry = 0
-        else:
-            num_paths = 0
-            for en in self.entry_points:
-                simple_paths = nx.all_simple_paths(self.call_graph, source=en, target=call)
-                for simple_path in simple_paths:
-                    num_paths += 1
-            
-            if num_paths != 0:
-                surface_coupling_with_entry = num_paths
-            
-        return surface_coupling_with_entry
-
-    def get_surface_coupling_with_exit(self, call):
-        """
-            Returns the sum of number of simple paths to each exit point from a specified call.
-
-            Args:
-                call: A Call object that represents a function call in the call graph.
-
-            Returns:
-                0, if the Call object is an Exit Point.
-                None, if there is no path between the Call object and any of the exit points.
-                Otherwise, a positive integer that represents the calculated surface coupling.
-        """
-        surface_coupling_with_exit = None
-        if call in self.exit_points:
-            surface_coupling_with_exit = 0
-        else:
-            num_paths = 0
-            for ex in self.exit_points:
-                simple_paths = nx.all_simple_paths(self.call_graph, source=call, target=ex)
-                for simple_path in simple_paths:
-                    num_paths += 1
-
-            if num_paths != 0:
                 surface_coupling_with_exit = num_paths
 
-        return surface_coupling_with_exit
+        return {'proximity': proximity_to_exit, 'surface_coupling': surface_coupling_with_exit}
