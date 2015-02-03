@@ -7,7 +7,7 @@ setup(
     name='AttackSurfaceMeter',
     version='0.0.2',
     packages=['attacksurfacemeter', 'formatters', 'loaders'],
-    requires=['networkx', 'matplotlib'],
+    requires=['networkx'],
     license='The MIT License (MIT) Copyright (c) 2014 Andy Meneely',
     description='Library for collecting metrics of the attack surface.',
     long_description=open('README.md').read(),
