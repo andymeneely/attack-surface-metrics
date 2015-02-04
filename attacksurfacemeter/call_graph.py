@@ -149,13 +149,17 @@ class CallGraph():
             Removes all the nodes in the call graph that represent calls for which the tools could not find the
             file where they were defined.
         """
-        self.call_graph.remove_nodes_from(self._select_nodes(lambda n: n.is_function_name_only()))
+        nodes_to_remove = self._select_nodes(lambda n: n.is_function_name_only())
+        self.call_graph.remove_nodes_from(nodes_to_remove)
+        self.attack_surface_graph.remove_nodes_from(nodes_to_remove)
 
     def remove_standard_library_calls(self):
         """
             Removes all the nodes in the call graph that represent calls to standard library functions.
         """
-        self.call_graph.remove_nodes_from(self._select_nodes(lambda n: n.is_standard_library_function()))
+        nodes_to_remove = self._select_nodes(lambda n: n.is_standard_library_function())
+        self.call_graph.remove_nodes_from(nodes_to_remove)
+        self.attack_surface_graph.remove_nodes_from(nodes_to_remove)
 
     @property
     def entry_points(self):
