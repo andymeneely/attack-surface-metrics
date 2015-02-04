@@ -51,6 +51,13 @@ class CallGraph():
 
         self.attack_surface_graph = nx.subgraph(self.call_graph, attack_surface_nodes)
 
+        # Calculating the entry and exit points
+        self._entry_points = self._select_nodes(lambda n: any([s.is_input_function() for s
+                                                               in self.call_graph.successors(n)]))
+
+        self._exit_points = self._select_nodes(lambda n: any([s.is_output_function() for s
+                                                              in self.call_graph.successors(n)]))
+
     @classmethod
     def from_loader(cls, loader):
         """
@@ -116,7 +123,7 @@ class CallGraph():
     @staticmethod
     def _fix_cflow_call_graph(cflow_call_graph, gprof_call_graph):
         """
-            Going through the cflow nodes and find those which do not have file names (function_signature) and find
+            Goes through the cflow nodes and find those which do not have file names (function_signature) and find
             the corresponding gprof node and put that node's function_signature into the file-name-lacking cflow node's
             function_signature.
 
@@ -137,6 +144,19 @@ class CallGraph():
             if gprof_call:
                 cflow_call.set_function_signature(gprof_call[0].function_signature)
 
+    def remove_function_name_only_calls(self):
+        """
+            Removes all the nodes in the call graph that represent calls for which the tools could not find the
+            file where they were defined.
+        """
+        self.call_graph.remove_nodes_from(self._select_nodes(lambda n: n.is_function_name_only()))
+
+    def remove_standard_library_calls(self):
+        """
+            Removes all the nodes in the call graph that represent calls to standard library functions.
+        """
+        self.call_graph.remove_nodes_from(self._select_nodes(lambda n: n.is_standard_library_function()))
+
     @property
     def entry_points(self):
         """
@@ -156,9 +176,6 @@ class CallGraph():
             vfscanf, vscanf
             
         """
-        if not self._entry_points:
-            self._entry_points = self._select_nodes(lambda n: any([s.is_input_function() for s
-                                                                   in self.call_graph.successors(n)]))
         return self._entry_points
 
     @property
@@ -176,9 +193,6 @@ class CallGraph():
             writev
             
         """
-        if not self._exit_points:
-            self._exit_points = self._select_nodes(lambda n: any([s.is_output_function() for s
-                                                                  in self.call_graph.successors(n)]))
         return self._exit_points
 
     @property
