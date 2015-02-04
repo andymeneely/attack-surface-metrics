@@ -8,14 +8,13 @@ before_install:
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
-  - pip install matplotlib
   - pip install networkx
   - pip install django
   - pip install coveralls
 
 # command to run tests, e.g. python setup.py test
 script:
-  - coverage run --source=attacksurfacemeter,formatters setup.py test
+  - coverage run --source=attacksurfacemeter,formatters,loaders setup.py test
 
 after_success:
   - coveralls

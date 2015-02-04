@@ -965,117 +965,69 @@ class CallGraphTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(expected_value, shallow_entry_point_reachability)
 
-    def test_proximity_to_entry(self):
+    def test_entry_surface_metrics(self):
         # Arrange
         expected_values = list()
-        expected_values.append({'node': 'greet_a', 'value': None})
-        expected_values.append({'node': 'recursive_a', 'value': 2})
-        expected_values.append({'node': 'greet', 'value': 1})
-        expected_values.append({'node': 'new_Greeter', 'value': None})
-        expected_values.append({'node': 'GreeterSayHiTo', 'value': None})
-        expected_values.append({'node': 'GreeterSayHi', 'value': None})
-        expected_values.append({'node': 'malloc', 'value': None})
-        expected_values.append({'node': 'main', 'value': None})
-        expected_values.append({'node': 'addInt', 'value': None})
-        expected_values.append({'node': 'greet_b', 'value': 0})
-        expected_values.append({'node': 'printf', 'value': 2.5})
-        expected_values.append({'node': 'functionPtr', 'value': None})
-        expected_values.append({'node': 'puts', 'value': 2})
-        expected_values.append({'node': 'recursive_b', 'value': 1})
-        expected_values.append({'node': 'scanf', 'value': 1})
+        expected_values.append({'node': 'greet_a', 'proximity': None, 'surface_coupling': None})
+        expected_values.append({'node': 'recursive_a', 'proximity': 2, 'surface_coupling': 1})
+        expected_values.append({'node': 'greet', 'proximity': 1, 'surface_coupling': 1})
+        expected_values.append({'node': 'new_Greeter', 'proximity': None, 'surface_coupling': None})
+        expected_values.append({'node': 'GreeterSayHiTo', 'proximity': None, 'surface_coupling': None})
+        expected_values.append({'node': 'GreeterSayHi', 'proximity': None, 'surface_coupling': None})
+        expected_values.append({'node': 'malloc', 'proximity': None, 'surface_coupling': None})
+        expected_values.append({'node': 'main', 'proximity': None, 'surface_coupling': None})
+        expected_values.append({'node': 'addInt', 'proximity': None, 'surface_coupling': None})
+        expected_values.append({'node': 'greet_b', 'proximity': 0, 'surface_coupling': None})
+        expected_values.append({'node': 'printf', 'proximity': 2, 'surface_coupling': 1})
+        expected_values.append({'node': 'functionPtr', 'proximity': None, 'surface_coupling': None})
+        expected_values.append({'node': 'puts', 'proximity': 2, 'surface_coupling': 1})
+        expected_values.append({'node': 'recursive_b', 'proximity': 1, 'surface_coupling': 1})
+        expected_values.append({'node': 'scanf', 'proximity': 1, 'surface_coupling': 1})
 
         for expected_value in expected_values:
             call = next(node for node in self.call_graph.nodes if node.function_name == expected_value['node'])
 
             # Act
-            actual_value = self.call_graph.get_proximity_to_entry(call)
+            actual_value = self.call_graph.get_entry_surface_metrics(call)
+            self.assertIsInstance(actual_value, dict)
 
             # Assert
-            self.assertEqual(expected_value['value'], actual_value, msg='%s' % expected_value['node'])
+            self.assertEqual(expected_value['proximity'], actual_value['proximity'],
+                             msg='Proximity: %s' % expected_value['node'])
+            self.assertEqual(expected_value['surface_coupling'], actual_value['surface_coupling'],
+                             msg='Surface Coupling: %s' % expected_value['node'])
 
-    def test_proximity_to_exit(self):
+    def test_exit_surface_metrics(self):
         # Arrange
         expected_values = list()
-        expected_values.append({'node': 'greet_a', 'value': 1.3333333333333333})
-        expected_values.append({'node': 'recursive_a', 'value': 0})
-        expected_values.append({'node': 'greet', 'value': 0})
-        expected_values.append({'node': 'new_Greeter', 'value': 1})
-        expected_values.append({'node': 'GreeterSayHiTo', 'value': 0})
-        expected_values.append({'node': 'GreeterSayHi', 'value': 0})
-        expected_values.append({'node': 'malloc', 'value': None})
-        expected_values.append({'node': 'main', 'value': 0})
-        expected_values.append({'node': 'addInt', 'value': None})
-        expected_values.append({'node': 'greet_b', 'value': 1.3333333333333333})
-        expected_values.append({'node': 'printf', 'value': None})
-        expected_values.append({'node': 'functionPtr', 'value': None})
-        expected_values.append({'node': 'puts', 'value': None})
-        expected_values.append({'node': 'recursive_b', 'value': 0})
-        expected_values.append({'node': 'scanf', 'value': None})
+        expected_values.append({'node': 'greet_a', 'proximity': 1.3333333333333333, 'surface_coupling': 3})
+        expected_values.append({'node': 'recursive_a', 'proximity': 0, 'surface_coupling': None})
+        expected_values.append({'node': 'greet', 'proximity': 0, 'surface_coupling': None})
+        expected_values.append({'node': 'new_Greeter', 'proximity': 1, 'surface_coupling': 2})
+        expected_values.append({'node': 'GreeterSayHiTo', 'proximity': 0, 'surface_coupling': None})
+        expected_values.append({'node': 'GreeterSayHi', 'proximity': 0, 'surface_coupling': None})
+        expected_values.append({'node': 'malloc', 'proximity': None, 'surface_coupling': None})
+        expected_values.append({'node': 'main', 'proximity': 0, 'surface_coupling': None})
+        expected_values.append({'node': 'addInt', 'proximity': None, 'surface_coupling': None})
+        expected_values.append({'node': 'greet_b', 'proximity': 1.3333333333333333, 'surface_coupling': 3})
+        expected_values.append({'node': 'printf', 'proximity': None, 'surface_coupling': None})
+        expected_values.append({'node': 'functionPtr', 'proximity': None, 'surface_coupling': None})
+        expected_values.append({'node': 'puts', 'proximity': None, 'surface_coupling': None})
+        expected_values.append({'node': 'recursive_b', 'proximity': 0, 'surface_coupling': None})
+        expected_values.append({'node': 'scanf', 'proximity': None, 'surface_coupling': None})
 
         for expected_value in expected_values:
             call = next(node for node in self.call_graph.nodes if node.function_name == expected_value['node'])
 
             # Act
-            actual_value = self.call_graph.get_proximity_to_exit(call)
+            actual_value = self.call_graph.get_exit_surface_metrics(call)
+            self.assertIsInstance(actual_value, dict)
 
             # Assert
-            self.assertEqual(expected_value['value'], actual_value, msg='%s' % expected_value['node'])
-
-    def test_surface_coupling_with_entry(self):
-        # Arrange
-        expected_values = list()
-        expected_values.append({'node': 'greet_a', 'value': None})
-        expected_values.append({'node': 'recursive_a', 'value': 1})
-        expected_values.append({'node': 'greet', 'value': 1})
-        expected_values.append({'node': 'new_Greeter', 'value': None})
-        expected_values.append({'node': 'GreeterSayHiTo', 'value': None})
-        expected_values.append({'node': 'GreeterSayHi', 'value': None})
-        expected_values.append({'node': 'malloc', 'value': None})
-        expected_values.append({'node': 'main', 'value': None})
-        expected_values.append({'node': 'addInt', 'value': None})
-        expected_values.append({'node': 'greet_b', 'value': 0})
-        expected_values.append({'node': 'printf', 'value': 2})
-        expected_values.append({'node': 'functionPtr', 'value': None})
-        expected_values.append({'node': 'puts', 'value': 1})
-        expected_values.append({'node': 'recursive_b', 'value': 1})
-        expected_values.append({'node': 'scanf', 'value': 1})
-
-        for expected_value in expected_values:
-            call = next(node for node in self.call_graph.nodes if node.function_name == expected_value['node'])
-
-            # Act
-            actual_value = self.call_graph.get_surface_coupling_with_entry(call)
-
-            # Assert
-            self.assertEqual(expected_value['value'], actual_value, msg='%s' % expected_value['node'])
-
-    def test_surface_coupling_with_exit(self):
-        # Arrange
-        expected_values = list()
-        expected_values.append({'node': 'greet_a', 'value': 3})
-        expected_values.append({'node': 'recursive_a', 'value': 0})
-        expected_values.append({'node': 'greet', 'value': 0})
-        expected_values.append({'node': 'new_Greeter', 'value': 2})
-        expected_values.append({'node': 'GreeterSayHiTo', 'value': 0})
-        expected_values.append({'node': 'GreeterSayHi', 'value': 0})
-        expected_values.append({'node': 'malloc', 'value': None})
-        expected_values.append({'node': 'main', 'value': 0})
-        expected_values.append({'node': 'addInt', 'value': None})
-        expected_values.append({'node': 'greet_b', 'value': 3})
-        expected_values.append({'node': 'printf', 'value': None})
-        expected_values.append({'node': 'functionPtr', 'value': None})
-        expected_values.append({'node': 'puts', 'value': None})
-        expected_values.append({'node': 'recursive_b', 'value': 0})
-        expected_values.append({'node': 'scanf', 'value': None})
-
-        for expected_value in expected_values:
-            call = next(node for node in self.call_graph.nodes if node.function_name == expected_value['node'])
-
-            # Act
-            actual_value = self.call_graph.get_surface_coupling_with_exit(call)
-
-            # Assert
-            self.assertEqual(expected_value['value'], actual_value, msg='%s' % expected_value['node'])
+            self.assertEqual(expected_value['proximity'], actual_value['proximity'],
+                             msg='Proximity: %s' % expected_value['node'])
+            self.assertEqual(expected_value['surface_coupling'], actual_value['surface_coupling'],
+                             msg='Surface Coupling: %s' % expected_value['node'])
 
 
 if __name__ == '__main__':

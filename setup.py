@@ -6,8 +6,8 @@ from setuptools import setup
 setup(
     name='AttackSurfaceMeter',
     version='0.0.2',
-    packages=['attacksurfacemeter', 'formatters'],
-    requires=['networkx', 'matplotlib'],
+    packages=['attacksurfacemeter', 'formatters', 'loaders'],
+    requires=['networkx'],
     license='The MIT License (MIT) Copyright (c) 2014 Andy Meneely',
     description='Library for collecting metrics of the attack surface.',
     long_description=open('README.md').read(),
