@@ -45,8 +45,18 @@ class CallGraph():
 
         self._exit_points = self._select_nodes(lambda n: any([s.is_output_function() for s
                                                               in self.call_graph.successors(n)]))
-        # Generate attack surface graph
-        self._generate_attack_surface_graph()
+
+        # Sub-graphing only those nodes connected to the attack surface
+        attack_surface_nodes = set()
+        for en in self.entry_points:
+            for des in self.get_descendants(en):
+                attack_surface_nodes.add(des)
+
+        for ex in self.exit_points:
+            for anc in self.get_ancestors(ex):
+                attack_surface_nodes.add(anc)
+
+        self.attack_surface_graph = nx.subgraph(self.call_graph, attack_surface_nodes)
 
     @classmethod
     def from_loader(cls, loader):
@@ -134,27 +144,6 @@ class CallGraph():
             if gprof_call:
                 cflow_call.set_function_signature(gprof_call[0].function_signature)
 
-    def _generate_attack_surface_graph(self):
-        """
-            Generates a sub graph, termed attack surface graph, containing only those functions from the entire call
-            graph which are connected to an entry point or an exit point or both.
-        """
-
-        # TODO: Observe self.call_graph for changes and call this method when notified versus requiring the developer
-        #   to remember to call this method at placed where the call graph is modified.
-
-        # Sub-graphing only those nodes connected to the attack surface
-        attack_surface_nodes = set()
-        for en in self.entry_points:
-            for des in self.get_descendants(en):
-                attack_surface_nodes.add(des)
-
-        for ex in self.exit_points:
-            for anc in self.get_ancestors(ex):
-                attack_surface_nodes.add(anc)
-
-        self.attack_surface_graph = nx.subgraph(self.call_graph, attack_surface_nodes)
-
     def remove_function_name_only_calls(self):
         """
             Removes all the nodes in the call graph that represent calls for which the tools could not find the
@@ -162,17 +151,11 @@ class CallGraph():
         """
         self.call_graph.remove_nodes_from(self._select_nodes(lambda n: n.is_function_name_only()))
 
-        # Regenerate attack surface graph
-        self._generate_attack_surface_graph()
-
     def remove_standard_library_calls(self):
         """
             Removes all the nodes in the call graph that represent calls to standard library functions.
         """
         self.call_graph.remove_nodes_from(self._select_nodes(lambda n: n.is_standard_library_function()))
-
-        # Regenerate attack surface graph
-        self._generate_attack_surface_graph()
 
     @property
     def entry_points(self):
