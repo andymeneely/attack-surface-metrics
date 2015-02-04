@@ -157,7 +157,7 @@ class CallGraph():
         """
             Removes all the nodes in the call graph that represent calls to standard library functions.
         """
-        nodes_to_remove = self._select_nodes(lambda n: n.is_standard_library_function())
+        nodes_to_remove = self._select_nodes(lambda n: n.is_standard_library_function() and n.is_function_name_only())
         self.call_graph.remove_nodes_from(nodes_to_remove)
         self.attack_surface_graph.remove_nodes_from(nodes_to_remove)
 
