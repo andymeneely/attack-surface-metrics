@@ -97,10 +97,7 @@ class Call():
         """
         # return hash(self) == hash(other)
 
-        if self.function_signature and other.function_signature:
-            return self.identity == other.identity
-        else:
-            return self.function_name == other.function_name
+        return self.identity == other.identity
 
     def __ne__(self, other):
         """
