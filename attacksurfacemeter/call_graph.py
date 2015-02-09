@@ -49,10 +49,12 @@ class CallGraph():
         # Sub-graphing only those nodes connected to the attack surface
         attack_surface_nodes = set()
         for en in self.entry_points:
+            attack_surface_nodes.add(en)
             for des in self.get_descendants(en):
                 attack_surface_nodes.add(des)
 
         for ex in self.exit_points:
+            attack_surface_nodes.add(ex)
             for anc in self.get_ancestors(ex):
                 attack_surface_nodes.add(anc)
 

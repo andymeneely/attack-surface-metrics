@@ -118,7 +118,7 @@ class CallGraphTestCase(unittest.TestCase):
         all_calls_found = all([c in nodes for c in expected_content])
 
         # Assert
-        self.assertEqual(10, len(nodes))
+        self.assertEqual(12, len(nodes))
         self.assertTrue(all_calls_found)
 
     def test_edges(self):
@@ -935,7 +935,7 @@ class CallGraphTestCase(unittest.TestCase):
     def test_entry_point_reachability(self):
         # Arrange
         call = Call.from_cflow("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")
-        expected_value = 0.6
+        expected_value = 0.5
 
         # Act
         entry_point_reachability = self.call_graph.get_entry_point_reachability(call)
@@ -946,7 +946,7 @@ class CallGraphTestCase(unittest.TestCase):
     def test_exit_point_reachability(self):
         # Arrange
         call = Call.from_cflow("recursive_a() <void recursive_a (int i) at ./src/greetings.c:26> (R):")
-        expected_value = 0.4
+        expected_value = 0.3333333333333333
 
         # Act
         exit_point_reachability = self.call_graph.get_exit_point_reachability(call)
@@ -957,7 +957,7 @@ class CallGraphTestCase(unittest.TestCase):
     def test_shallow_entry_point_reachability(self):
         # Arrange
         call = Call.from_cflow("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")
-        expected_value = 0.3
+        expected_value = 0.25
 
         # Act
         shallow_entry_point_reachability = self.call_graph.get_shallow_entry_point_reachability(call, depth=1)
