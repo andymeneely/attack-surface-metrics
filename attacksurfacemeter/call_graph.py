@@ -900,7 +900,8 @@ class CallGraph():
 
     def get_entry_surface_metrics(self, call):
         """
-            Returns two function-level metrics associated with the entry surface of a software system:
+            Returns a list of Call objects and two function-level metrics associated with the entry surface
+                of a software system:
                 Proximity - average of the length of shortest paths between all entry points and a specified
                 call, if a path exists.
                 If there are multiple paths of the same shortest length then all those paths are considered
@@ -911,33 +912,39 @@ class CallGraph():
                 call: A Call object that represents a function call in the call graph.
 
             Returns:
-                A dictionary with the keys "proximity" and "surface coupling". Possible values are:
+                A dictionary with the keys "points", "proximity", and "surface coupling". Possible values are:
                     0 for proximity and None for surface coupling, if the Call object is an Entry Point.
                     None for both, if there is no path between any of the entry points and the Call object.
                     Otherwise, a decimal (positive integer) value that represents the calculated proximity
                     (surface coupling).
+                The dictionary value corresponding to the key "points" is a list of Call objects representing
+                    the entry points that the given call gets input from.
         """
-        proximity_to_entry = surface_coupling_with_entry = None
+        entry_points = proximity_to_entry = surface_coupling_with_entry = None
         if call in self.entry_points:
             proximity_to_entry = 0
         else:
+            points = []
             entry_path_lengths = []
             num_paths = 0
             for en in self.entry_points:
                 if nx.has_path(self.call_graph, source=en, target=call):
+                    points.append(en)
                     for shortest_path in nx.all_shortest_paths(self.call_graph, source=en, target=call):
                         num_paths += 1
                         entry_path_lengths.append(len(shortest_path) - 1) # Path length is one less than the number of nodes
 
             if entry_path_lengths and num_paths != 0:
+                entry_points = points
                 proximity_to_entry = stat.mean(entry_path_lengths)
                 surface_coupling_with_entry = num_paths
 
-        return {'proximity': proximity_to_entry, 'surface_coupling': surface_coupling_with_entry}
+        return {'points': entry_points, 'proximity': proximity_to_entry, 'surface_coupling': surface_coupling_with_entry}
 
     def get_exit_surface_metrics(self, call):
         """
-            Returns two function-level metrics associated with the exit surface of a software syste:
+            Returns a list of Call objects and two function-level metrics associated with the exit surface
+                of a software system:
                 Proximity - average of the length of shortest paths between a specfied call and all exit points,
                 if a path exists.
                 If there are multiple paths of the same shortest length then all those paths are considered
@@ -948,26 +955,31 @@ class CallGraph():
                 call: A Call object that represents a function call in the call graph.
 
             Returns:
-                A dictionary with the keys "proximity" and "surface coupling". Possible values are:
+                A dictionary with the keys "points", "proximity", and "surface coupling". Possible values are:
                     0 for proximity and None for surface coupling, if the Call object is an Exit Point.
                     None for both, if there is no path between the Call object and any of the exit points.
                     Otherwise, a decimal (positive integer) value that represents the calculated proximity
                     (surface coupling).
+                The dictionary value corresponding to the key "points" is a list of Call objects representing
+                    the exit points that the given call outputs data through.
         """
-        proximity_to_exit = surface_coupling_with_exit = None
+        exit_points = proximity_to_exit = surface_coupling_with_exit = None
         if call in self.exit_points:
             proximity_to_exit = 0
         else:
+            points = []
             exit_path_lengths = []
             num_paths = 0
             for ex in self.exit_points:
                 if nx.has_path(self.call_graph, source=call, target=ex):
+                    points.append(ex)
                     for shortest_path in nx.all_shortest_paths(self.call_graph, source=call, target=ex):
                         num_paths += 1
                         exit_path_lengths.append(len(shortest_path) - 1) # Path length is one less than the number of nodes
 
             if exit_path_lengths and num_paths != 0:
+                exit_points = points
                 proximity_to_exit = stat.mean(exit_path_lengths)
                 surface_coupling_with_exit = num_paths
 
-        return {'proximity': proximity_to_exit, 'surface_coupling': surface_coupling_with_exit}
+        return {'points': exit_points, 'proximity': proximity_to_exit, 'surface_coupling': surface_coupling_with_exit}
