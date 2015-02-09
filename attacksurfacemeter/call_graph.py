@@ -927,8 +927,9 @@ class CallGraph():
                         num_paths += 1
                         entry_path_lengths.append(len(shortest_path) - 1) # Path length is one less than the number of nodes
 
-                    proximity_to_entry = stat.mean(entry_path_lengths)
-                    surface_coupling_with_entry = num_paths
+            if entry_path_lengths and num_paths != 0:
+                proximity_to_entry = stat.mean(entry_path_lengths)
+                surface_coupling_with_entry = num_paths
 
         return {'proximity': proximity_to_entry, 'surface_coupling': surface_coupling_with_entry}
 
@@ -963,7 +964,8 @@ class CallGraph():
                         num_paths += 1
                         exit_path_lengths.append(len(shortest_path) - 1) # Path length is one less than the number of nodes
 
-                    proximity_to_exit = stat.mean(exit_path_lengths)
-                    surface_coupling_with_exit = num_paths
+            if exit_path_lengths and num_paths != 0:
+                proximity_to_exit = stat.mean(exit_path_lengths)
+                surface_coupling_with_exit = num_paths
 
         return {'proximity': proximity_to_exit, 'surface_coupling': surface_coupling_with_exit}
