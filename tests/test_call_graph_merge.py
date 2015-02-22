@@ -30,21 +30,21 @@ class CallGraphMergeTestCase(unittest.TestCase):
 
     def test_nodes(self):
         # Arrange
-        expected_content = [Call("malloc", ""),
-                            Call("scanf", ""),
-                            Call("GreeterSayHiTo", "helloworld.c"),
-                            Call("functionPtr", "helloworld.c"),
-                            Call("greet", "greetings.c"),
-                            Call("recursive_a", "greetings.c"),
-                            Call("greet_a", "helloworld.c"),
-                            Call("addInt", "helloworld.c"),
-                            Call("recursive_b", "greetings.c"),
-                            Call("new_Greeter", "helloworld.c"),
-                            Call("printf", ""),
-                            Call("greet_b", "helloworld.c"),
-                            Call("GreeterSayHi", "helloworld.c"),
-                            Call("main", "helloworld.c"),
-                            Call("puts", "")]
+        expected_content = [Call("malloc", "", "c"),
+                            Call("scanf", "", "c"),
+                            Call("GreeterSayHiTo", "helloworld.c", "c"),
+                            Call("functionPtr", "helloworld.c", "c"),
+                            Call("greet", "greetings.c", "c"),
+                            Call("recursive_a", "greetings.c", "c"),
+                            Call("greet_a", "helloworld.c", "c"),
+                            Call("addInt", "helloworld.c", "c"),
+                            Call("recursive_b", "greetings.c", "c"),
+                            Call("new_Greeter", "helloworld.c", "c"),
+                            Call("printf", "", "c"),
+                            Call("greet_b", "helloworld.c", "c"),
+                            Call("GreeterSayHi", "helloworld.c", "c"),
+                            Call("main", "helloworld.c", "c"),
+                            Call("puts", "", "c")]
 
         # Act
         nodes = self.call_graph.nodes
@@ -60,30 +60,30 @@ class CallGraphMergeTestCase(unittest.TestCase):
 
     def test_edges(self):
         # Arrange
-        expected_content = [(Call("GreeterSayHi", "helloworld.c"), Call("printf", "")),
-                            (Call("greet", "greetings.c"), Call("puts", "")),
-                            (Call("new_Greeter", "helloworld.c"), Call("malloc", "")),
-                            (Call("new_Greeter", "helloworld.c"), Call("GreeterSayHi", "helloworld.c")),
-                            (Call("new_Greeter", "helloworld.c"), Call("GreeterSayHiTo", "helloworld.c")),
-                            (Call("recursive_b", "greetings.c"), Call("recursive_a", "greetings.c")),
-                            (Call("recursive_b", "greetings.c"), Call("printf", "")),
-                            (Call("main", "helloworld.c"), Call("functionPtr", "helloworld.c")),
-                            (Call("main", "helloworld.c"), Call("puts", "")),
-                            (Call("main", "helloworld.c"), Call("greet_b", "helloworld.c")),
-                            (Call("main", "helloworld.c"), Call("GreeterSayHi", "helloworld.c")),
-                            (Call("main", "helloworld.c"), Call("new_Greeter", "helloworld.c")),
-                            (Call("main", "helloworld.c"), Call("greet_a", "helloworld.c")),
-                            (Call("main", "helloworld.c"), Call("GreeterSayHiTo", "helloworld.c")),
-                            (Call("main", "helloworld.c"), Call("printf", "")),
-                            (Call("main", "helloworld.c"), Call("addInt", "helloworld.c")),
-                            (Call("greet_b", "helloworld.c"), Call("greet", "greetings.c")),
-                            (Call("greet_b", "helloworld.c"), Call("recursive_b", "greetings.c")),
-                            (Call("greet_b", "helloworld.c"), Call("scanf", "")),
-                            (Call("recursive_a", "greetings.c"), Call("recursive_b", "greetings.c")),
-                            (Call("recursive_a", "greetings.c"), Call("printf", "")),
-                            (Call("greet_a", "helloworld.c"), Call("greet", "greetings.c")),
-                            (Call("greet_a", "helloworld.c"), Call("recursive_a", "greetings.c")),
-                            (Call("GreeterSayHiTo", "helloworld.c"), Call("printf", ""))]
+        expected_content = [(Call("GreeterSayHi", "helloworld.c", "c"), Call("printf", "", "c")),
+                            (Call("greet", "greetings.c", "c"), Call("puts", "", "c")),
+                            (Call("new_Greeter", "helloworld.c", "c"), Call("malloc", "", "c")),
+                            (Call("new_Greeter", "helloworld.c", "c"), Call("GreeterSayHi", "helloworld.c", "c")),
+                            (Call("new_Greeter", "helloworld.c", "c"), Call("GreeterSayHiTo", "helloworld.c", "c")),
+                            (Call("recursive_b", "greetings.c", "c"), Call("recursive_a", "greetings.c", "c")),
+                            (Call("recursive_b", "greetings.c", "c"), Call("printf", "", "c")),
+                            (Call("main", "helloworld.c", "c"), Call("functionPtr", "helloworld.c", "c")),
+                            (Call("main", "helloworld.c", "c"), Call("puts", "", "c")),
+                            (Call("main", "helloworld.c", "c"), Call("greet_b", "helloworld.c", "c")),
+                            (Call("main", "helloworld.c", "c"), Call("GreeterSayHi", "helloworld.c", "c")),
+                            (Call("main", "helloworld.c", "c"), Call("new_Greeter", "helloworld.c", "c")),
+                            (Call("main", "helloworld.c", "c"), Call("greet_a", "helloworld.c", "c")),
+                            (Call("main", "helloworld.c", "c"), Call("GreeterSayHiTo", "helloworld.c", "c")),
+                            (Call("main", "helloworld.c", "c"), Call("printf", "", "c")),
+                            (Call("main", "helloworld.c", "c"), Call("addInt", "helloworld.c", "c")),
+                            (Call("greet_b", "helloworld.c", "c"), Call("greet", "greetings.c", "c")),
+                            (Call("greet_b", "helloworld.c", "c"), Call("recursive_b", "greetings.c", "c")),
+                            (Call("greet_b", "helloworld.c", "c"), Call("scanf", "", "c")),
+                            (Call("recursive_a", "greetings.c", "c"), Call("recursive_b", "greetings.c", "c")),
+                            (Call("recursive_a", "greetings.c", "c"), Call("printf", "", "c")),
+                            (Call("greet_a", "helloworld.c", "c"), Call("greet", "greetings.c", "c")),
+                            (Call("greet_a", "helloworld.c", "c"), Call("recursive_a", "greetings.c", "c")),
+                            (Call("GreeterSayHiTo", "helloworld.c", "c"), Call("printf", "", "c"))]
 
         # Act
         edges = self.call_graph.edges
