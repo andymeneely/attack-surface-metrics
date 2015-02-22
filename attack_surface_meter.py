@@ -5,6 +5,7 @@ import argparse
 from attacksurfacemeter.call_graph import CallGraph
 from loaders.cflow_loader import CflowLoader
 from loaders.gprof_loader import GprofLoader
+from loaders.javacg_loader import JavaCGLoader
 from formatters.txt_formatter import TxtFormatter
 from formatters.xml_formatter import XmlFormatter
 from formatters.json_formatter import JsonFormatter
@@ -22,7 +23,8 @@ def main():
 
     loaders = {
         'cflow': CflowLoader,
-        'gprof': GprofLoader
+        'gprof': GprofLoader,
+        'javacg': JavaCGLoader
     }
 
     args = parse_args()
@@ -41,7 +43,8 @@ def main():
 
         input_file = {
             'cflow': if_not_none(args.cflowfile),
-            'gprof': if_not_none(args.gproffile)
+            'gprof': if_not_none(args.gproffile),
+            'javacg': if_not_none(args.javacgfile)
         }
 
         loader = loaders[args.tool](input_file[args.tool], args.reverse)
@@ -81,7 +84,10 @@ def parse_args():
                         help="The file containing cflow's output.")
     parser.add_argument("-gf", "--gproffile",
                         help="The file containing gprof's output")
-    parser.add_argument("-t", "--tool", choices=["cflow", "gprof", "all"], default="cflow",
+    parser.add_argument("-jf", "--javacgfile",
+                        help="The file containing java-callgraph's output")
+    # TODO: Change this "all" option so that it reflects what it actually is: using both cflow and gprof files.
+    parser.add_argument("-t", "--tool", choices=["cflow", "gprof", "all", "javacg"], default="cflow",
                         help="The call graph generation software to use. Choose both to use both tools.")
     parser.add_argument("-r", "--reverse", action="store_true",
                         help="When using cflow for call graph generation, use the reverse algorithm.")
