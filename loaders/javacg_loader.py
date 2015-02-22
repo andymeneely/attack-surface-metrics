@@ -8,9 +8,10 @@ from attacksurfacemeter.call import Call
 
 class JavaCGLoader(BaseLoader):
     """"""
-    def __init__(self, source, reverse=False):
+    def __init__(self, source, app_packages=[]):
         """Constructor for JavaCGLoader"""
         self.source = source
+        self.app_packages = app_packages
 
     def load_call_graph(self):
         """
@@ -27,8 +28,11 @@ class JavaCGLoader(BaseLoader):
             # line is like this:
             # M:com.example.kevin.helloandroid.Greeter:sayHelloInSpanish (M)java.lang.StringBuilder:toString
             for line in raw_call_graph:
-                if line.startswith("M:"):
+                if line.startswith("M:") and self._contains_call_in_package(line):
                     caller, callee = line.split(" ")
                     call_graph.add_edge(Call.from_javacg(caller), Call.from_javacg(callee))
 
         return call_graph
+
+    def _contains_call_in_package(self, line):
+        return any([(p in line) for p in self.app_packages])

@@ -11,7 +11,9 @@ from formatters.xml_formatter import XmlFormatter
 from formatters.json_formatter import JsonFormatter
 from formatters.html_formatter import HtmlFormatter
 
-
+# TODO: This way of setting up the call graph and metrics calculations is becoming
+# too complex. Better find another way to set all of this up. Creating classes for
+# managing the set up of each toolchain seems like a good idea.
 def main():
 
     formatters = {
@@ -47,7 +49,10 @@ def main():
             'javacg': if_not_none(args.javacgfile)
         }
 
-        loader = loaders[args.tool](input_file[args.tool], args.reverse)
+        if args.tool == "javacg":
+            loader = loaders[args.tool](input_file[args.tool], args.apppackages)
+        else:
+            loader = loaders[args.tool](input_file[args.tool], args.reverse)
 
         call_graph = CallGraph.from_loader(loader)
 
@@ -91,6 +96,11 @@ def parse_args():
                         help="The call graph generation software to use. Choose both to use both tools.")
     parser.add_argument("-r", "--reverse", action="store_true",
                         help="When using cflow for call graph generation, use the reverse algorithm.")
+    parser.add_argument("-ap", "--apppackages", metavar='P', nargs="*",
+                        help="When using java-callgraph for call graph generation of android apps, "
+                             "specify the fully qualified package name of the method calls that will"
+                             "be included in the call graph. This is generally the name of the java package"
+                             "inside which the app's classes are defined.")
     parser.add_argument("-f", "--format", choices=["txt", "html", "xml", "json"], default="txt",
                         help="Output format of the calculated metrics report.")
     parser.add_argument("-s", "--summary", action="store_true",
