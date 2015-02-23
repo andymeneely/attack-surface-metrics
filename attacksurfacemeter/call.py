@@ -38,6 +38,7 @@ class Call():
                                'ContentResolver.query',
                                'onStartCommand',
                                'onBind']
+
     android_output_functions = ['startActivity',
                                 'startActivityForResult',
                                 'startService',
@@ -62,7 +63,7 @@ class Call():
         
             Receives a line of cflow's output and parses it for some key information such as indent level,
             function name, signature and the point where it's defined.
-        
+
             Args:
                 name: A String containing the name of the function this Call represents.
                 signature: A piece of information associated with the function this Call represents. In the current
@@ -157,13 +158,12 @@ class Call():
             Returns:
                 A Boolean that states whether this object is an input function.
         """
-        function_sets = {
-            "c": Call.c_input_functions,
-            "android": Call.android_input_functions
-        }
+        is_input = False
 
-        input_functions = function_sets[self._environment]
-        is_input = self._belongs_to(input_functions)
+        if self._environment == "c":
+            is_input = self._belongs_to(Call.c_input_functions)
+        elif self._environment == "android":
+            is_input = (self.function_signature + "." + self.function_name) in Call.android_input_functions
 
         return is_input
 
@@ -174,15 +174,14 @@ class Call():
             Returns:
                 A Boolean that states whether this object is an output function.
         """
-        function_sets = {
-            "c": Call.c_output_functions,
-            "android": Call.android_output_functions
-        }
+        is_output = False
 
-        output_functions = function_sets[self._environment]
-        is_input = self._belongs_to(output_functions)
+        if self._environment == "c":
+            is_output = self._belongs_to(Call.c_output_functions)
+        elif self._environment == "android":
+            is_output = (self.function_signature + "." + self.function_name) in Call.android_output_functions
 
-        return is_input
+        return is_output
 
     def is_standard_library_function(self):
         """

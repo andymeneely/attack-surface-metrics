@@ -1,7 +1,5 @@
 __author__ = 'kevin'
 
-import re
-
 from loaders.base_line_parser import BaseLineParser
 
 

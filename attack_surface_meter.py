@@ -13,7 +13,7 @@ from formatters.html_formatter import HtmlFormatter
 
 # TODO: This way of setting up the call graph and metrics calculations is becoming
 # too complex. Better find another way to set all of this up. Creating classes for
-# managing the set up of each toolchain seems like a good idea.
+# managing the set up of each "class chain" seems like a good idea.
 def main():
 
     formatters = {
@@ -91,6 +91,7 @@ def parse_args():
                         help="The file containing gprof's output")
     parser.add_argument("-jf", "--javacgfile",
                         help="The file containing java-callgraph's output")
+
     # TODO: Change this "all" option so that it reflects what it actually is: using both cflow and gprof files.
     parser.add_argument("-t", "--tool", choices=["cflow", "gprof", "all", "javacg"], default="cflow",
                         help="The call graph generation software to use. Choose both to use both tools.")
@@ -101,6 +102,7 @@ def parse_args():
                              "specify the fully qualified package name of the method calls that will"
                              "be included in the call graph. This is generally the name of the java package"
                              "inside which the app's classes are defined.")
+
     parser.add_argument("-f", "--format", choices=["txt", "html", "xml", "json"], default="txt",
                         help="Output format of the calculated metrics report.")
     parser.add_argument("-s", "--summary", action="store_true",
