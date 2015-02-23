@@ -161,7 +161,7 @@ class Call():
         is_input = False
 
         if self._environment == "c":
-            is_input = self._belongs_to(Call.c_input_functions)
+            is_input = self.function_name in Call.c_input_functions
         elif self._environment == "android":
             is_input = (self.function_signature + "." + self.function_name) in Call.android_input_functions
 
@@ -177,7 +177,7 @@ class Call():
         is_output = False
 
         if self._environment == "c":
-            is_output = self._belongs_to(Call.c_output_functions)
+            is_output = self.function_name in Call.c_output_functions
         elif self._environment == "android":
             is_output = (self.function_signature + "." + self.function_name) in Call.android_output_functions
 
@@ -190,24 +190,10 @@ class Call():
             Returns:
                 A Boolean that states whether this object is a standard library function.
         """
-        return self._belongs_to(Call.c_standard_library_functions)
+        return self.function_name in Call.c_standard_library_functions
 
     def is_function_name_only(self):
         return False if self._function_signature else True
-
-    def _belongs_to(self, function_set):
-        """
-            Determines whether the function represented by this object is contained in a given function set.
-
-            Args:
-                function_set: A List of Strings that contain the names of the functions to test if this object is
-                    present in.
-
-            Returns:
-                A Boolean that states whether the function represented by this object is contained in a given
-                function set.
-        """
-        return self.function_name in function_set
 
     @property
     def identity(self):
