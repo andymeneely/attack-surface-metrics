@@ -8,7 +8,7 @@ class CflowLoaderTestCase(unittest.TestCase):
 
     def test_load_call_graph(self):
         # Arrange
-        test_loader = CflowLoader("/home/kevin/Documents/attack-surface-metrics/tests/helloworld/cflow.callgraph.txt",
+        test_loader = CflowLoader("helloworld/cflow.callgraph.txt",
                                   False)
         expected_content = ['GreeterSayHiTo helloworld.c',
                             'greet_a helloworld.c',

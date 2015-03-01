@@ -8,7 +8,7 @@ class CflowLoaderTestCase(unittest.TestCase):
 
     def test_load_call_graph(self):
         # Arrange
-        test_loader = JavaCGLoader("/home/kevin/Documents/attack-surface-metrics/tests/helloworld/javacg.callgraph.txt",
+        test_loader = JavaCGLoader("helloworld/javacg.callgraph.txt",
                                   ["com.example.kevin.helloandroid"])
         expected_content = ['onCreateOptionsMenu com.example.kevin.helloandroid.MainActivity',
                             '<init> com.example.kevin.helloandroid.R$anim',
