@@ -1,14 +1,17 @@
 __author__ = 'kevin'
 
 import unittest
+import os
+
 from loaders.gprof_loader import GprofLoader
 
 
-class CflowLoaderTestCase(unittest.TestCase):
+class GprofLoaderTestCase(unittest.TestCase):
 
     def test_load_call_graph(self):
         # Arrange
-        test_loader = GprofLoader("helloworld/gprof.callgraph.txt",
+        test_loader = GprofLoader(os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                               "helloworld/gprof.callgraph.txt"),
                                   False)
         expected_content = ['GreeterSayHiTo helloworld.c',
                             'greet_a helloworld.c',

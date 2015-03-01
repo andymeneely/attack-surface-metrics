@@ -1,14 +1,17 @@
 __author__ = 'kevin'
 
 import unittest
+import os
+
 from loaders.javacg_loader import JavaCGLoader
 
 
-class CflowLoaderTestCase(unittest.TestCase):
+class JavaCGLoaderTestCase(unittest.TestCase):
 
     def test_load_call_graph(self):
         # Arrange
-        test_loader = JavaCGLoader("helloworld/javacg.callgraph.txt",
+        test_loader = JavaCGLoader(os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                               "helloworld/javacg.callgraph.txt"),
                                   ["com.example.kevin.helloandroid"])
         expected_content = ['onCreateOptionsMenu com.example.kevin.helloandroid.MainActivity',
                             '<init> com.example.kevin.helloandroid.R$anim',
