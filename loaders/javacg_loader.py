@@ -24,15 +24,20 @@ class JavaCGLoader(BaseLoader):
         """
         call_graph = nx.DiGraph()
 
+        if self.app_packages:
+            condition_to_add = lambda line: line.startswith("M:") and self._contains_call_in_package(line)
+        else:
+            condition_to_add = lambda line: line.startswith("M:")
+
         with open(self.source) as raw_call_graph:
             # line is like this:
-            # M:com.example.kevin.helloandroid.Greeter:sayHelloInSpanish (M)java.lang.StringBuilder:toString
+            # M:com.example.kevin.helloandroid.Greeter:sayHelloInSpanish (M)java.lang.StringBuilder:toString.
             for line in raw_call_graph:
-                if line.startswith("M:") and self._contains_call_in_package(line):
+                if condition_to_add(line):
                     caller, callee = line.split(" ")
                     call_graph.add_edge(Call.from_javacg(caller), Call.from_javacg(callee))
 
         return call_graph
 
     def _contains_call_in_package(self, line):
-        return any([(p in line) for p in self.app_packages])
+            return any([(p in line) for p in self.app_packages])
