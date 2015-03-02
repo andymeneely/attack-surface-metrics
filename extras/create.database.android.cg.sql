@@ -15,5 +15,7 @@
 CREATE TABLE "edges" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     "callee" TEXT NOT NULL,
-    "caller" TEXT NOT NULL
+    "caller" TEXT NOT NULL,
+    "app" TEXT NOT NULL
 )
+
