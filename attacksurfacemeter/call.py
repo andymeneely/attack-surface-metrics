@@ -4,6 +4,8 @@ from loaders.cflow_line_parser import CflowLineParser
 from loaders.gprof_line_parser import GprofLineParser
 from loaders.javacg_line_parser import JavaCGLineParser
 
+from attacksurfacemeter.environments import Environments
+
 
 class Call():
     """
@@ -82,7 +84,7 @@ class Call():
 
         new_instance = cls(cflow_line_parser.get_function_name(),
                            cflow_line_parser.get_function_signature(),
-                           "c")
+                           Environments.C)
         new_instance.level = cflow_line_parser.get_level()
 
         return new_instance
@@ -93,7 +95,7 @@ class Call():
 
         new_instance = cls(gprof_line_parser.get_function_name(),
                            gprof_line_parser.get_function_signature(),
-                           "c")
+                           Environments.C)
 
         return new_instance
 
@@ -103,7 +105,7 @@ class Call():
 
         new_instance = cls(javacg_line_parser.get_function_name(),
                            javacg_line_parser.get_function_signature(),
-                           "android")
+                           Environments.ANDROID)
 
         return new_instance
 
@@ -160,9 +162,9 @@ class Call():
         """
         is_input = False
 
-        if self._environment == "c":
+        if self._environment == Environments.C:
             is_input = self.function_name in Call.c_input_functions
-        elif self._environment == "android":
+        elif self._environment == Environments.ANDROID:
             is_input = (self.function_signature + "." + self.function_name) in Call.android_input_functions
 
         return is_input
@@ -176,9 +178,9 @@ class Call():
         """
         is_output = False
 
-        if self._environment == "c":
+        if self._environment == Environments.C:
             is_output = self.function_name in Call.c_output_functions
-        elif self._environment == "android":
+        elif self._environment == Environments.ANDROID:
             is_output = (self.function_signature + "." + self.function_name) in Call.android_output_functions
 
         return is_output
