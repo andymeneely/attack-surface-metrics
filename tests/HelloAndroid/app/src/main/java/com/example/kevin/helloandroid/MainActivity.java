@@ -49,6 +49,12 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void button_call_data_presenter_onClick(View button)
+    {
+        Intent intent = new Intent(this, DataPresenterActivity.class);
+        startActivity(intent);
+    }
+
     public void button_salute_onClick(View button)
     {
         String salutation = myGreeter.sayHello();
