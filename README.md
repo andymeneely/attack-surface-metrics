@@ -6,6 +6,6 @@ attack-surface-metrics
 
 Scripts for collecting metrics of the attack surface.
 
-Pypi: https://pypi.python.org/pypi/AttackSurfaceMeter
+Pypi: https://pypi.python.org/pypi/attacksurfacemeter
 
-Install using: pip install AttackSurfaceMeter
+Install using: pip install attacksurfacemeter

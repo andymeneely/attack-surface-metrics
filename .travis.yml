@@ -8,8 +8,6 @@ before_install:
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
-  - pip install networkx
-  - pip install django
   - pip install coveralls
 
 # command to run tests, e.g. python setup.py test
