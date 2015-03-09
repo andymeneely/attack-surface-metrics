@@ -4,3 +4,4 @@ build
 /tests/helloworld/Debug
 *.pyc
 .coverage
+AttackSurfaceMeter.egg-info/
