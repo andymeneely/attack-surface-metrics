@@ -1,18 +1,30 @@
-__author__ = 'kevin'
-
-# from distutils.core import setup
-from setuptools import setup
+try:
+    from setuptools import setup
+except ImportError:
+    import ez_setup
+    ez_setup.use_setuptools()
+    from setuptools import setup
 
 setup(
-    name='AttackSurfaceMeter',
-    version='0.0.2',
+    name='attacksurfacemeter',
+    version='0.1.0',
     packages=['attacksurfacemeter', 'formatters', 'loaders'],
-    requires=['networkx'],
-    license='The MIT License (MIT) Copyright (c) 2014 Andy Meneely',
+    install_requires=['networkx==1.9.1','django==1.6'],
+    license='The MIT License (MIT) Copyright (c) 2015 Andy Meneely',
     description='Library for collecting metrics of the attack surface.',
     long_description=open('README.md').read(),
-    author='Kevin Campusano',
-    author_email='kac2375@rit.edu',
+    author='Andy Meneely',
+    author_email='andy@se.rit.edu',
     url='https://github.com/andymeneely/attack-surface-metrics',
-    test_suite="tests"
+    test_suite="tests",
+    classifiers=[
+        'Development Status :: 2 - Pre-Alpha',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'Intended Audience :: Science/Research',
+        'License :: OSI Approved :: MIT License',
+        'Natural Language :: English',
+        'Operating System :: Unix',
+        'Programming Language :: Python :: 3.4',
+    ],
 )
