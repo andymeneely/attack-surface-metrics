@@ -2,6 +2,7 @@ __author__ = 'kevin'
 
 import statistics as stat
 import networkx as nx
+import os
 # import matplotlib.pyplot as plt
 
 
@@ -239,6 +240,9 @@ class CallGraph():
     #     nx.draw(self.call_graph)
     #     plt.savefig(os.path.basename(os.path.normpath(self.source_dir)) + ".png")
     #     plt.clf()
+
+    def save_gml(self):
+        nx.write_gml(self.call_graph, os.path.basename(os.path.normpath(self.source)) + ".gml")
     
     def shortest_path(self, source, target):
         """
