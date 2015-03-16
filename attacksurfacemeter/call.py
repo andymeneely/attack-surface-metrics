@@ -107,6 +107,9 @@ class Call():
                            javacg_line_parser.get_function_signature(),
                            Environments.ANDROID)
 
+        new_instance.class_name = javacg_line_parser.get_class()
+        new_instance.package_name = javacg_line_parser.get_package()
+
         return new_instance
 
     def __str__(self):
