@@ -119,7 +119,10 @@ class Call():
             Returns:
                 A String representation of the Call
         """
-        return self.function_name
+        if self._environment == Environments.ANDROID:
+            return self.function_signature + "." + self.function_name
+        else:
+            return self.identity
 
     def __hash__(self):
         """

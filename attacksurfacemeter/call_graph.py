@@ -988,86 +988,10 @@ class CallGraph():
 
         return {'points': exit_points, 'proximity': proximity_to_exit, 'surface_coupling': surface_coupling_with_exit}
 
-    black_listed_packages = ['android.accessibilityservice',
-                            'android.animation',
-                            'android.app',
-                            'android.content',
-                            'android.content.pm',
-                            'android.content.res',
-                            'android.database',
-                            'android.graphics',
-                            'android.graphics.drawable',
-                            'android.graphics.drawable.shapes',
-                            'android.graphics.pdf',
-                            'android.hardware.display',
-                            'android.media',
-                            'android.media.session',
-                            'android.net',
-                            'android.os',
-                            'android.print',
-                            'android.print.pdf',
-                            'android.provider',
-                            'android.speech.tts',
-                            'android.support.v4',
-                            'android.support.v4.accessibilityservice',
-                            'android.support.v4.app',
-                            'android.support.v4.content',
-                            'android.support.v4.content.pm',
-                            'android.support.v4.content.res',
-                            'android.support.v4.database',
-                            'android.support.v4.graphics',
-                            'android.support.v4.graphics.drawable',
-                            'android.support.v4.hardware.display',
-                            'android.support.v4.internal.view',
-                            'android.support.v4.media',
-                            'android.support.v4.media.routing',
-                            'android.support.v4.media.session',
-                            'android.support.v4.net',
-                            'android.support.v4.os',
-                            'android.support.v4.print',
-                            'android.support.v4.provider',
-                            'android.support.v4.speech.tts',
-                            'android.support.v4.text',
-                            'android.support.v4.util',
-                            'android.support.v4.view',
-                            'android.support.v4.view.accessibility',
-                            'android.support.v4.widget',
-                            'android.support.v7.app',
-                            'android.support.v7.appcompat',
-                            'android.support.v7.internal',
-                            'android.support.v7.internal.app',
-                            'android.support.v7.internal.text',
-                            'android.support.v7.internal.transition',
-                            'android.support.v7.internal.view',
-                            'android.support.v7.internal.view.menu',
-                            'android.support.v7.internal.widget',
-                            'android.support.v7.view',
-                            'android.support.v7.widget',
-                            'android.text',
-                            'android.text.method',
-                            'android.text.style',
-                            'android.transition',
-                            'android.util',
-                            'android.view',
-                            'android.view.accessibility',
-                            'android.view.animation',
-                            'android.view.inputmethod',
-                            'android.webkit',
-                            'android.widget',
-                            'int[]',
-                            'java.io',
-                            'java.lang',
-                            'java.lang.ref',
-                            'java.lang.reflect',
-                            'java.math',
-                            'java.nio',
-                            'java.util',
-                            'java.util.concurrent',
-                            'java.util.concurrent.atomic',
-                            'long[]',
-                            'org.xmlpull.v1']
-
     def collapse_android_black_listed_packages(self):
+
+        black_listed_packages = self._load_android_package_black_list()
+
         nodes_to_remove = set()
         edges_to_remove = []
 
@@ -1079,7 +1003,7 @@ class CallGraph():
             if not (caller.is_input_function() or caller.is_output_function() or
                     callee.is_input_function() or callee.is_output_function()):
 
-                if caller.package_name in self.black_listed_packages and callee.package_name in self.black_listed_packages:
+                if caller.package_name in black_listed_packages and callee.package_name in black_listed_packages:
 
                     edges_to_remove.append(edge)
                     nodes_to_remove.add(caller)
@@ -1087,14 +1011,14 @@ class CallGraph():
 
                     edges_to_add.append((caller.package_name, callee.package_name))
 
-                elif caller.package_name in self.black_listed_packages:
+                elif caller.package_name in black_listed_packages:
 
                     edges_to_remove.append(edge)
                     nodes_to_remove.add(caller)
 
                     edges_to_add.append((caller.package_name, callee))
 
-                elif callee.package_name in self.black_listed_packages:
+                elif callee.package_name in black_listed_packages:
 
                     edges_to_remove.append(edge)
                     nodes_to_remove.add(callee)
@@ -1111,3 +1035,11 @@ class CallGraph():
                 self.call_graph.add_edge(*e, weight=1)
             else:
                 self.call_graph.add_edge(*e, weight=edge_data["weight"] + 1)
+
+    def _load_android_package_black_list(self):
+        file_name = os.path.join(os.path.dirname(os.path.realpath(__file__)), "android_package_black_list")
+
+        with open(file_name) as f:
+            black_listed_packages = f.read().splitlines()
+
+        return black_listed_packages
