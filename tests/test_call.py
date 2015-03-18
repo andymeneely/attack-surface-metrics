@@ -20,7 +20,7 @@ class CallTestCase(unittest.TestCase):
         test_call = Call.from_cflow(cflow_line)
 
         # Assert
-        self.assertEqual("xstrdup xmalloc.c", test_call.identity)
+        self.assertEqual("xstrdup ./cyrus/lib/xmalloc.c", test_call.identity)
 
     def test_function_name_only_name(self):
         # Arrange
@@ -53,7 +53,7 @@ class CallTestCase(unittest.TestCase):
 
         # Assert
         # self.assertEqual("<char *xstrdup (const char *str) at ./cyrus/lib/xmalloc.c:89>", test_call.function_signature)
-        self.assertEqual("xmalloc.c", test_call.function_signature)
+        self.assertEqual("./cyrus/lib/xmalloc.c", test_call.function_signature)
 
     def test_is_input_function(self):
         # Arrange

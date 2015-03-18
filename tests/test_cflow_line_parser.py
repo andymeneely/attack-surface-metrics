@@ -24,7 +24,7 @@ class CflowLineParserTestCase(unittest.TestCase):
         test_function_signature = test_line_parser.get_function_signature()
 
         # Assert
-        self.assertEqual("helloworld.c", test_function_signature)
+        self.assertEqual("./src/helloworld.c", test_function_signature)
 
     def test_get_function_name_name_only(self):
         # Arrange
