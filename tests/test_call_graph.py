@@ -1049,6 +1049,5 @@ class CallGraphTestCase(unittest.TestCase):
             self.assertEqual(expected_value['proximity'], actual_value['proximity'], msg=msg)
             self.assertEqual(expected_value['surface_coupling'], actual_value['surface_coupling'], msg=msg)
 
-
 if __name__ == '__main__':
     unittest.main()
