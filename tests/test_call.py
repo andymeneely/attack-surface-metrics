@@ -122,5 +122,22 @@ class CallTestCase(unittest.TestCase):
         # Assert
         self.assertNotEqual(test_call_1, test_call_2)
 
+    def test_is_standard_library_function(self):
+        # Arrange
+        cflow_line = "printf()"
+        test_call = Call.from_cflow(cflow_line)
+
+        # Assert
+        self.assertTrue(test_call.is_standard_library_function())
+
+    def test_is_function_name_only(self):
+        # Arrange
+        cflow_line = "printf()"
+        test_call = Call.from_cflow(cflow_line)
+
+        # Assert
+        self.assertTrue(test_call.is_function_name_only())
+
+
 if __name__ == '__main__':
     unittest.main()
