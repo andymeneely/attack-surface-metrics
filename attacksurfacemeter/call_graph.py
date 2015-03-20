@@ -1103,3 +1103,16 @@ class CallGraph():
             black_listed_packages = f.read().splitlines()
 
         return black_listed_packages
+
+    def get_entry_page_rank(self):
+        per = dict([(n, (1 if n in self.entry_points else 0)) for n in self.nodes])
+        return nx.pagerank(self.call_graph, personalization=per)
+
+    def get_exit_page_rank(self):
+        per = dict([(n, (1 if n in self.exit_points else 0)) for n in self.nodes])
+        return nx.pagerank(self.call_graph, personalization=per)
+
+    def get_page_rank(self):
+        per = dict([(n, (1 if n in self.entry_points or n in self.exit_points else 0))
+                    for n in self.nodes])
+        return nx.pagerank(self.call_graph, personalization=per)
