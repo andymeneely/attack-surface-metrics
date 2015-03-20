@@ -5,6 +5,7 @@ import os
 
 from attacksurfacemeter.call import Call
 from attacksurfacemeter.call_graph import CallGraph
+from attacksurfacemeter.environments import Environments
 from loaders.cflow_loader import CflowLoader
 
 
@@ -1048,6 +1049,87 @@ class CallGraphTestCase(unittest.TestCase):
                 self.assertEqual(expected_value['points'], actual_value['points'], msg=msg)
             self.assertEqual(expected_value['proximity'], actual_value['proximity'], msg=msg)
             self.assertEqual(expected_value['surface_coupling'], actual_value['surface_coupling'], msg=msg)
+
+    def test_get_entry_page_rank(self):
+        # Arrange
+        expected_content = {
+            Call("GreeterSayHi", "./src/helloworld.c", Environments.C): 0.0,
+            Call("functionPtr", "./src/helloworld.c", Environments.C): 0.0,
+            Call("greet", "./src/greetings.c", Environments.C): 0.11289602951039726,
+            Call("addInt", "./src/helloworld.c", Environments.C): 0.0,
+            Call("malloc", "", Environments.C): 0.0,
+            Call("puts", "", Environments.C): 0.09596114244582209,
+            Call("greet_a", "./src/helloworld.c", Environments.C): 0.0,
+            Call("greet_b", "./src/helloworld.c", Environments.C): 0.3984604893467055,
+            Call("printf", "", Environments.C): 0.08344513983814024,
+            Call("scanf", "", Environments.C): 0.11289602951039726,
+            Call("recursive_b", "./src/greetings.c", Environments.C): 0.13778369453395795,
+            Call("main", "./src/helloworld.c", Environments.C): 0.0,
+            Call("recursive_a", "./src/greetings.c", Environments.C): 0.05855747481457957,
+            Call("new_Greeter", "./src/helloworld.c", Environments.C): 0.0,
+            Call("GreeterSayHiTo", "./src/helloworld.c", Environments.C): 0.0
+        }
+
+        # Act
+        page_rank = self.call_graph.get_entry_page_rank()
+
+        # Assert
+        for n in page_rank:
+            self.assertAlmostEqual(expected_content[n], page_rank[n])
+
+    def test_get_exit_page_rank(self):
+        # Arrange
+        expected_content = {
+            Call("greet_a", "./src/helloworld.c", Environments.C): 0.009395011409371217,
+            Call("GreeterSayHiTo", "./src/helloworld.c", Environments.C): 0.0800313164863152,
+            Call("recursive_b", "./src/greetings.c", Environments.C): 0.13987587032020407,
+            Call("addInt", "./src/helloworld.c", Environments.C): 0.009395011409371217,
+            Call("printf", "", Environments.C): 0.2647426063120301,
+            Call("GreeterSayHi", "./src/helloworld.c", Environments.C): 0.0800313164863152,
+            Call("greet", "./src/greetings.c", Environments.C): 0.08402410961818857,
+            Call("scanf", "", Environments.C): 0.0026618620879155803,
+            Call("greet_b", "./src/helloworld.c", Environments.C): 0.009395011409371217,
+            Call("recursive_a", "./src/greetings.c", Environments.C): 0.14080982881566895,
+            Call("malloc", "", Environments.C): 0.0026618620879155803,
+            Call("new_Greeter", "./src/helloworld.c", Environments.C): 0.009395011409371217,
+            Call("puts", "", Environments.C): 0.08081671634019098,
+            Call("main", "./src/helloworld.c", Environments.C): 0.07736945439839962,
+            Call("functionPtr", "./src/helloworld.c", Environments.C): 0.009395011409371217
+        }
+
+        # Act
+        page_rank = self.call_graph.get_exit_page_rank()
+
+        # Assert
+        for n in page_rank:
+            self.assertAlmostEqual(expected_content[n], page_rank[n])
+
+    def test_get_page_rank(self):
+                # Arrange
+        expected_content = {
+            Call("greet_a", "./src/helloworld.c", Environments.C): 0.007867387366472087,
+            Call("main", "./src/helloworld.c", Environments.C): 0.0647891087618243,
+            Call("puts", "", Environments.C): 0.08327922286726645,
+            Call("malloc", "", Environments.C): 0.0022290338348351845,
+            Call("greet", "./src/greetings.c", Environments.C): 0.08871893053734713,
+            Call("scanf", "", Environments.C): 0.020586271023270056,
+            Call("addInt", "./src/helloworld.c", Environments.C): 0.007867387366472087,
+            Call("greet_b", "./src/helloworld.c", Environments.C): 0.07265649612829639,
+            Call("GreeterSayHiTo", "./src/helloworld.c", Environments.C): 0.06701814259665947,
+            Call("functionPtr", "./src/helloworld.c", Environments.C): 0.007867387366472087,
+            Call("printf", "", Environments.C): 0.23526369152958884,
+            Call("recursive_b", "./src/greetings.c", Environments.C): 0.13953600449873405,
+            Call("recursive_a", "./src/greetings.c", Environments.C): 0.12743540615963014,
+            Call("new_Greeter", "./src/helloworld.c", Environments.C): 0.007867387366472087,
+            Call("GreeterSayHi", "./src/helloworld.c", Environments.C): 0.06701814259665947
+        }
+
+        # Act
+        page_rank = self.call_graph.get_page_rank()
+
+        # Assert
+        for n in page_rank:
+            self.assertAlmostEqual(expected_content[n], page_rank[n])
 
 if __name__ == '__main__':
     unittest.main()
