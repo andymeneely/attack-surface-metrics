@@ -1,0 +1,8 @@
+[run]
+source =
+	attacksurfacemeter
+	formatters
+	loaders
+
+[report]
+	show_missing = True
