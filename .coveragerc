@@ -1,8 +1,5 @@
 [run]
-source =
-	attacksurfacemeter
-	formatters
-	loaders
+source = attacksurfacemeter,formatters,loaders
 
 [report]
 	show_missing = True
