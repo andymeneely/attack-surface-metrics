@@ -1,0 +1,14 @@
+			Call graph
+
+
+granularity: each sample hit covers 4 byte(s) no time propagated
+
+index % time    self  children    called     name
+                0.00    0.00       1/10          main (multigprof.c:35 @ 804861e) [25]
+                0.00    0.00       9/10          factorial (multigprof.c:7 @ 8048563) [7]
+[1]      0.0    0.00    0.00      10         factorial (multigprof.c:4 @ 804854d) [1]
+-----------------------------------------------
+
+Index by function name
+
+   [1] factorial (multigprof.c:4 @ 804854d)
