@@ -1,7 +1,7 @@
 __author__ = 'kevin'
 
 import unittest
-from loaders.gprof_line_parser import GprofLineParser
+from attacksurfacemeter.loaders.gprof_line_parser import GprofLineParser
 
 
 class GprofLineParserTestCase(unittest.TestCase):

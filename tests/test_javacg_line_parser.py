@@ -1,7 +1,7 @@
 __author__ = 'kevin'
 
 import unittest
-from loaders.javacg_line_parser import JavaCGLineParser
+from attacksurfacemeter.loaders.javacg_line_parser import JavaCGLineParser
 
 
 class JavaCGLineParserTestCase(unittest.TestCase):

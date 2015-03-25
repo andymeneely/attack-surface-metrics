@@ -6,7 +6,7 @@ import os
 from attacksurfacemeter.call import Call
 from attacksurfacemeter.call_graph import CallGraph
 from attacksurfacemeter.environments import Environments
-from loaders.cflow_loader import CflowLoader
+from attacksurfacemeter.loaders.cflow_loader import CflowLoader
 
 
 class CallGraphTestCase(unittest.TestCase):

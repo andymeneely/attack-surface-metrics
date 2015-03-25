@@ -3,7 +3,7 @@ __author__ = 'kevin'
 import unittest
 import os
 
-from loaders.gprof_loader import GprofLoader
+from attacksurfacemeter.loaders.gprof_loader import GprofLoader
 
 
 class GprofLoaderTestCase(unittest.TestCase):

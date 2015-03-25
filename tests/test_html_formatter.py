@@ -4,8 +4,8 @@ import unittest
 import os
 
 from attacksurfacemeter.call_graph import CallGraph
-from loaders.cflow_loader import CflowLoader
-from formatters.html_formatter import HtmlFormatter
+from attacksurfacemeter.loaders.cflow_loader import CflowLoader
+from attacksurfacemeter.formatters.html_formatter import HtmlFormatter
 
 from tests.test_txt_formatter import TxtFormatterTestCase
 

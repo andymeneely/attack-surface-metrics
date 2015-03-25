@@ -5,8 +5,8 @@ import os
 
 from attacksurfacemeter.call import Call
 from attacksurfacemeter.call_graph import CallGraph
-from loaders.cflow_loader import CflowLoader
-from formatters.txt_formatter import TxtFormatter
+from attacksurfacemeter.loaders.cflow_loader import CflowLoader
+from attacksurfacemeter.formatters.txt_formatter import TxtFormatter
 
 
 class TxtFormatterTestCase(unittest.TestCase):

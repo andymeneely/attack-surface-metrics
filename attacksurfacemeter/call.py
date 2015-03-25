@@ -1,8 +1,8 @@
 __author__ = 'kevin'
 
-from loaders.cflow_line_parser import CflowLineParser
-from loaders.gprof_line_parser import GprofLineParser
-from loaders.javacg_line_parser import JavaCGLineParser
+from attacksurfacemeter.loaders.cflow_line_parser import CflowLineParser
+from attacksurfacemeter.loaders.gprof_line_parser import GprofLineParser
+from attacksurfacemeter.loaders.javacg_line_parser import JavaCGLineParser
 
 from attacksurfacemeter.environments import Environments
 

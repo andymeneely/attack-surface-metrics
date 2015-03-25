@@ -3,7 +3,7 @@ __author__ = 'kevin'
 import unittest
 import os
 
-from loaders.cflow_loader import CflowLoader
+from attacksurfacemeter.loaders.cflow_loader import CflowLoader
 
 
 class CflowLoaderTestCase(unittest.TestCase):

@@ -1,6 +1,6 @@
 __author__ = 'kevin'
 
-from loaders.base_line_parser import BaseLineParser
+from attacksurfacemeter.loaders.base_line_parser import BaseLineParser
 
 
 class JavaCGLineParser(BaseLineParser):

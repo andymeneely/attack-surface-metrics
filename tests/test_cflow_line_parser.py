@@ -1,7 +1,7 @@
 __author__ = 'kevin'
 
 import unittest
-from loaders.cflow_line_parser import CflowLineParser
+from attacksurfacemeter.loaders.cflow_line_parser import CflowLineParser
 
 
 class CflowLineParserTestCase(unittest.TestCase):

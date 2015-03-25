@@ -2,7 +2,7 @@ __author__ = 'kevin'
 
 import re
 
-from loaders.base_line_parser import BaseLineParser
+from attacksurfacemeter.loaders.base_line_parser import BaseLineParser
 
 
 class GprofLineParser(BaseLineParser):

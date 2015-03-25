@@ -4,8 +4,8 @@ import unittest
 import os
 
 from attacksurfacemeter.call_graph import CallGraph
-from loaders.cflow_loader import CflowLoader
-from formatters.json_formatter import JsonFormatter
+from attacksurfacemeter.loaders.cflow_loader import CflowLoader
+from attacksurfacemeter.formatters.json_formatter import JsonFormatter
 
 
 class JsonFormatterTestCase(unittest.TestCase):

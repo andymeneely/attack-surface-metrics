@@ -3,7 +3,7 @@ __author__ = 'kevin'
 import xml.etree.ElementTree as Xml
 from xml.dom.minidom import parseString
 
-from formatters.base_formatter import BaseFormatter
+from attacksurfacemeter.formatters.base_formatter import BaseFormatter
 
 
 class XmlFormatter(BaseFormatter):

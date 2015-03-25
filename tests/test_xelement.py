@@ -1,7 +1,7 @@
 __author__ = 'kevin'
 
 import unittest
-from formatters.xml_formatter import XElement
+from attacksurfacemeter.formatters.xml_formatter import XElement
 
 
 class XElementTestCase(unittest.TestCase):

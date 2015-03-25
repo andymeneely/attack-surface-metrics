@@ -5,7 +5,7 @@ import os
 
 from attacksurfacemeter.call import Call
 from attacksurfacemeter.call_graph import CallGraph
-from loaders.cflow_loader import CflowLoader
+from attacksurfacemeter.loaders.cflow_loader import CflowLoader
 
 class CallGraphCleaningOptionsTestCase(unittest.TestCase):
     def setUp(self):

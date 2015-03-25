@@ -5,8 +5,8 @@ import os
 
 from attacksurfacemeter.call import Call
 from attacksurfacemeter.call_graph import CallGraph
-from loaders.cflow_loader import CflowLoader
-from loaders.gprof_loader import GprofLoader
+from attacksurfacemeter.loaders.cflow_loader import CflowLoader
+from attacksurfacemeter.loaders.gprof_loader import GprofLoader
 
 from tests.test_call_graph_merge import CallGraphMergeTestCase
 

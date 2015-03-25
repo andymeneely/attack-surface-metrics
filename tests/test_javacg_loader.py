@@ -3,7 +3,7 @@ __author__ = 'kevin'
 import unittest
 import os
 
-from loaders.javacg_loader import JavaCGLoader
+from attacksurfacemeter.loaders.javacg_loader import JavaCGLoader
 
 
 class JavaCGLoaderTestCase(unittest.TestCase):

@@ -2,7 +2,7 @@ __author__ = 'kevin'
 
 import networkx as nx
 
-from loaders.base_loader import BaseLoader
+from attacksurfacemeter.loaders.base_loader import BaseLoader
 from attacksurfacemeter.call import Call
 
 

@@ -2,7 +2,7 @@ import unittest
 import os
 
 from attacksurfacemeter.call import Call
-from loaders.multigprof_loader import MultigprofLoader
+from attacksurfacemeter.loaders.multigprof_loader import MultigprofLoader
 
 
 class MultigprofLoaderTestCase(unittest.TestCase):

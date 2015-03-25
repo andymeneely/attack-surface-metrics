@@ -4,7 +4,7 @@ import unittest
 import os
 
 from attacksurfacemeter.call_graph import CallGraph
-from loaders.cflow_loader import CflowLoader
+from attacksurfacemeter.loaders.cflow_loader import CflowLoader
 
 from tests.test_call_graph import CallGraphTestCase
 

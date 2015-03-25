@@ -1,7 +1,7 @@
 __author__ = 'kevin'
 
 
-from formatters.base_formatter import BaseFormatter
+from attacksurfacemeter.formatters.base_formatter import BaseFormatter
 
 
 class HtmlFormatter(BaseFormatter):
