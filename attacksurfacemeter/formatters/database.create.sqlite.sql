@@ -38,7 +38,7 @@ CREATE TABLE attack_surfaces
     "median_out_degree" REAL,
     "average_out_degree" REAL
 );
-
+// separator
 CREATE TABLE nodes
 (
     "id" INTEGER PRIMARY KEY,
@@ -80,35 +80,35 @@ CREATE TABLE nodes
     "entry_page_rank" REAL,
     "exit_page_rank" REAL
 );
-
+// separator
 CREATE TABLE descendant_entry_points
 (
     "id" INTEGER PRIMARY KEY,
     "node_id" INTEGER,
     "descendant_node_id" INTEGER
 );
-
+// separator
 CREATE TABLE descendant_exit_points
 (
     "id" INTEGER PRIMARY KEY,
     "node_id" INTEGER,
     "descendant_node_id" INTEGER
 );
-
+// separator
 CREATE TABLE ancestor_entry_points
 (
     "id" INTEGER PRIMARY KEY,
     "node_id" INTEGER,
     "ancestor_node_id" INTEGER
 );
-
+// separator
 CREATE TABLE ancestor_exit_points
 (
     "id" INTEGER PRIMARY KEY,
     "node_id" INTEGER,
     "ancestor_node_id" INTEGER
 );
-
+// separator
 CREATE TABLE edges
 (
     "id" INTEGER PRIMARY KEY,
