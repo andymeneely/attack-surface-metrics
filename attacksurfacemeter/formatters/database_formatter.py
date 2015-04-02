@@ -25,8 +25,7 @@ class DatabaseFormatter(BaseFormatter):
         db = self.get_connection()
         cursor = db.cursor()
 
-        create_database = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                  self.get_database_init_script())
+        create_database = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.get_database_init_script())
 
         with open(create_database, "r") as create_database:
             create_table_commands = create_database.read().split("// separator")
