@@ -47,11 +47,12 @@ class SqliteFormatter(DatabaseFormatter):
     ancestor_exit_points_insert_stmt = '''INSERT INTO ancestor_exit_points(node_id, ancestor_node_id)
                                           VALUES (?, ?)'''
 
-    def __init__(self, call_graph):
+    def __init__(self, call_graph, database_file):
         super(SqliteFormatter, self).__init__(call_graph)
+        self.database_file = database_file
 
     def get_connection(self):
-        return sqlite3.connect('attack_surface.cg.db')
+        return sqlite3.connect(self.database_file)
 
     def get_database_init_script(self):
         return "database.create.sqlite.sql"
