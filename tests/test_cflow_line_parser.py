@@ -86,7 +86,8 @@ class CflowLineParserTestCase(unittest.TestCase):
         # Arrange
         test_line_parser = CflowLineParser.get_instance(
             "mp_msg() <void mp_msg (int mod, int lev, const char *format, "
-                "...) at ./libavfilter/vf_mp.c:353>: [see 20795]")
+                "...) at ./libavfilter/vf_mp.c:353>: [see 20795]"
+        )
 
         # Act
         test_function_signature = test_line_parser.get_function_signature()
@@ -97,7 +98,8 @@ class CflowLineParserTestCase(unittest.TestCase):
         # Arrange
         test_line_parser = CflowLineParser.get_instance(
             "    mp_msg() <void mp_msg (int mod, int lev, const char "
-                "*format, ...) at ./libavfilter/vf_mp.c:353>:")
+                "*format, ...) at ./libavfilter/vf_mp.c:353>:"
+        )
 
         # Act
         test_function_signature = test_line_parser.get_function_signature()
@@ -108,7 +110,8 @@ class CflowLineParserTestCase(unittest.TestCase):
         # Arrange
         test_line_parser = CflowLineParser.get_instance(
             "    mp_msg() <void mp_msg (int mod, int lev, const char "
-                "*format, ...) at ./libavfilter/vf_mp.c:353>: [see 20795]")
+                "*format, ...) at ./libavfilter/vf_mp.c:353>: [see 20795]"
+        )
 
         # Act
         test_function_signature = test_line_parser.get_function_signature()
