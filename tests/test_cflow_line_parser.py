@@ -76,6 +76,46 @@ class CflowLineParserTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(2, test_level)
 
+    def test_issue_41(self):
+        '''Unit test to test the fix for issue #41.
+        
+        Specifics:
+            https://github.com/andymeneely/attack-surface-metrics/issues/41
+        '''
+
+        # Arrange
+        test_line_parser = CflowLineParser.get_instance(
+            "mp_msg() <void mp_msg (int mod, int lev, const char *format, "
+                "...) at ./libavfilter/vf_mp.c:353>: [see 20795]")
+
+        # Act
+        test_function_signature = test_line_parser.get_function_signature()
+
+        # Assert
+        self.assertEqual("./libavfilter/vf_mp.c", test_function_signature)
+
+        # Arrange
+        test_line_parser = CflowLineParser.get_instance(
+            "    mp_msg() <void mp_msg (int mod, int lev, const char "
+                "*format, ...) at ./libavfilter/vf_mp.c:353>:")
+
+        # Act
+        test_function_signature = test_line_parser.get_function_signature()
+
+        # Assert
+        self.assertEqual("./libavfilter/vf_mp.c", test_function_signature)
+
+        # Arrange
+        test_line_parser = CflowLineParser.get_instance(
+            "    mp_msg() <void mp_msg (int mod, int lev, const char "
+                "*format, ...) at ./libavfilter/vf_mp.c:353>: [see 20795]")
+
+        # Act
+        test_function_signature = test_line_parser.get_function_signature()
+
+        # Assert
+        self.assertEqual("./libavfilter/vf_mp.c", test_function_signature)
+
 
 if __name__ == '__main__':
     unittest.main()
