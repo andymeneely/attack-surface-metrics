@@ -40,7 +40,7 @@ class CallGraphMergeCflowFixTestCase(CallGraphMergeTestCase):
                             Call("new_Greeter", "./src/helloworld.c", "c"),
                             Call("printf", "", "c"),
                             Call("greet_b", "./src/helloworld.c", "c"),
-                            Call("GreeterSayHi", "helloworld.c", "c"),
+                            Call("GreeterSayHi", "./src/helloworld.c", "c"),
                             Call("main", "./src/helloworld.c", "c"),
                             Call("puts", "", "c")]
 
@@ -58,17 +58,17 @@ class CallGraphMergeCflowFixTestCase(CallGraphMergeTestCase):
 
     def test_edges(self):
         # Arrange
-        expected_content = [(Call("GreeterSayHi", "helloworld.c", "c"), Call("printf", "", "c")),
+        expected_content = [(Call("GreeterSayHi", "./src/helloworld.c", "c"), Call("printf", "", "c")),
                             (Call("greet", "./src/greetings.c", "c"), Call("puts", "", "c")),
                             (Call("new_Greeter", "./src/helloworld.c", "c"), Call("malloc", "", "c")),
-                            (Call("new_Greeter", "./src/helloworld.c", "c"), Call("GreeterSayHi", "helloworld.c", "c")),
+                            (Call("new_Greeter", "./src/helloworld.c", "c"), Call("GreeterSayHi", "./src/helloworld.c", "c")),
                             (Call("new_Greeter", "./src/helloworld.c", "c"), Call("GreeterSayHiTo", "./src/helloworld.c", "c")),
                             (Call("recursive_b", "./src/greetings.c", "c"), Call("recursive_a", "./src/greetings.c", "c")),
                             (Call("recursive_b", "./src/greetings.c", "c"), Call("printf", "", "c")),
                             (Call("main", "./src/helloworld.c", "c"), Call("functionPtr", "./src/helloworld.c", "c")),
                             (Call("main", "./src/helloworld.c", "c"), Call("puts", "", "c")),
                             (Call("main", "./src/helloworld.c", "c"), Call("greet_b", "./src/helloworld.c", "c")),
-                            (Call("main", "./src/helloworld.c", "c"), Call("GreeterSayHi", "helloworld.c", "c")),
+                            (Call("main", "./src/helloworld.c", "c"), Call("GreeterSayHi", "./src/helloworld.c", "c")),
                             (Call("main", "./src/helloworld.c", "c"), Call("new_Greeter", "./src/helloworld.c", "c")),
                             (Call("main", "./src/helloworld.c", "c"), Call("greet_a", "./src/helloworld.c", "c")),
                             (Call("main", "./src/helloworld.c", "c"), Call("GreeterSayHiTo", "./src/helloworld.c", "c")),

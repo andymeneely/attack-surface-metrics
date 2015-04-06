@@ -7,22 +7,21 @@ from attacksurfacemeter.loaders.gprof_loader import GprofLoader
 
 
 class GprofLoaderTestCase(unittest.TestCase):
-
     def test_load_call_graph(self):
         # Arrange
         test_loader = GprofLoader(os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                                "helloworld/gprof.callgraph.txt"),
                                   False)
-        expected_content = ['GreeterSayHiTo helloworld.c',
-                            'greet_a helloworld.c',
-                            'recursive_a greetings.c',
-                            'addInt helloworld.c',
-                            'greet_b helloworld.c',
-                            'recursive_b greetings.c',
-                            'main helloworld.c',
-                            'new_Greeter helloworld.c',
-                            'greet greetings.c',
-                            'GreeterSayHi helloworld.c']
+        expected_content = ['GreeterSayHiTo ./src/helloworld.c',
+                            'greet_a ./src/helloworld.c',
+                            'recursive_a ./src/greetings.c',
+                            'addInt ./src/helloworld.c',
+                            'greet_b ./src/helloworld.c',
+                            'recursive_b ./src/greetings.c',
+                            'main ./src/helloworld.c',
+                            'new_Greeter ./src/helloworld.c',
+                            'greet ./src/greetings.c',
+                            'GreeterSayHi ./src/helloworld.c']
 
         # Act
         test_graph = test_loader.load_call_graph()
@@ -32,7 +31,6 @@ class GprofLoaderTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(10, len(nodes))
         self.assertTrue(all_nodes_found)
-
 
 if __name__ == '__main__':
     unittest.main()
