@@ -95,6 +95,8 @@ class CallGraph():
         source = "cflow: {0} - gprof: {1}".format(cflow_call_graph.source, gprof_call_graph.source)
 
         CallGraph._fix_cflow_call_graph(cflow_call_graph, gprof_call_graph)
+        # TODO: We may not need to fix gprof call now that gprof call graph
+        #   also contains the path to files in which functions are defined.
         CallGraph._fix_gprof_call_graph(cflow_call_graph, gprof_call_graph)
 
         graph = nx.DiGraph()
@@ -142,13 +144,7 @@ class CallGraph():
                 cflow_call_graph: A CallGraph instance that represents a call graph generated using output from cflow.
                 gprof_call_graph: A CallGraph instance that represents a call graph generated using output from gprof.
         """
-        cflow_calls_with_no_signature = [c for c in cflow_call_graph.nodes if not c.function_signature]
-
-        for cflow_call in cflow_calls_with_no_signature:
-            gprof_call = [c for c in gprof_call_graph.nodes if c.function_name == cflow_call.function_name]
-
-            if gprof_call:
-                cflow_call.set_function_signature(gprof_call[0].function_signature)
+        CallGraph._fix(cflow_call_graph, gprof_call_graph)
 
     @staticmethod
     def _fix_gprof_call_graph(cflow_call_graph, gprof_call_graph):
@@ -206,6 +202,62 @@ class CallGraph():
         # edges = [e for e in gprof_call_graph.edges
         #          if e[0] not in gprof_call_graph.nodes
         #          or e[1] not in gprof_call_graph.nodes]
+
+    @staticmethod
+    def _fix(call_graph, reference_call_graph):
+        """
+            Method attempts to a fix a call graph using a reference call 
+            graph which is assumed to be more comprehensive than the one
+            being fixed. The notion of fixing a call graph entails 
+            identifying a node without function_signature and replacing it 
+            with an identical node from the reference call graph that has a 
+            function_signature.
+
+            A call graph is required to be fixed to ensure compatibility of 
+            equivalent nodes so that later when merging the two call graphs' 
+            sets of edges, networkx doesn't think the cflow and gprof calls 
+            are different only because one of them doesn't have a 
+            function_signature associated to it.
+
+            Implementation detail:
+                networkx internally uses a dictionary as the data structure 
+                to store nodes. Modifying an attribute that is used in the 
+                computation of the object's hash will invalidate the hash 
+                leaving the graph in an inconsistent state. Hence, fixing 
+                nodes involves replacing existing nodes with their fixed 
+                equivalents.
+                
+                More details at 
+                http://networkx.lanl.gov/tutorial/tutorial.html
+
+        Args:
+                call_graph: A CallGraph instance that represents a call graph 
+                to be fixed.
+                reference_call_graph: A CallGraph instance that represents a 
+                call graph assumed to be more comprehensive than call_graph.
+        """
+        nodes_to_replace = []
+
+        for node in [n for n in call_graph.nodes if not n.function_signature]:
+            reference_nodes = [n for n in reference_call_graph.nodes 
+                if n.function_name == node.function_name]
+
+            if len(reference_nodes) == 1:
+                new_node = Call(node.function_name, 
+                    reference_nodes[0].function_signature,
+                    Environments.C)
+                nodes_to_replace.append((node, new_node))
+
+        for (before,after) in nodes_to_replace:
+            # Edges terminating at the node to be replaced
+            for predecessor in call_graph.call_graph.predecessors(before):
+                call_graph.call_graph.add_edge(predecessor, after)
+
+            # Edges originating at the node to be replaced
+            for successor in call_graph.call_graph.successors(before):
+                call_graph.call_graph.add_edge(after, successor)
+
+            call_graph.call_graph.remove_node(before)
 
     def remove_function_name_only_calls(self):
         """
