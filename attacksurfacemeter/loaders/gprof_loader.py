@@ -77,11 +77,13 @@ class GprofLoader(BaseLoader):
 
                     elif line == GprofLoader.separator:
                         for caller in callers:
-                            call_graph.add_edge(caller, entry)
+                            call_graph.add_edge(caller, entry,
+                                {'gprof': 'gprof'})
                         callers.clear()
 
                         for callee in callees:
-                            call_graph.add_edge(entry, callee)
+                            call_graph.add_edge(entry, callee,
+                                {'gprof': 'gprof'})
                         callees.clear()
 
                         is_caller = True

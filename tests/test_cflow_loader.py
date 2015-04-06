@@ -38,6 +38,23 @@ class CflowLoaderTestCase(unittest.TestCase):
         self.assertEqual(15, len(nodes))
         self.assertTrue(all_nodes_found)
 
+    def test_load_call_graph_edge_attributes(self):
+        # Arrange
+        test_loader = CflowLoader(
+            os.path.join(
+                os.path.dirname(os.path.realpath(__file__)),
+                "helloworld/cflow.callgraph.txt"
+            ),
+            False
+        )
+
+        # Act
+        test_graph = test_loader.load_call_graph()
+        edges = [edge for edge in test_graph.edges() 
+            if 'cflow' in test_graph.get_edge_data(*edge)]
+
+        # Assert
+        self.assertEqual(len(test_graph.edges()), len(edges))
 
 if __name__ == '__main__':
     unittest.main()

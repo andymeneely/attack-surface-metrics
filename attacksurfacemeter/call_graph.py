@@ -101,8 +101,18 @@ class CallGraph():
 
         graph = nx.DiGraph()
 
-        graph.add_edges_from(cflow_call_graph.edges)
-        graph.add_edges_from(gprof_call_graph.edges)
+        graph.add_edges_from(
+            [
+                (u,v,cflow_call_graph.call_graph.get_edge_data(u,v)) 
+                    for (u,v) in cflow_call_graph.edges
+            ]
+        )
+        graph.add_edges_from(
+            [
+                (u,v,gprof_call_graph.call_graph.get_edge_data(u,v)) 
+                    for (u,v) in gprof_call_graph.edges
+            ]
+        )
 
         # Could come in handy!
         # nodes = gprof_call_graph.nodes
@@ -251,11 +261,21 @@ class CallGraph():
         for (before,after) in nodes_to_replace:
             # Edges terminating at the node to be replaced
             for predecessor in call_graph.call_graph.predecessors(before):
-                call_graph.call_graph.add_edge(predecessor, after)
+                call_graph.call_graph.add_edge(
+                    predecessor, after, 
+                    call_graph.call_graph.get_edge_data(
+                        predecessor, before
+                    )
+                )
 
             # Edges originating at the node to be replaced
             for successor in call_graph.call_graph.successors(before):
-                call_graph.call_graph.add_edge(after, successor)
+                call_graph.call_graph.add_edge(
+                    after, successor,
+                    call_graph.call_graph.get_edge_data(
+                        before, successor
+                    )
+                )
 
             call_graph.call_graph.remove_node(before)
 
