@@ -94,11 +94,8 @@ class CallGraph():
         """
         source = "cflow: {0} - gprof: {1}".format(cflow_call_graph.source, gprof_call_graph.source)
 
-        CallGraph._fix_cflow_call_graph(cflow_call_graph, gprof_call_graph)
-        # TODO: We may not need to fix gprof call now that gprof call graph
-        #   also contains the path to files in which functions are defined.
-        CallGraph._fix_gprof_call_graph(cflow_call_graph, gprof_call_graph)
-
+        CallGraph._fix(cflow_call_graph, gprof_call_graph)
+        
         graph = nx.DiGraph()
 
         graph.add_edges_from(
@@ -138,80 +135,6 @@ class CallGraph():
                 A List of all the nodes in the cal graph for which predicate is true.
         """
         return [n for n in self.call_graph.nodes() if predicate(n)]
-
-    @staticmethod
-    def _fix_cflow_call_graph(cflow_call_graph, gprof_call_graph):
-        """
-            Goes through the cflow nodes and find those which do not have file names (function_signature) and find
-            the corresponding gprof node and put that node's function_signature into the file-name-lacking cflow node's
-            function_signature.
-
-            This cleanup is done so that later when merging the two call graph's sets of edges, networkx doesn't
-            think the cflow and gprof calls are different only because one of them (the cflow one) doesn't have a
-            file name associated to it.
-
-        Args:
-                cflow_call_graph: A CallGraph instance that represents a call graph generated using output from cflow.
-                gprof_call_graph: A CallGraph instance that represents a call graph generated using output from gprof.
-        """
-        CallGraph._fix(cflow_call_graph, gprof_call_graph)
-
-    @staticmethod
-    def _fix_gprof_call_graph(cflow_call_graph, gprof_call_graph):
-        """
-            Goes through the gprof nodes and incorporates to them the function_signature of their equivalent cflow
-            nodes. This is done because cflow includes the path of the file where functons are defined while gprof
-            doesn't.
-
-            This cleanup is done to ensure compatibility of equivalent nodes so that later when merging the two
-            call graph's sets of edges, networkx doesn't think the cflow and gprof calls are different only because
-            one of them (the gprof one) doesn't have a file path associated to it.
-
-            Implementation detail:
-                Can't directly modify nodes because: http://networkx.lanl.gov/tutorial/tutorial.html
-                "(Note: You should not change the node object if the hash depends on its contents.)"
-
-        Args:
-                cflow_call_graph: A CallGraph instance that represents a call graph generated using output from cflow.
-                gprof_call_graph: A CallGraph instance that represents a call graph generated using output from gprof.
-        """
-        nodes_to_replace = []
-
-        for gprof_call in gprof_call_graph.nodes:
-            cflow_call = [c for c in cflow_call_graph.nodes
-                          if gprof_call.function_name == c.function_name
-                          and gprof_call.function_signature == c.function_signature.split("/")[-1]]
-
-            if cflow_call:
-            # if the clfow function_signature contains more information than it's gprof equivalent
-                if len(gprof_call.function_signature) < len(cflow_call[0].function_signature):
-                    nodes_to_replace.append((gprof_call, cflow_call[0]))
-
-        # This behaviour appears to be a bug in networkx but its actually documented in
-        # "(Note: You should not change the node object if the hash depends on its contents.)".
-        # http://networkx.lanl.gov/tutorial/tutorial.html
-        # Updating the node does not update SOME of the edges that node is part of, causing nodes and
-        # edges to "desynchronize". This code is a way around that. Here, I remove the old nodes
-        # and add the new ones. The edges that the old one had are associated to the new one.
-        for (gprof_call, cflow_call) in nodes_to_replace:
-            caller_edges = [e for e in gprof_call_graph.edges if gprof_call == e[0]]
-            callee_edges = [e for e in gprof_call_graph.edges if gprof_call == e[1]]
-
-            new_gprof_node = Call(gprof_call.function_name,
-                                  cflow_call.function_signature,
-                                  Environments.C)
-
-            for edge_to_add in caller_edges:
-                gprof_call_graph.call_graph.add_edge(new_gprof_node, edge_to_add[1])
-
-            for edge_to_add in callee_edges:
-                gprof_call_graph.call_graph.add_edge(edge_to_add[0], new_gprof_node)
-
-            gprof_call_graph.call_graph.remove_node(gprof_call)
-
-        # edges = [e for e in gprof_call_graph.edges
-        #          if e[0] not in gprof_call_graph.nodes
-        #          or e[1] not in gprof_call_graph.nodes]
 
     @staticmethod
     def _fix(call_graph, reference_call_graph):
