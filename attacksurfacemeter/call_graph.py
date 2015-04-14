@@ -1123,3 +1123,10 @@ class CallGraph():
             return nx.pagerank(self.call_graph, personalization=per)
         else:
             return nx.pagerank(self.call_graph, personalization=per)[call]
+
+    def assign_page_rank(self):
+        """
+            Assigns the page rank of each node as an attribute of the node.
+        """
+        nx.set_node_attributes(self.call_graph, 'page_rank', 
+            self.get_page_rank())

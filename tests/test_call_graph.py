@@ -3,6 +3,8 @@ __author__ = 'kevin'
 import unittest
 import os
 
+import networkx as nx
+
 from attacksurfacemeter.call import Call
 from attacksurfacemeter.call_graph import CallGraph
 from attacksurfacemeter.environments import Environments
@@ -1105,7 +1107,7 @@ class CallGraphTestCase(unittest.TestCase):
             self.assertAlmostEqual(expected_content[n], page_rank[n])
 
     def test_get_page_rank(self):
-                # Arrange
+        # Arrange
         expected_content = {
             Call("greet_a", "./src/helloworld.c", Environments.C): 0.007867387366472087,
             Call("main", "./src/helloworld.c", Environments.C): 0.0647891087618243,
@@ -1129,6 +1131,50 @@ class CallGraphTestCase(unittest.TestCase):
 
         # Assert
         for n in page_rank:
+            self.assertAlmostEqual(expected_content[n], page_rank[n])
+
+    def test_assign_page_rank(self):
+        # Arrange
+        expected_content = {
+            Call("greet_a", "./src/helloworld.c", Environments.C): 
+                0.007867387366472087,
+            Call("main", "./src/helloworld.c", Environments.C): 
+                0.0647891087618243,
+            Call("puts", "", Environments.C): 
+                0.08327922286726645,
+            Call("malloc", "", Environments.C): 
+                0.0022290338348351845,
+            Call("greet", "./src/greetings.c", Environments.C): 
+                0.08871893053734713,
+            Call("scanf", "", Environments.C): 
+                0.020586271023270056,
+            Call("addInt", "./src/helloworld.c", Environments.C): 
+                0.007867387366472087,
+            Call("greet_b", "./src/helloworld.c", Environments.C): 
+                0.07265649612829639,
+            Call("GreeterSayHiTo", "./src/helloworld.c", Environments.C): 
+                0.06701814259665947,
+            Call("functionPtr", "./src/helloworld.c", Environments.C): 
+                0.007867387366472087,
+            Call("printf", "", Environments.C): 
+                0.23526369152958884,
+            Call("recursive_b", "./src/greetings.c", Environments.C): 
+                0.13953600449873405,
+            Call("recursive_a", "./src/greetings.c", Environments.C): 
+                0.12743540615963014,
+            Call("new_Greeter", "./src/helloworld.c", Environments.C): 
+                0.007867387366472087,
+            Call("GreeterSayHi", "./src/helloworld.c", Environments.C): 
+                0.06701814259665947
+        }
+
+        # Act
+        self.call_graph.assign_page_rank()
+        page_rank = nx.get_node_attributes(self.call_graph.call_graph, 
+            'page_rank')
+
+        # Assert
+        for n in self.call_graph.nodes:
             self.assertAlmostEqual(expected_content[n], page_rank[n])
 
 if __name__ == '__main__':
