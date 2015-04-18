@@ -1055,21 +1055,21 @@ class CallGraphTestCase(unittest.TestCase):
     def test_get_entry_page_rank(self):
         # Arrange
         expected_content = {
-            Call("GreeterSayHi", "./src/helloworld.c", Environments.C): 0.0,
-            Call("functionPtr", "./src/helloworld.c", Environments.C): 0.0,
-            Call("greet", "./src/greetings.c", Environments.C): 0.11289602951039726,
-            Call("addInt", "./src/helloworld.c", Environments.C): 0.0,
-            Call("malloc", "", Environments.C): 0.0,
-            Call("puts", "", Environments.C): 0.09596114244582209,
-            Call("greet_a", "./src/helloworld.c", Environments.C): 0.0,
-            Call("greet_b", "./src/helloworld.c", Environments.C): 0.3984604893467055,
-            Call("printf", "", Environments.C): 0.08344513983814024,
-            Call("scanf", "", Environments.C): 0.11289602951039726,
-            Call("recursive_b", "./src/greetings.c", Environments.C): 0.13778369453395795,
-            Call("main", "./src/helloworld.c", Environments.C): 0.0,
-            Call("recursive_a", "./src/greetings.c", Environments.C): 0.05855747481457957,
-            Call("new_Greeter", "./src/helloworld.c", Environments.C): 0.0,
-            Call("GreeterSayHiTo", "./src/helloworld.c", Environments.C): 0.0
+            Call("addInt", "./src/helloworld.c", Environments.C): 4.464158581345759e-05,
+            Call("functionPtr", "./src/helloworld.c", Environments.C): 4.464158581345759e-05,
+            Call("greet", "./src/greetings.c", Environments.C): 0.11284789083731708,
+            Call("greet_a", "./src/helloworld.c", Environments.C): 4.464158581345759e-05,
+            Call("greet_b", "./src/helloworld.c", Environments.C): 0.3980830886289512,
+            Call("GreeterSayHi", "./src/helloworld.c", Environments.C): 5.245615830248125e-05,
+            Call("GreeterSayHiTo", "./src/helloworld.c", Environments.C): 5.245615830248125e-05,
+            Call("main", "./src/helloworld.c", Environments.C): 3.980782548686245e-05,
+            Call("malloc", "", Environments.C): 5.245615830248125e-05,
+            Call("new_Greeter", "./src/helloworld.c", Environments.C): 4.464158581345759e-05,
+            Call("printf", "", Environments.C): 0.08357279908280717,
+            Call("puts", "", Environments.C): 0.09596487911711421,
+            Call("recursive_a", "./src/greetings.c", Environments.C): 0.05859441021618111,
+            Call("recursive_b", "./src/greetings.c", Environments.C): 0.13773227113588746,
+            Call("scanf", "", Environments.C): 0.11282891833809365,
         }
 
         # Act
@@ -1082,21 +1082,21 @@ class CallGraphTestCase(unittest.TestCase):
     def test_get_exit_page_rank(self):
         # Arrange
         expected_content = {
-            Call("greet_a", "./src/helloworld.c", Environments.C): 0.009395011409371217,
-            Call("GreeterSayHiTo", "./src/helloworld.c", Environments.C): 0.0800313164863152,
-            Call("recursive_b", "./src/greetings.c", Environments.C): 0.13987587032020407,
-            Call("addInt", "./src/helloworld.c", Environments.C): 0.009395011409371217,
-            Call("printf", "", Environments.C): 0.2647426063120301,
-            Call("GreeterSayHi", "./src/helloworld.c", Environments.C): 0.0800313164863152,
-            Call("greet", "./src/greetings.c", Environments.C): 0.08402410961818857,
-            Call("scanf", "", Environments.C): 0.0026618620879155803,
-            Call("greet_b", "./src/helloworld.c", Environments.C): 0.009395011409371217,
-            Call("recursive_a", "./src/greetings.c", Environments.C): 0.14080982881566895,
-            Call("malloc", "", Environments.C): 0.0026618620879155803,
-            Call("new_Greeter", "./src/helloworld.c", Environments.C): 0.009395011409371217,
-            Call("puts", "", Environments.C): 0.08081671634019098,
-            Call("main", "./src/helloworld.c", Environments.C): 0.07736945439839962,
-            Call("functionPtr", "./src/helloworld.c", Environments.C): 0.009395011409371217
+            Call("addInt", "./src/helloworld.c", Environments.C): 0.00940175278007922,
+            Call("functionPtr", "./src/helloworld.c", Environments.C): 0.00940175278007922,
+            Call("greet", "./src/greetings.c", Environments.C): 0.08402069949635671,
+            Call("greet_a", "./src/helloworld.c", Environments.C): 0.00940175278007922,
+            Call("greet_b", "./src/helloworld.c", Environments.C): 0.00940175278007922,
+            Call("GreeterSayHi", "./src/helloworld.c", Environments.C): 0.08002504081372096,
+            Call("GreeterSayHiTo", "./src/helloworld.c", Environments.C): 0.08002504081372096,
+            Call("main", "./src/helloworld.c", Environments.C): 0.07736126835863046,
+            Call("malloc", "", Environments.C): 0.002671508581926369,
+            Call("new_Greeter", "./src/helloworld.c", Environments.C): 0.00940175278007922,
+            Call("printf", "", Environments.C): 0.26473009071434866,
+            Call("puts", "", Environments.C): 0.08082055306448903,
+            Call("recursive_a", "./src/greetings.c", Environments.C): 0.14080007730843117,
+            Call("recursive_b", "./src/greetings.c", Environments.C): 0.1398654483660534,
+            Call("scanf", "", Environments.C): 0.002671508581926369
         }
 
         # Act
@@ -1109,21 +1109,21 @@ class CallGraphTestCase(unittest.TestCase):
     def test_get_page_rank(self):
         # Arrange
         expected_content = {
-            Call("greet_a", "./src/helloworld.c", Environments.C): 0.007867387366472087,
-            Call("main", "./src/helloworld.c", Environments.C): 0.0647891087618243,
-            Call("puts", "", Environments.C): 0.08327922286726645,
-            Call("malloc", "", Environments.C): 0.0022290338348351845,
-            Call("greet", "./src/greetings.c", Environments.C): 0.08871893053734713,
-            Call("scanf", "", Environments.C): 0.020586271023270056,
-            Call("addInt", "./src/helloworld.c", Environments.C): 0.007867387366472087,
-            Call("greet_b", "./src/helloworld.c", Environments.C): 0.07265649612829639,
-            Call("GreeterSayHiTo", "./src/helloworld.c", Environments.C): 0.06701814259665947,
-            Call("functionPtr", "./src/helloworld.c", Environments.C): 0.007867387366472087,
-            Call("printf", "", Environments.C): 0.23526369152958884,
-            Call("recursive_b", "./src/greetings.c", Environments.C): 0.13953600449873405,
-            Call("recursive_a", "./src/greetings.c", Environments.C): 0.12743540615963014,
-            Call("new_Greeter", "./src/helloworld.c", Environments.C): 0.007867387366472087,
-            Call("GreeterSayHi", "./src/helloworld.c", Environments.C): 0.06701814259665947
+            Call("greet_a", "./src/helloworld.c", Environments.C): 0.007873296155044037,
+            Call("main", "./src/helloworld.c", Environments.C): 0.06478442136637992,
+            Call("puts", "", Environments.C): 0.08328201277410537,
+            Call("malloc", "", Environments.C): 0.002237186659380345,
+            Call("greet", "./src/greetings.c", Environments.C): 0.08871526431547344,
+            Call("scanf", "", Environments.C): 0.020591259065364596,
+            Call("addInt", "./src/helloworld.c", Environments.C): 0.007873296155044037,
+            Call("greet_b", "./src/helloworld.c", Environments.C): 0.07265123907928732,
+            Call("GreeterSayHiTo", "./src/helloworld.c", Environments.C): 0.06701512958362363,
+            Call("functionPtr", "./src/helloworld.c", Environments.C): 0.007873296155044037,
+            Call("printf", "", Environments.C): 0.2352582934850157,
+            Call("recursive_b", "./src/greetings.c", Environments.C): 0.13952733400087836,
+            Call("recursive_a", "./src/greetings.c", Environments.C): 0.12742954546669122,
+            Call("new_Greeter", "./src/helloworld.c", Environments.C): 0.007873296155044037,
+            Call("GreeterSayHi", "./src/helloworld.c", Environments.C): 0.06701512958362363
         }
 
         # Act
@@ -1137,35 +1137,35 @@ class CallGraphTestCase(unittest.TestCase):
         # Arrange
         expected_content = {
             Call("greet_a", "./src/helloworld.c", Environments.C): 
-                0.007867387366472087,
+                0.007873296155044037,
             Call("main", "./src/helloworld.c", Environments.C): 
-                0.0647891087618243,
+                0.06478442136637992,
             Call("puts", "", Environments.C): 
-                0.08327922286726645,
+                0.08328201277410537,
             Call("malloc", "", Environments.C): 
-                0.0022290338348351845,
+                0.002237186659380345,
             Call("greet", "./src/greetings.c", Environments.C): 
-                0.08871893053734713,
+                0.08871526431547344,
             Call("scanf", "", Environments.C): 
-                0.020586271023270056,
+                0.020591259065364596,
             Call("addInt", "./src/helloworld.c", Environments.C): 
-                0.007867387366472087,
+                0.007873296155044037,
             Call("greet_b", "./src/helloworld.c", Environments.C): 
-                0.07265649612829639,
+                0.07265123907928732,
             Call("GreeterSayHiTo", "./src/helloworld.c", Environments.C): 
-                0.06701814259665947,
+                0.06701512958362363,
             Call("functionPtr", "./src/helloworld.c", Environments.C): 
-                0.007867387366472087,
+                0.007873296155044037,
             Call("printf", "", Environments.C): 
-                0.23526369152958884,
+                0.2352582934850157,
             Call("recursive_b", "./src/greetings.c", Environments.C): 
-                0.13953600449873405,
+                0.13952733400087836,
             Call("recursive_a", "./src/greetings.c", Environments.C): 
-                0.12743540615963014,
+                0.12742954546669122,
             Call("new_Greeter", "./src/helloworld.c", Environments.C): 
-                0.007867387366472087,
+                0.007873296155044037,
             Call("GreeterSayHi", "./src/helloworld.c", Environments.C): 
-                0.06701814259665947
+                0.06701512958362363
         }
 
         # Act
