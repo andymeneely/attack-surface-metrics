@@ -98,6 +98,25 @@ class CallGraph():
         
         graph = nx.DiGraph()
 
+        # WARNING: The merge order CANNOT change. The value of the 'tested' 
+        #   attribute of the graph nodes works on the assumption that nodes 
+        #   from cflow are merged in first.
+
+        # Load nodes including any attributes that may be associated with them
+        graph.add_nodes_from(
+            [
+                (n, cflow_call_graph.call_graph.node[n]) 
+                    for n in cflow_call_graph.nodes
+            ]
+        )
+        graph.add_nodes_from(
+            [
+                (n, gprof_call_graph.call_graph.node[n]) 
+                    for n in gprof_call_graph.nodes
+            ]
+        )
+
+        # Load edges including any attributes that may be associated with them
         graph.add_edges_from(
             [
                 (u,v,cflow_call_graph.call_graph.get_edge_data(u,v)) 
@@ -181,7 +200,10 @@ class CallGraph():
                     Environments.C)
                 nodes_to_replace.append((node, new_node))
 
-        for (before,after) in nodes_to_replace:
+        for (before, after) in nodes_to_replace:
+            call_graph.call_graph.add_node(after, 
+                call_graph.call_graph.node[before])
+
             # Edges terminating at the node to be replaced
             for predecessor in call_graph.call_graph.predecessors(before):
                 call_graph.call_graph.add_edge(

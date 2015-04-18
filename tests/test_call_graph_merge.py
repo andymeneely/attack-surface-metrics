@@ -3,6 +3,8 @@ __author__ = 'kevin'
 import unittest
 import os
 
+import networkx as nx
+
 from attacksurfacemeter.call import Call
 
 from attacksurfacemeter.call_graph import CallGraph
@@ -99,7 +101,20 @@ class CallGraphMergeTestCase(unittest.TestCase):
 
     def test_edge_attributes(self):
         # Arrange
-        cflow_only_expected_content = [
+        cflow_edges = set()
+        gprof_edges = set()
+
+        for edge in self.call_graph.edges:
+            attributes = self.call_graph.call_graph.edge[edge[0]][edge[1]]
+            if "cflow" in attributes:
+                cflow_edges.add(edge)
+            if "gprof" in attributes:
+                gprof_edges.add(edge)
+
+        # Edges tagged as 'cflow' only
+
+        # Arrange
+        expected_content = [
             (Call("GreeterSayHi", "./src/helloworld.c", "c"), 
                 Call("printf", "", "c")),
             (Call("greet", "./src/greetings.c", "c"), 
@@ -126,14 +141,37 @@ class CallGraphMergeTestCase(unittest.TestCase):
                 Call("printf", "", "c"))
         ]
 
-        gprof_only_expected_content = [
+        cflow_only_edges = cflow_edges - gprof_edges
+
+        # Assert
+        self.assertEqual(12, len(cflow_only_edges))
+        self.assertTrue(
+            all([e in cflow_only_edges for e in expected_content])
+        )
+
+        # Edges tagged as 'gprof' only
+
+        # Arrange
+        expected_content = [
             (Call("main", "./src/helloworld.c", "c"), 
                 Call("GreeterSayHi", "./src/helloworld.c", "c")),
             (Call("main", "./src/helloworld.c", "c"), 
                 Call("GreeterSayHiTo", "./src/helloworld.c", "c")),
         ]
 
-        cflow_n_gprof_expected_content = [
+        # Act
+        gprof_only_edges = gprof_edges - cflow_edges
+
+        # Assert
+        self.assertEqual(2, len(gprof_only_edges))
+        self.assertTrue(
+            all([e in gprof_only_edges for e in expected_content])
+        )
+
+        # Edges tagged as 'cflow' and 'gprof'
+
+        # Arrange
+        expected_content = [
             (Call("recursive_b", "./src/greetings.c", "c"), 
                 Call("recursive_a", "./src/greetings.c", "c")),
             (Call("main", "./src/helloworld.c", "c"), 
@@ -157,45 +195,59 @@ class CallGraphMergeTestCase(unittest.TestCase):
         ]
 
         # Act
+        cflow_n_gprof_edges = cflow_edges & gprof_edges
 
-        # Aliasing to improve readability
-        get_edge_data = self.call_graph.call_graph.get_edge_data
+        # Assert
+        self.assertEqual(10, len(cflow_n_gprof_edges))
+        self.assertTrue(
+            all([e in cflow_n_gprof_edges for e in expected_content])
+        )
 
-        cflow_only_edges = [edge for edge in self.call_graph.edges 
-            if ('cflow' in get_edge_data(*edge) 
-                and 'gprof' not in get_edge_data(*edge))]
-        gprof_only_edges = [edge for edge in self.call_graph.edges 
-            if ('gprof' in get_edge_data(*edge) and 
-                'cflow' not in get_edge_data(*edge))]
-        cflow_n_gprof_edges = [
-            edge for edge in self.call_graph.edges 
-            if all(k in get_edge_data(*edge) for k in ('cflow', 'gprof'))
+    def test_node_attributes(self):
+        # Arrange
+        expected_content = [
+            Call("malloc", "", "c"),
+            Call("scanf", "", "c"),
+            Call("functionPtr", "./src/helloworld.c", "c"),
+            Call("puts", "", "c"),
+            Call("printf", "", "c")
+        ]
+
+        # Act
+        untested_nodes = [
+            node for node in self.call_graph.nodes 
+                if not self.call_graph.call_graph.node[node]['tested']
+        ]
+        
+        # Assert
+        self.assertTrue(5, len(untested_nodes))
+        self.assertTrue(all(n in untested_nodes for n in expected_content))
+
+        # Arrange
+        expected_content = [
+            Call("recursive_a","./src/greetings.c","C"),
+            Call("recursive_b","./src/greetings.c","C"),
+            Call("greet_a","./src/helloworld.c","C"),
+            Call("greet_b","./src/helloworld.c","C"),
+            Call("greet","./src/greetings.c","C"),
+            Call("main","./src/helloworld.c","C"),
+            Call("new_Greeter","./src/helloworld.c","C"),
+            Call("GreeterSayHiTo","./src/helloworld.c","C"),
+            Call("addInt","./src/helloworld.c","C"),
+            Call("GreeterSayHi","./src/helloworld.c","C"),
+        ]
+
+        # Act
+        tested_nodes = [
+            node for node in self.call_graph.nodes 
+                if self.call_graph.call_graph.node[node]['tested']
         ]
 
         # Assert
-        self.assertEqual(len(cflow_only_expected_content), 
-            len(cflow_only_edges))
         self.assertTrue(
-            all(
-                [e in cflow_only_edges for e in cflow_only_expected_content]
-            )
+            all(n in tested_nodes for n in expected_content)
         )
 
-        self.assertEqual(len(gprof_only_expected_content), 
-            len(gprof_only_edges))
-        self.assertTrue(
-            all(
-                [e in gprof_only_edges for e in gprof_only_expected_content]
-            )
-        )
-
-        self.assertEqual(len(cflow_n_gprof_expected_content), 
-            len(cflow_n_gprof_edges))
-        self.assertTrue(
-            all(
-                [e in cflow_n_gprof_edges for e in cflow_n_gprof_expected_content]
-            )
-        )
 
 if __name__ == '__main__':
     unittest.main()

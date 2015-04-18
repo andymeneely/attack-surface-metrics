@@ -58,6 +58,9 @@ class CflowLoader(BaseLoader):
                         parent.pop()
 
                 if parent.top:
+                    call_graph.add_node(current, {'tested': False})
+                    call_graph.add_node(parent.top, {'tested': False})
+
                     if not self.is_reverse:
                         call_graph.add_edge(parent.top, current,
                             {'cflow': 'cflow'})

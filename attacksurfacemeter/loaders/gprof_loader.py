@@ -76,12 +76,17 @@ class GprofLoader(BaseLoader):
                         is_caller = False
 
                     elif line == GprofLoader.separator:
+                        if len(callers) > 0 or len(callees) > 0:
+                            call_graph.node[entry] = {'tested': True}
+
                         for caller in callers:
+                            call_graph.add_node(caller, {'tested': True})
                             call_graph.add_edge(caller, entry,
                                 {'gprof': 'gprof'})
                         callers.clear()
 
                         for callee in callees:
+                            call_graph.add_node(callee, {'tested': True})
                             call_graph.add_edge(entry, callee,
                                 {'gprof': 'gprof'})
                         callees.clear()
