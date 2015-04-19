@@ -7,6 +7,7 @@ import os
 
 from attacksurfacemeter.call import Call
 from attacksurfacemeter.environments import Environments
+from attacksurfacemeter.loaders.javacg_loader import JavaCGLoader
 
 
 class CallGraph():
@@ -1063,61 +1064,6 @@ class CallGraph():
 
         return {'points': exit_points, 'proximity': proximity_to_exit, 'surface_coupling': surface_coupling_with_exit}
 
-    def collapse_android_black_listed_packages(self):
-
-        black_listed_packages = self._load_android_package_black_list()
-
-        nodes_to_remove = set()
-        edges_to_remove = []
-
-        edges_to_add = []
-
-        for edge in self.call_graph.edges():
-            caller, callee = edge
-
-            if not (caller.is_input_function() or caller.is_output_function() or
-                    callee.is_input_function() or callee.is_output_function()):
-
-                if caller.package_name in black_listed_packages and callee.package_name in black_listed_packages:
-
-                    edges_to_remove.append(edge)
-                    nodes_to_remove.add(caller)
-                    nodes_to_remove.add(callee)
-
-                    edges_to_add.append((caller.package_name, callee.package_name))
-
-                elif caller.package_name in black_listed_packages:
-
-                    edges_to_remove.append(edge)
-                    nodes_to_remove.add(caller)
-
-                    edges_to_add.append((caller.package_name, callee))
-
-                elif callee.package_name in black_listed_packages:
-
-                    edges_to_remove.append(edge)
-                    nodes_to_remove.add(callee)
-
-                    edges_to_add.append((caller, callee.package_name))
-
-        self.call_graph.remove_edges_from(edges_to_remove)
-        self.call_graph.remove_nodes_from(nodes_to_remove)
-
-        for e in edges_to_add:
-            edge_data = self.call_graph.get_edge_data(*e)
-
-            if not edge_data:
-                self.call_graph.add_edge(*e, weight=1)
-            else:
-                self.call_graph.add_edge(*e, weight=edge_data["weight"] + 1)
-
-    def _load_android_package_black_list(self):
-        file_name = os.path.join(os.path.dirname(os.path.realpath(__file__)), "android_package_black_list")
-
-        with open(file_name) as f:
-            black_listed_packages = f.read().splitlines()
-
-        return black_listed_packages
 
     def get_entry_page_rank(self, call=None, primary=10000, secondary=1):
         """

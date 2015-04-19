@@ -50,9 +50,6 @@ class SqliteFormatterTestCase(unittest.TestCase):
 
     def test_write_output(self):
         # Arrange
-        db = sqlite3.connect(self.test_oracle_database_file)
-        c = db.cursor()
-
         attack_surface_select_stmt = '''SELECT id, nodes_count, edges_count, entry_points_count, exit_points_count, 
                                         attack_surface_nodes_count, entry_points_clustering, exit_points_clustering,
                                         execution_paths_count, execution_paths_average, execution_paths_median,
@@ -102,6 +99,9 @@ class SqliteFormatterTestCase(unittest.TestCase):
                                               FROM ancestor_exit_points as aep
                                               INNER JOIN nodes as node ON aep.node_id = node.id
                                               INNER JOIN nodes as ancestor ON aep.node_id = ancestor.id;'''
+
+        db = sqlite3.connect(self.test_oracle_database_file)
+        c = db.cursor()
         
         c.execute(attack_surface_select_stmt)
         expected_attack_surfaces = c.fetchall()
