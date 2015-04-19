@@ -146,6 +146,9 @@ class CallGraphMergeCflowFixTestCase(CallGraphMergeTestCase):
         self.assertTrue(
             all([e in cflow_only_edges for e in expected_content])
         )
+        for (u, v) in cflow_only_edges:
+            self.assertEqual(1, 
+                self.call_graph.call_graph.edge[u][v]['weight'])
 
         # Edges tagged as 'gprof' only
 
@@ -165,6 +168,9 @@ class CallGraphMergeCflowFixTestCase(CallGraphMergeTestCase):
         self.assertTrue(
             all([e in gprof_only_edges for e in expected_content])
         )
+        for (u, v) in gprof_only_edges:
+            self.assertEqual(0.5, 
+                self.call_graph.call_graph.edge[u][v]['weight'])
 
         # Edges tagged as 'cflow' and 'gprof'
 
@@ -200,6 +206,9 @@ class CallGraphMergeCflowFixTestCase(CallGraphMergeTestCase):
         self.assertTrue(
             all([e in cflow_n_gprof_edges for e in expected_content])
         )
+        for (u, v) in gprof_only_edges:
+            self.assertEqual(0.5, 
+                self.call_graph.call_graph.edge[u][v]['weight'])
 
     def test_node_attributes(self):
         # Arrange

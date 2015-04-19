@@ -100,7 +100,9 @@ class CallGraph():
 
         # WARNING: The merge order CANNOT change. The value of the 'tested' 
         #   attribute of the graph nodes works on the assumption that nodes 
-        #   from cflow are merged in first.
+        #   from cflow are merged in first. Similarly, the weights of edges in
+        #   gprof are lower than those in cflow and the merged graph is 
+        #   expected to have the edge weights match those from gprof.
 
         # Load nodes including any attributes that may be associated with them
         graph.add_nodes_from(
@@ -117,18 +119,14 @@ class CallGraph():
         )
 
         # Load edges including any attributes that may be associated with them
-        graph.add_edges_from(
-            [
-                (u,v,cflow_call_graph.call_graph.get_edge_data(u,v)) 
-                    for (u,v) in cflow_call_graph.edges
-            ]
-        )
-        graph.add_edges_from(
-            [
-                (u,v,gprof_call_graph.call_graph.get_edge_data(u,v)) 
-                    for (u,v) in gprof_call_graph.edges
-            ]
-        )
+        graph.add_edges_from([
+            (u, v, d) 
+                for (u, v, d) in cflow_call_graph.call_graph.edges(data=True)
+        ])
+        graph.add_edges_from([
+            (u, v, d) 
+                for (u, v, d) in gprof_call_graph.call_graph.edges(data=True)
+        ])
 
         # Could come in handy!
         # nodes = gprof_call_graph.nodes
@@ -1146,9 +1144,11 @@ class CallGraph():
         }
 
         if not call:
-            return nx.pagerank(self.call_graph, personalization=per)
+            return nx.pagerank(self.call_graph, weight='weight', 
+                personalization=per)
         else:
-            return nx.pagerank(self.call_graph, personalization=per)[call]
+            return nx.pagerank(self.call_graph, weight='weight',
+                personalization=per)[call]
 
     def get_exit_page_rank(self, call=None, primary=10000, secondary=1):
         """
@@ -1175,9 +1175,11 @@ class CallGraph():
         }
 
         if not call:
-            return nx.pagerank(self.call_graph, personalization=per)
+            return nx.pagerank(self.call_graph, weight='weight', 
+                personalization=per)
         else:
-            return nx.pagerank(self.call_graph, personalization=per)[call]
+            return nx.pagerank(self.call_graph, weight='weight', 
+                personalization=per)[call]
 
     def get_page_rank(self, call=None, primary=10000, secondary=1):
         """
@@ -1204,9 +1206,11 @@ class CallGraph():
         }
 
         if not call:
-            return nx.pagerank(self.call_graph, personalization=per)
+            return nx.pagerank(self.call_graph, weight='weight', 
+                personalization=per)
         else:
-            return nx.pagerank(self.call_graph, personalization=per)[call]
+            return nx.pagerank(self.call_graph, weight='weight', 
+                personalization=per)[call]
 
     def assign_page_rank(self, primary=10000, secondary=1, name='page_rank'):
         """

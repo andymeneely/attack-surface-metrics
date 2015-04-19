@@ -50,11 +50,12 @@ class CflowLoaderTestCase(unittest.TestCase):
 
         # Act
         test_graph = test_loader.load_call_graph()
-        edges = [edge for edge in test_graph.edges() 
-            if 'cflow' in test_graph.get_edge_data(*edge)]
 
         # Assert
-        self.assertEqual(len(test_graph.edges()), len(edges))
+        for (u, v, d) in test_graph.edges(data=True):
+            self.assertFalse('cflow' not in d)
+            self.assertFalse('weight' not in d)
+            self.assertEqual(1, d['weight'])
 
 if __name__ == '__main__':
     unittest.main()

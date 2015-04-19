@@ -81,14 +81,22 @@ class GprofLoader(BaseLoader):
 
                         for caller in callers:
                             call_graph.add_node(caller, {'tested': True})
-                            call_graph.add_edge(caller, entry,
-                                {'gprof': 'gprof'})
+
+                            # Edge weight can be any arbitrary number lesser 
+                            #   than that used as the weight for the edges 
+                            #   in the cflow call graph.
+                            call_graph.add_edge(caller, entry, 
+                                {'gprof': 'gprof'}, weight=0.5)
                         callers.clear()
 
                         for callee in callees:
                             call_graph.add_node(callee, {'tested': True})
-                            call_graph.add_edge(entry, callee,
-                                {'gprof': 'gprof'})
+
+                            # Edge weight can be any arbitrary number lesser 
+                            #   than that used as the weight for the edges 
+                            #   in the cflow call graph.
+                            call_graph.add_edge(entry, callee, 
+                                {'gprof': 'gprof'}, weight=0.5)
                         callees.clear()
 
                         is_caller = True
