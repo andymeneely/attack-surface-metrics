@@ -108,5 +108,32 @@ class GprofLineParserTestCase(unittest.TestCase):
         # Assert
         self.assertEqual("", test_function_signature)
 
+    def test_get_function_signature_include_files(self):
+        # Arrange
+        test_line_parser = GprofLineParser.get_instance(
+            "                0.00    0.00       1/34841       snprintf "
+            "(/usr/include/x86_64-linux-gnu/bits/stdio2.h:64 @ 47d37b) "
+            "[650457]"
+        )
+
+        # Act
+        test_function_signature = test_line_parser.get_function_signature()
+
+        # Assert
+        self.assertEqual("/usr/include/x86_64-linux-gnu/bits/stdio2.h", 
+            test_function_signature)
+
+        # Arrange
+        test_line_parser = GprofLineParser.get_instance(
+            "                0.00    0.00       1/589         atoi "
+            "(/usr/include/stdlib.h:280 @ 57c1fc) [26713]"
+        )
+
+        # Act
+        test_function_signature = test_line_parser.get_function_signature()
+
+        # Assert
+        self.assertEqual("/usr/include/stdlib.h", test_function_signature)
+
 if __name__ == '__main__':
     unittest.main()
