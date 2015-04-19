@@ -58,6 +58,46 @@ class AndroidCallGraph(CallGraph):
         #
         # self.attack_surface_graph = nx.subgraph(self.call_graph, attack_surface_nodes)
 
+    _android_override_input_methods = []
+    _android_override_output_methods = []
+    _android_black_list_packages = []
+
+    @staticmethod
+    def _load_function_list(function_list_file):
+        file_name = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data', function_list_file)
+
+        with open(file_name) as f:
+            functions = f.read().splitlines()
+
+        return functions
+
+    @staticmethod
+    def _get_android_override_input_methods():
+        if not AndroidCallGraph._android_override_input_methods:
+            AndroidCallGraph._android_override_input_methods = AndroidCallGraph._load_function_list("android_override_input_methods")
+
+        return AndroidCallGraph._android_override_input_methods
+
+    @staticmethod
+    def _get_android_override_output_methods():
+        if not AndroidCallGraph._android_override_output_methods:
+            AndroidCallGraph._android_override_output_methods = AndroidCallGraph._load_function_list("android_override_output_methods")
+
+        return AndroidCallGraph._android_override_output_methods
+
+    def _load_android_edge_black_list(self):
+        file_name = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data", "android_edge_black_list")
+
+        black_list_call_graph = AndroidCallGraph.from_loader(JavaCGLoader(file_name))
+
+        return black_list_call_graph.edges
+
+    def _load_android_package_black_list(self):
+        if not AndroidCallGraph._android_black_list_packages:
+            AndroidCallGraph._android_black_list_packages = AndroidCallGraph._load_function_list("android_package_black_list")
+
+        return AndroidCallGraph._android_black_list_packages
+
     def calculate_entry_and_exit_points(self):
         self._entry_points = self._select_nodes(lambda n: any([s.is_input_function() for s
                                                                    in self.call_graph.successors(n)]))
@@ -76,32 +116,6 @@ class AndroidCallGraph(CallGraph):
         #
         # self._exit_points += exit_points_to_add
         # self._exit_points = list(set(self._exit_points))
-
-    _android_override_input_methods = []
-    _android_override_output_methods = []
-
-    @staticmethod
-    def _get_android_override_input_methods():
-        if not CallGraph._android_override_input_methods:
-            CallGraph._android_override_input_methods = CallGraph._load_function_list("android_override_input_methods")
-
-        return CallGraph._android_override_input_methods
-
-    @staticmethod
-    def _get_android_override_output_methods():
-        if not CallGraph._android_override_output_methods:
-            CallGraph._android_override_output_methods = CallGraph._load_function_list("android_override_output_methods")
-
-        return CallGraph._android_override_output_methods
-
-    @staticmethod
-    def _load_function_list(function_list_file):
-        file_name = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data', function_list_file)
-
-        with open(file_name) as f:
-            functions = f.read().splitlines()
-
-        return functions
 
     def collapse_android_black_listed_edges(self):
         """
@@ -185,7 +199,17 @@ class AndroidCallGraph(CallGraph):
         print('altering graph...')
         self.call_graph.remove_edges_from(edges_to_remove)
         self.call_graph.remove_nodes_from(nodes_to_remove)
+
         self.call_graph.add_edges_from(edges_to_add)
+
+        # Use this if planing to create a gml to open with gephi
+        # for e in edges_to_add:
+        #     edge_data = self.call_graph.get_edge_data(*e)
+        #
+        #     if not edge_data:
+        #         self.call_graph.add_edge(*e, weight=1)
+        #     else:
+        #         self.call_graph.add_edge(*e, weight=edge_data["weight"] + 1)
 
     def collapse_android_black_listed_packages(self):
 
@@ -234,18 +258,3 @@ class AndroidCallGraph(CallGraph):
                 self.call_graph.add_edge(*e, weight=1)
             else:
                 self.call_graph.add_edge(*e, weight=edge_data["weight"] + 1)
-
-    def _load_android_edge_black_list(self):
-        file_name = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data", "android_edge_black_list")
-
-        black_list_call_graph = CallGraph.from_loader(JavaCGLoader(file_name))
-
-        return black_list_call_graph.edges
-
-    def _load_android_package_black_list(self):
-        file_name = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data", "android_package_black_list")
-
-        with open(file_name) as f:
-            black_listed_packages = f.read().splitlines()
-
-        return black_listed_packages
