@@ -162,7 +162,7 @@ class Call():
 
     @staticmethod
     def _load_function_list(function_list_file):
-        file_name = os.path.join(os.path.dirname(os.path.realpath(__file__)), function_list_file)
+        file_name = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data', function_list_file)
 
         with open(file_name) as f:
             functions = f.read().splitlines()
