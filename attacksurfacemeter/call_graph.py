@@ -45,37 +45,37 @@ class CallGraph():
         self._execution_paths = list()
 
         # Calculating the entry and exit points
-        # self._entry_points = self._select_nodes(lambda n: any([s.is_input_function() for s
-        #                                                            in self.call_graph.successors(n)]))
-        #
-        # self._exit_points = self._select_nodes(lambda n: any([s.is_output_function() for s
-        #                                                       in self.call_graph.successors(n)]))
-        #
-        # override_input_methods = [m.split('.')[-1] for m in CallGraph._get_android_override_input_methods()]
-        # entry_points_to_add = self._select_nodes(lambda n: n.function_name in override_input_methods)
-        #
-        # self._entry_points += entry_points_to_add
-        # self._entry_points = list(set(self._entry_points))
-        #
-        # override_output_methods = [m.split('.')[-1] for m in CallGraph._get_android_override_output_methods()]
-        # exit_points_to_add = self._select_nodes(lambda n: n.function_name in override_output_methods)
-        #
-        # self._exit_points += exit_points_to_add
-        # self._exit_points = list(set(self._exit_points))
+        self._entry_points = self._select_nodes(lambda n: any([s.is_input_function() for s
+                                                                   in self.call_graph.successors(n)]))
+
+        self._exit_points = self._select_nodes(lambda n: any([s.is_output_function() for s
+                                                              in self.call_graph.successors(n)]))
+
+        override_input_methods = [m.split('.')[-1] for m in CallGraph._get_android_override_input_methods()]
+        entry_points_to_add = self._select_nodes(lambda n: n.function_name in override_input_methods)
+
+        self._entry_points += entry_points_to_add
+        self._entry_points = list(set(self._entry_points))
+
+        override_output_methods = [m.split('.')[-1] for m in CallGraph._get_android_override_output_methods()]
+        exit_points_to_add = self._select_nodes(lambda n: n.function_name in override_output_methods)
+
+        self._exit_points += exit_points_to_add
+        self._exit_points = list(set(self._exit_points))
 
         # Sub-graphing only those nodes connected to the attack surface
-        # attack_surface_nodes = set()
-        # for en in self.entry_points:
-        #     attack_surface_nodes.add(en)
-        #     for des in self.get_descendants(en):
-        #         attack_surface_nodes.add(des)
-        #
-        # for ex in self.exit_points:
-        #     attack_surface_nodes.add(ex)
-        #     for anc in self.get_ancestors(ex):
-        #         attack_surface_nodes.add(anc)
-        #
-        # self.attack_surface_graph = nx.subgraph(self.call_graph, attack_surface_nodes)
+        attack_surface_nodes = set()
+        for en in self.entry_points:
+            attack_surface_nodes.add(en)
+            for des in self.get_descendants(en):
+                attack_surface_nodes.add(des)
+
+        for ex in self.exit_points:
+            attack_surface_nodes.add(ex)
+            for anc in self.get_ancestors(ex):
+                attack_surface_nodes.add(anc)
+
+        self.attack_surface_graph = nx.subgraph(self.call_graph, attack_surface_nodes)
 
     def calculate_entry_and_exit_points(self):
         self._entry_points = self._select_nodes(lambda n: any([s.is_input_function() for s
