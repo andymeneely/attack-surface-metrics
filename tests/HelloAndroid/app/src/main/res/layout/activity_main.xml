@@ -49,4 +49,32 @@
         android:onClick="button_call_data_presenter_onClick"
         android:nestedScrollingEnabled="true" />
 
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New CheckBox"
+        android:id="@+id/checkBox_test"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:id="@+id/textView2"
+        android:layout_above="@+id/textView_Greeting"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText"
+        android:layout_below="@+id/button_call_data_presenter"
+        android:layout_alignLeft="@+id/button_salute"
+        android:layout_alignStart="@+id/button_salute"
+        android:layout_marginTop="28dp"
+        android:layout_alignRight="@+id/button_salute"
+        android:layout_alignEnd="@+id/button_salute" />
+
 </RelativeLayout>

@@ -1,12 +1,19 @@
 package com.example.kevin.helloandroid;
 
 import android.content.Intent;
+import android.content.IntentSender;
+import android.net.Uri;
+import android.os.Parcel;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
+
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -53,6 +60,40 @@ public class MainActivity extends ActionBarActivity {
     {
         Intent intent = new Intent(this, DataPresenterActivity.class);
         startActivity(intent);
+
+        Intent[] il = null;
+        IntentSender is = null;
+
+        android.content.ContentResolver cr = getContentResolver();
+
+        Uri uri = null;
+
+        cr.insert(uri, null);
+
+
+
+        setContentView(0);
+        startActivities(il);
+        startActivityForResult(intent, 0);
+        startActivityFromChild(new DataPresenterActivity(), intent, 0);
+        startActivityIfNeeded(intent, 0);
+        try
+        {
+            startIntentSender(is, intent, 0, 0, 0);
+        }
+        catch (Exception ex) { }
+
+        try
+        {
+            startIntentSenderForResult(is, 0, intent, 0, 0, 0);
+        }
+        catch (Exception ex) { }
+
+        try
+        {
+            startIntentSenderFromChild(new DataPresenterActivity(), is, 0, intent, 0, 0, 0);
+        }
+        catch (Exception ex) { }
     }
 
     public void button_salute_onClick(View button)
@@ -61,6 +102,9 @@ public class MainActivity extends ActionBarActivity {
 
         TextView tv = (TextView)this.findViewById(R.id.textView_Greeting);
         tv.setText(salutation);
+
+        CheckBox cb = (CheckBox)this.findViewById(R.id.checkBox_test);
+        cb.setChecked(true);
     }
 
     public void button_saluteWorld_onClick(View button)
