@@ -59,9 +59,11 @@ class CflowLoader(BaseLoader):
 
                 if parent.top:
                     if not self.is_reverse:
-                        call_graph.add_edge(parent.top, current)
+                        call_graph.add_edge(parent.top, current,
+                            {'cflow': 'cflow'})
                     else:
-                        call_graph.add_edge(current, parent.top)
+                        call_graph.add_edge(current, parent.top,
+                            {'cflow': 'cflow'})
 
             previous = current
             is_first_line = False

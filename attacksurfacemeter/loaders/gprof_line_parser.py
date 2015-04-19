@@ -61,7 +61,7 @@ class GprofLineParser(BaseLineParser):
             Returns:
                 A String containing the name of the file where the function detailed in the fragment is defined.
         """
-        regex = r"(\w+\.c)|(\w+\.asm)"
+        regex = r"([.\w\/]+\.(?:c|asm|h))"
 
         match = re.search(regex, text_fragment)
 

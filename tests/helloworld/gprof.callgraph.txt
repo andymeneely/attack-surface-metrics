@@ -1,49 +1,42 @@
 			Call graph
 
 
-granularity: each sample hit covers 2 byte(s) no time propagated
+granularity: each sample hit covers 4 byte(s) no time propagated
 
 index % time    self  children    called     name
-                                   8             recursive_a <cycle 1> (greetings.c:38 @ 581033) [3]
-                0.00    0.00       1/2           greet_b (helloworld.c:38 @ 581033) [9]
-[2]      0.0    0.00    0.00       9         recursive_b <cycle 1> (greetings.c:38 @ 581033) [2]
-                                   7             recursive_a <cycle 1> (greetings.c:38 @ 581033) [3]
+                0.00    0.00       1/9           greet_b (./src/helloworld.c:99 @ 80487bf) [30]
+                0.00    0.00       8/9           recursive_a (./src/greetings.c:29 @ 8048618) [50]
+[1]      0.0    0.00    0.00       9         recursive_b (./src/greetings.c:33 @ 8048629) [1]
 -----------------------------------------------
-                                   7             recursive_b <cycle 1> (greetings.c:38 @ 581033) [2]
-                0.00    0.00       1/2           greet_a (helloworld.c:38 @ 581033) [8]
-[3]      0.0    0.00    0.00       8         recursive_a <cycle 1> (greetings.c:38 @ 581033) [3]
-                                   8             recursive_b <cycle 1> (greetings.c:38 @ 581033) [2]
+                0.00    0.00       1/8           greet_a (./src/helloworld.c:90 @ 8048784) [25]
+                0.00    0.00       7/8           recursive_b (./src/greetings.c:37 @ 804864d) [54]
+[2]      0.0    0.00    0.00       8         recursive_a (./src/greetings.c:27 @ 80485fa) [2]
 -----------------------------------------------
-                0.00    0.00       1/2           greet_a (helloworld.c:38 @ 581033) [8]
-                0.00    0.00       1/2           greet_b (helloworld.c:38 @ 581033) [9]
-[4]      0.0    0.00    0.00       2         greet (greetings.c:38 @ 581033) [4]
+                0.00    0.00       1/2           greet_a (./src/helloworld.c:89 @ 8048778) [24]
+                0.00    0.00       1/2           greet_b (./src/helloworld.c:98 @ 80487b3) [29]
+[3]      0.0    0.00    0.00       2         greet (./src/greetings.c:15 @ 80485cd) [3]
 -----------------------------------------------
-                0.00    0.00       1/1           main (helloworld.c:38 @ 581033) [15]
-[5]      0.0    0.00    0.00       1         GreeterSayHi (helloworld.c:38 @ 581033) [5]
+                0.00    0.00       1/1           main (./src/helloworld.c:70 @ 804874e) [40]
+[4]      0.0    0.00    0.00       1         GreeterSayHi (./src/helloworld.c:49 @ 80486a2) [4]
 -----------------------------------------------
-                0.00    0.00       1/1           main (helloworld.c:38 @ 581033) [15]
-[6]      0.0    0.00    0.00       1         GreeterSayHiTo (helloworld.c:38 @ 581033) [6]
+                0.00    0.00       1/1           main (./src/helloworld.c:71 @ 8048756) [41]
+[5]      0.0    0.00    0.00       1         GreeterSayHiTo (./src/helloworld.c:54 @ 80486bb) [5]
 -----------------------------------------------
-                0.00    0.00       1/1           main (helloworld.c:38 @ 581033) [15]
-[7]      0.0    0.00    0.00       1         addInt (helloworld.c:38 @ 581033) [7]
+                0.00    0.00       1/1           main (./src/helloworld.c:66 @ 8048717) [37]
+[6]      0.0    0.00    0.00       1         addInt (./src/helloworld.c:19 @ 804865e) [6]
 -----------------------------------------------
-                0.00    0.00       1/1           main (helloworld.c:38 @ 581033) [15]
-[8]      0.0    0.00    0.00       1         greet_a (helloworld.c:38 @ 581033) [8]
-                0.00    0.00       1/2           greet (greetings.c:38 @ 581033) [4]
-                0.00    0.00       1/2           recursive_a <cycle 1> (greetings.c:38 @ 581033) [3]
+                0.00    0.00       1/1           main (./src/helloworld.c:60 @ 80486e9) [33]
+[7]      0.0    0.00    0.00       1         greet_a (./src/helloworld.c:88 @ 804876d) [7]
 -----------------------------------------------
-                0.00    0.00       1/1           main (helloworld.c:38 @ 581033) [15]
-[9]      0.0    0.00    0.00       1         greet_b (helloworld.c:38 @ 581033) [9]
-                0.00    0.00       1/2           greet (greetings.c:38 @ 581033) [4]
-                0.00    0.00       1/2           recursive_b <cycle 1> (greetings.c:38 @ 581033) [2]
+                0.00    0.00       1/1           main (./src/helloworld.c:61 @ 80486f5) [34]
+[8]      0.0    0.00    0.00       1         greet_b (./src/helloworld.c:94 @ 8048791) [8]
 -----------------------------------------------
-                0.00    0.00       1/1           main (helloworld.c:38 @ 581033) [15]
-[10]     0.0    0.00    0.00       1         new_Greeter (helloworld.c:38 @ 581033) [10]
+                0.00    0.00       1/1           main (./src/helloworld.c:69 @ 8048745) [39]
+[9]      0.0    0.00    0.00       1         new_Greeter (./src/helloworld.c:39 @ 8048670) [9]
 -----------------------------------------------
 
 Index by function name
 
-   [5] GreeterSayHi            [8] greet_a                 [2] recursive_b
-   [6] GreeterSayHiTo          [9] greet_b                 [1] <cycle 1>
-   [7] addInt                 [10] new_Greeter
-   [4] greet                   [3] recursive_a
+   [4] GreeterSayHi (./src/helloworld.c:49 @ 80486a2) [3] greet (./src/greetings.c:15 @ 80485cd) [9] new_Greeter (./src/helloworld.c:39 @ 8048670)
+   [5] GreeterSayHiTo (./src/helloworld.c:54 @ 80486bb) [7] greet_a (./src/helloworld.c:88 @ 804876d) [2] recursive_a (./src/greetings.c:27 @ 80485fa)
+   [6] addInt (./src/helloworld.c:19 @ 804865e) [8] greet_b (./src/helloworld.c:94 @ 8048791) [1] recursive_b (./src/greetings.c:33 @ 8048629)

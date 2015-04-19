@@ -152,13 +152,22 @@ class CallGraph():
         """
         source = "cflow: {0} - gprof: {1}".format(cflow_call_graph.source, gprof_call_graph.source)
 
-        CallGraph._fix_cflow_call_graph(cflow_call_graph, gprof_call_graph)
-        CallGraph._fix_gprof_call_graph(cflow_call_graph, gprof_call_graph)
-
+        CallGraph._fix(cflow_call_graph, gprof_call_graph)
+        
         graph = nx.DiGraph()
 
-        graph.add_edges_from(cflow_call_graph.edges)
-        graph.add_edges_from(gprof_call_graph.edges)
+        graph.add_edges_from(
+            [
+                (u,v,cflow_call_graph.call_graph.get_edge_data(u,v)) 
+                    for (u,v) in cflow_call_graph.edges
+            ]
+        )
+        graph.add_edges_from(
+            [
+                (u,v,gprof_call_graph.call_graph.get_edge_data(u,v)) 
+                    for (u,v) in gprof_call_graph.edges
+            ]
+        )
 
         # Could come in handy!
         # nodes = gprof_call_graph.nodes
@@ -186,84 +195,70 @@ class CallGraph():
         return [n for n in self.call_graph.nodes() if predicate(n)]
 
     @staticmethod
-    def _fix_cflow_call_graph(cflow_call_graph, gprof_call_graph):
+    def _fix(call_graph, reference_call_graph):
         """
-            Goes through the cflow nodes and find those which do not have file names (function_signature) and find
-            the corresponding gprof node and put that node's function_signature into the file-name-lacking cflow node's
+            Method attempts to a fix a call graph using a reference call 
+            graph which is assumed to be more comprehensive than the one
+            being fixed. The notion of fixing a call graph entails 
+            identifying a node without function_signature and replacing it 
+            with an identical node from the reference call graph that has a 
             function_signature.
 
-            This cleanup is done so that later when merging the two call graph's sets of edges, networkx doesn't
-            think the cflow and gprof calls are different only because one of them (the cflow one) doesn't have a
-            file name associated to it.
-
-        Args:
-                cflow_call_graph: A CallGraph instance that represents a call graph generated using output from cflow.
-                gprof_call_graph: A CallGraph instance that represents a call graph generated using output from gprof.
-        """
-        cflow_calls_with_no_signature = [c for c in cflow_call_graph.nodes if not c.function_signature]
-
-        for cflow_call in cflow_calls_with_no_signature:
-            gprof_call = [c for c in gprof_call_graph.nodes if c.function_name == cflow_call.function_name]
-
-            if gprof_call:
-                cflow_call.set_function_signature(gprof_call[0].function_signature)
-
-    @staticmethod
-    def _fix_gprof_call_graph(cflow_call_graph, gprof_call_graph):
-        """
-            Goes through the gprof nodes and incorporates to them the function_signature of their equivalent cflow
-            nodes. This is done because cflow includes the path of the file where functons are defined while gprof
-            doesn't.
-
-            This cleanup is done to ensure compatibility of equivalent nodes so that later when merging the two
-            call graph's sets of edges, networkx doesn't think the cflow and gprof calls are different only because
-            one of them (the gprof one) doesn't have a file path associated to it.
+            A call graph is required to be fixed to ensure compatibility of 
+            equivalent nodes so that later when merging the two call graphs' 
+            sets of edges, networkx doesn't think the cflow and gprof calls 
+            are different only because one of them doesn't have a 
+            function_signature associated to it.
 
             Implementation detail:
-                Can't directly modify nodes because: http://networkx.lanl.gov/tutorial/tutorial.html
-                "(Note: You should not change the node object if the hash depends on its contents.)"
+                networkx internally uses a dictionary as the data structure 
+                to store nodes. Modifying an attribute that is used in the 
+                computation of the object's hash will invalidate the hash 
+                leaving the graph in an inconsistent state. Hence, fixing 
+                nodes involves replacing existing nodes with their fixed 
+                equivalents.
+                
+                More details at 
+                http://networkx.lanl.gov/tutorial/tutorial.html
 
         Args:
-                cflow_call_graph: A CallGraph instance that represents a call graph generated using output from cflow.
-                gprof_call_graph: A CallGraph instance that represents a call graph generated using output from gprof.
+                call_graph: A CallGraph instance that represents a call graph 
+                to be fixed.
+                reference_call_graph: A CallGraph instance that represents a 
+                call graph assumed to be more comprehensive than call_graph.
         """
         nodes_to_replace = []
 
-        for gprof_call in gprof_call_graph.nodes:
-            cflow_call = [c for c in cflow_call_graph.nodes
-                          if gprof_call.function_name == c.function_name
-                          and gprof_call.function_signature == c.function_signature.split("/")[-1]]
+        for node in [n for n in call_graph.nodes if not n.function_signature]:
+            reference_nodes = [n for n in reference_call_graph.nodes 
+                if n.function_name == node.function_name]
 
-            if cflow_call:
-            # if the clfow function_signature contains more information than it's gprof equivalent
-                if len(gprof_call.function_signature) < len(cflow_call[0].function_signature):
-                    nodes_to_replace.append((gprof_call, cflow_call[0]))
+            if len(reference_nodes) == 1:
+                new_node = Call(node.function_name, 
+                    reference_nodes[0].function_signature,
+                    Environments.C)
+                nodes_to_replace.append((node, new_node))
 
-        # This behaviour appears to be a bug in networkx but its actually documented in
-        # "(Note: You should not change the node object if the hash depends on its contents.)".
-        # http://networkx.lanl.gov/tutorial/tutorial.html
-        # Updating the node does not update SOME of the edges that node is part of, causing nodes and
-        # edges to "desynchronize". This code is a way around that. Here, I remove the old nodes
-        # and add the new ones. The edges that the old one had are associated to the new one.
-        for (gprof_call, cflow_call) in nodes_to_replace:
-            caller_edges = [e for e in gprof_call_graph.edges if gprof_call == e[0]]
-            callee_edges = [e for e in gprof_call_graph.edges if gprof_call == e[1]]
+        for (before,after) in nodes_to_replace:
+            # Edges terminating at the node to be replaced
+            for predecessor in call_graph.call_graph.predecessors(before):
+                call_graph.call_graph.add_edge(
+                    predecessor, after, 
+                    call_graph.call_graph.get_edge_data(
+                        predecessor, before
+                    )
+                )
 
-            new_gprof_node = Call(gprof_call.function_name,
-                                  cflow_call.function_signature,
-                                  Environments.C)
+            # Edges originating at the node to be replaced
+            for successor in call_graph.call_graph.successors(before):
+                call_graph.call_graph.add_edge(
+                    after, successor,
+                    call_graph.call_graph.get_edge_data(
+                        before, successor
+                    )
+                )
 
-            for edge_to_add in caller_edges:
-                gprof_call_graph.call_graph.add_edge(new_gprof_node, edge_to_add[1])
-
-            for edge_to_add in callee_edges:
-                gprof_call_graph.call_graph.add_edge(edge_to_add[0], new_gprof_node)
-
-            gprof_call_graph.call_graph.remove_node(gprof_call)
-
-        # edges = [e for e in gprof_call_graph.edges
-        #          if e[0] not in gprof_call_graph.nodes
-        #          or e[1] not in gprof_call_graph.nodes]
+            call_graph.call_graph.remove_node(before)
 
     def remove_function_name_only_calls(self):
         """
@@ -1277,3 +1272,10 @@ class CallGraph():
             return nx.pagerank(self.call_graph, personalization=per)
         else:
             return nx.pagerank(self.call_graph, personalization=per)[call]
+
+    def assign_page_rank(self):
+        """
+            Assigns the page rank of each node as an attribute of the node.
+        """
+        nx.set_node_attributes(self.call_graph, 'page_rank', 
+            self.get_page_rank())

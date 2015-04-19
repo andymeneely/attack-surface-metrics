@@ -66,6 +66,47 @@ class GprofLineParserTestCase(unittest.TestCase):
         # Assert
         self.assertEqual("greetings.c", test_function_signature)
 
+    def test_spontaneous(self):
+        # Assert
+        self.assertRaises(ValueError, GprofLineParser.get_instance, 
+            "                                                 <spontaneous>")
+
+    def test_get_function_signature_with_path(self):
+        # Arrange
+        test_line_parser = GprofLineParser.get_instance(
+            "[12]     0.0    0.00    0.00   72000         hScale_MMX "
+            "(./libswscale/x86/swscale_template.c:1921 @ 9f46e0) [12]"
+        )
+
+        # Act
+        test_function_signature = test_line_parser.get_function_signature()
+
+        # Assert
+        self.assertEqual("./libswscale/x86/swscale_template.c", test_function_signature)
+
+        # Arrange
+        test_line_parser = GprofLineParser.get_instance(
+            "                0.00    0.00    2590/5180        opt_find "
+            "(./libavcodec/options.c:53 @ 77e710) [316705]"
+        )
+
+        # Act
+        test_function_signature = test_line_parser.get_function_signature()
+
+        # Assert
+        self.assertEqual("./libavcodec/options.c", test_function_signature)
+
+        # Arrange
+        test_line_parser = GprofLineParser.get_instance(
+            "[49220   0.0    0.00    0.00                 "
+            "__do_global_ctors_aux [492203]"
+        )
+
+        # Act
+        test_function_signature = test_line_parser.get_function_signature()
+
+        # Assert
+        self.assertEqual("", test_function_signature)
 
 if __name__ == '__main__':
     unittest.main()
