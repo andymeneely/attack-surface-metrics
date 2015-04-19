@@ -18,6 +18,13 @@ class Call():
 
     indent = "    "
 
+    _android_input_methods = []
+    _android_output_methods = []
+
+    _c_std_lib_functions = []
+    _c_input_functions = []
+    _c_output_functions = []
+
     def __init__(self, name, signature, environment):
         """
             Call constructor.
@@ -117,13 +124,6 @@ class Call():
                 A Boolean that says whether this instance can be considered not equal to other.
         """
         return self.identity != other.identity
-
-    _android_input_methods = []
-    _android_output_methods = []
-
-    _c_std_lib_functions = []
-    _c_input_functions = []
-    _c_output_functions = []
 
     @staticmethod
     def _get_android_input_methods():
