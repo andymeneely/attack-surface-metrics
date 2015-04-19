@@ -72,12 +72,12 @@ class GprofLoader(BaseLoader):
                         except ValueError as e:
                             raise e
 
-                        call_graph.add_node(entry)
+                        call_graph.add_node(entry, {'tested': False})
                         is_caller = False
 
                     elif line == GprofLoader.separator:
                         if len(callers) > 0 or len(callees) > 0:
-                            call_graph.node[entry] = {'tested': True}
+                            call_graph.node[entry]['tested'] = True
 
                         for caller in callers:
                             call_graph.add_node(caller, {'tested': True})
