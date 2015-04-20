@@ -1,7 +1,7 @@
 __author__ = 'kevin'
 
-import statistics as stat
-import networkx as nx
+# import statistics as stat
+# import networkx as nx
 import os
 
 from attacksurfacemeter.call import Call
@@ -92,7 +92,8 @@ class AndroidCallGraph(CallGraph):
 
         return black_list_call_graph.edges
 
-    def _load_android_package_black_list(self):
+    @staticmethod
+    def _load_android_package_black_list():
         if not AndroidCallGraph._android_black_list_packages:
             AndroidCallGraph._android_black_list_packages = AndroidCallGraph._load_function_list("android_package_black_list")
 
@@ -105,17 +106,17 @@ class AndroidCallGraph(CallGraph):
         self._exit_points = self._select_nodes(lambda n: any([s.is_output_function() for s
                                                               in self.call_graph.successors(n)]))
 
-        # override_input_methods = [m.split('.')[-1] for m in CallGraph._get_android_override_input_methods()]
-        # entry_points_to_add = [n for n in self.call_graph.nodes() if n.function_name in override_input_methods]
-        #
-        # self._entry_points += entry_points_to_add
-        # self._entry_points = list(set(self._entry_points))
-        #
-        # override_output_methods = [m.split('.')[-1] for m in CallGraph._get_android_override_output_methods()]
-        # exit_points_to_add = self._select_nodes(lambda n: n.function_name in override_output_methods)
-        #
-        # self._exit_points += exit_points_to_add
-        # self._exit_points = list(set(self._exit_points))
+        override_input_methods = [m.split('.')[-1] for m in AndroidCallGraph._get_android_override_input_methods()]
+        entry_points_to_add = [n for n in self.call_graph.nodes() if n.function_name in override_input_methods]
+
+        self._entry_points += entry_points_to_add
+        self._entry_points = list(set(self._entry_points))
+
+        override_output_methods = [m.split('.')[-1] for m in AndroidCallGraph._get_android_override_output_methods()]
+        exit_points_to_add = self._select_nodes(lambda n: n.function_name in override_output_methods)
+
+        self._exit_points += exit_points_to_add
+        self._exit_points = list(set(self._exit_points))
 
     def collapse_android_black_listed_edges(self):
         """
@@ -213,7 +214,7 @@ class AndroidCallGraph(CallGraph):
 
     def collapse_android_black_listed_packages(self):
 
-        black_listed_packages = self._load_android_package_black_list()
+        black_listed_packages = AndroidCallGraph._load_android_package_black_list()
 
         nodes_to_remove = set()
         edges_to_remove = []
