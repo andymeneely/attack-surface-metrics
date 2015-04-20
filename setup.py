@@ -7,12 +7,11 @@ except ImportError:
 
 setup(
     name='attacksurfacemeter',
-    version='0.7.1',
+    version='0.7.2',
     packages=[
         'attacksurfacemeter',
         'attacksurfacemeter.loaders',
-        'attacksurfacemeter.formatters',
-        'attacksurfacemeter.data'
+        'attacksurfacemeter.formatters'
     ],
     package_data={
         'attacksurfacemeter': [
@@ -22,7 +21,7 @@ setup(
             'data/android_override_input_methods',
             'data/android_override_output_methods',
             'data/android_package_black_list',
-            'data/android_edge_black_list',
+            'data/c_std_lib_functions',
             'data/c_input_functions',
             'data/c_output_functions'
         ],
