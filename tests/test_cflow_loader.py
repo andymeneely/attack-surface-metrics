@@ -54,8 +54,6 @@ class CflowLoaderTestCase(unittest.TestCase):
         # Assert
         for (u, v, d) in test_graph.edges(data=True):
             self.assertFalse('cflow' not in d)
-            self.assertFalse('weight' not in d)
-            self.assertEqual(1, d['weight'])
 
 if __name__ == '__main__':
     unittest.main()

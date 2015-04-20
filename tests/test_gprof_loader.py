@@ -48,8 +48,6 @@ class GprofLoaderTestCase(unittest.TestCase):
         # Assert
         for (u, v, d) in test_graph.edges(data=True):
             self.assertFalse('gprof' not in d)
-            self.assertFalse('weight' not in d)
-            self.assertEqual(0.5, d['weight'])
 
 if __name__ == '__main__':
     unittest.main()

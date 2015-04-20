@@ -61,16 +61,12 @@ class CflowLoader(BaseLoader):
                     call_graph.add_node(current, {'tested': False})
                     call_graph.add_node(parent.top, {'tested': False})
 
-                    # Edge weight can be any arbitrary number greater than 
-                    #   that used as the weight for the edges in the gprof 
-                    #   call graph.
-
                     if not self.is_reverse:
                         call_graph.add_edge(parent.top, current, 
-                            {'cflow': 'cflow'}, weight=1)
+                            {'cflow': 'cflow'})
                     else:
                         call_graph.add_edge(current, parent.top, 
-                            {'cflow': 'cflow'}, weight=1)
+                            {'cflow': 'cflow'})
 
             previous = current
             is_first_line = False

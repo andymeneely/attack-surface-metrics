@@ -1169,7 +1169,10 @@ class CallGraphTestCase(unittest.TestCase):
         }
 
         # Act
-        self.call_graph.assign_page_rank()
+        self.call_graph.assign_page_rank(
+            cflow_edge_weight=1.0, gprof_edge_weight=0.5,
+            primary=10000, secondary=1
+        )
         page_rank = nx.get_node_attributes(self.call_graph.call_graph, 
             'page_rank')
 

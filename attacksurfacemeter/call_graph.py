@@ -1158,17 +1158,28 @@ class CallGraph():
             return nx.pagerank(self.call_graph, weight='weight', 
                 personalization=per)[call]
 
-    def assign_page_rank(self, primary=10000, secondary=1, name='page_rank'):
+    def assign_page_rank(self, cflow_edge_weight, gprof_edge_weight, 
+        primary, secondary, name='page_rank'):
         """
             Assigns the page rank of each node as an attribute of the node.
 
             Args:
+                cflow_edge_weight: The weight of an edge from the cflow call
+                    graph.
+                gprof_edge_weight: The weight of an edge from the gprof call
+                    graph.
                 primary: A non-zero personalization value for a node that 
-                    is an entry point or an exit point. Default is 10000.
+                    is an entry point or an exit point.
                 secondary: A non-zero personalization value for a node that 
-                    is not an entry point or an exit point. Default is 1.
+                    is not an entry point or an exit point.
                 name: The name of the attribute that the page rank should be 
-                    assigned to.
+                    assigned to. Default is 'page_rank'.
         """
+        # Assign weights to edges before computing page rank
+        for (u, v, d) in self.call_graph.edges(data=True):
+            self.call_graph.edge[u][v]['weight'] = cflow_edge_weight
+            if 'gprof' in d:
+                self.call_graph.edge[u][v]['weight'] = gprof_edge_weight
+
         nx.set_node_attributes(self.call_graph, name, 
             self.get_page_rank(primary=primary, secondary=secondary))
