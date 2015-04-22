@@ -43,18 +43,7 @@ class CallGraph():
 
         self._execution_paths = list()
 
-        # Calculating the entry and exit points
-        # self._entry_points = self._select_nodes(lambda n: any([s.is_input_function() for s
-        #                                                            in self.call_graph.successors(n)]))
-
-        # self._exit_points = self._select_nodes(lambda n: any([s.is_output_function() for s
-        #                                                       in self.call_graph.successors(n)]))
-
-        self._entry_points = {n: n for n in self.call_graph.nodes()
-                              if any([s.is_input_function() for s in self.call_graph.successors(n)])}
-
-        self._exit_points = {n: n for n in self.call_graph.nodes()
-                             if any([s.is_output_function() for s in self.call_graph.successors(n)])}
+        self._calculate_entry_and_exit_points()
 
         # Sub-graphing only those nodes connected to the attack surface
         attack_surface_nodes = set()
@@ -69,6 +58,20 @@ class CallGraph():
                 attack_surface_nodes.add(anc)
 
         self.attack_surface_graph = nx.subgraph(self.call_graph, attack_surface_nodes)
+
+    def _calculate_entry_and_exit_points(self):
+        # Calculating the entry and exit points
+        # self._entry_points = self._select_nodes(lambda n: any([s.is_input_function() for s
+        #                                                            in self.call_graph.successors(n)]))
+
+        # self._exit_points = self._select_nodes(lambda n: any([s.is_output_function() for s
+        #                                                       in self.call_graph.successors(n)]))
+
+        self._entry_points = {n: n for n in self.call_graph.nodes()
+                              if any([s.is_input_function() for s in self.call_graph.successors(n)])}
+
+        self._exit_points = {n: n for n in self.call_graph.nodes()
+                             if any([s.is_output_function() for s in self.call_graph.successors(n)])}
 
     @classmethod
     def from_loader(cls, loader):
