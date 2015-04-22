@@ -466,6 +466,8 @@ class CallGraph():
         calculator = lambda c, p: len(p) - p.index(c) - 1
         return self._get_distances(calculator, call, paths)
 
+    _closeness = dict()
+
     def get_closeness(self, call=None):
         """
             Calculates the Closeness of call.
@@ -490,7 +492,13 @@ class CallGraph():
                 If call is provided, returns a Float that represents the Closeness of call. If not, returns a
                 dictionary with every Call in the Call Graph with their respective Closenesses.
         """
-        return nx.closeness_centrality(self.call_graph, call)
+        if not self._closeness:
+            self._closeness = nx.closeness_centrality(self.call_graph)
+
+        if call:
+            return self._closeness[call]
+        else:
+            return self._closeness
 
     @property
     def median_closeness(self):
@@ -499,7 +507,9 @@ class CallGraph():
     @property
     def average_closeness(self):
         return stat.mean([closeness for k, closeness in self.get_closeness().items()])
-    
+
+    _betweenness = dict()
+
     def get_betweenness(self, call=None):
         """
             Calculates the Betweenness of call.
@@ -524,12 +534,13 @@ class CallGraph():
                 If call is provided, returns a Float that represents the Betweenness of call. If not, returns a
                 dictionary with every Call in the Call Graph with their respective Betweennesses.
         """
-        betweennesses = nx.betweenness_centrality(self.call_graph)
+        if not self._betweenness:
+            self._betweenness = nx.betweenness_centrality(self.call_graph)
 
         if call:
-            return betweennesses[call]
+            return self._betweenness[call]
         else:
-            return betweennesses
+            return self._betweenness
 
     @property
     def median_betweenness(self):
@@ -573,7 +584,9 @@ class CallGraph():
                 An Int that represents the average clustering coefficient of the Exit Points.
         """
         return self.average_clustering(self.exit_points)
-    
+
+    _degree_centrality = dict()
+
     def get_degree_centrality(self, call=None):
         """
             Returns the degree centrality of a given Call
@@ -588,12 +601,13 @@ class CallGraph():
                 If call is provided, returns a Float that represents the degree centrality of call. If not, returns a
                 dictionary with every Call in the Call Graph with their respective degree centrality.
         """
-        degrees = nx.degree_centrality(self.call_graph)
+        if not self._degree_centrality:
+            self._degree_centrality = nx.degree_centrality(self.call_graph)
 
         if call:
-            return degrees[call]
+            return self._degree_centrality[call]
         else:
-            return degrees
+            return self._degree_centrality
 
     @property
     def median_degree_centrality(self):
@@ -602,6 +616,8 @@ class CallGraph():
     @property
     def average_degree_centrality(self):
         return stat.mean([degree_centrality for k, degree_centrality in self.get_degree_centrality().items()])
+
+    _in_degree_centrality = dict()
 
     def get_in_degree_centrality(self, call=None):
         """
@@ -618,12 +634,13 @@ class CallGraph():
                 If call is provided, returns a Float that represents the in degree centrality of call. If not, returns
                 a dictionary with every Call in the Call Graph with their respective in degree centrality.
         """
-        degrees = nx.in_degree_centrality(self.call_graph)
+        if not self._in_degree_centrality:
+            self._in_degree_centrality = nx.in_degree_centrality(self.call_graph)
 
         if call:
-            return degrees[call]
+            return self._in_degree_centrality[call]
         else:
-            return degrees
+            return self._in_degree_centrality
 
     @property
     def median_in_degree_centrality(self):
@@ -632,6 +649,8 @@ class CallGraph():
     @property
     def average_in_degree_centrality(self):
         return stat.mean([in_degree_centrality for k, in_degree_centrality in self.get_in_degree_centrality().items()])
+
+    _out_degree_centrality = dict()
 
     def get_out_degree_centrality(self, call=None):
         """
@@ -648,12 +667,13 @@ class CallGraph():
                 If call is provided, returns a Float that represents the out degree centrality of call. If not, returns
                 a dictionary with every Call in the Call Graph with their respective out degree centrality.
         """
-        degrees = nx.out_degree_centrality(self.call_graph)
+        if not self._out_degree_centrality:
+            self._out_degree_centrality = nx.out_degree_centrality(self.call_graph)
 
         if call:
-            return degrees[call]
+            return self._out_degree_centrality[call]
         else:
-            return degrees
+            return self._out_degree_centrality
 
     @property
     def median_out_degree_centrality(self):
@@ -662,7 +682,9 @@ class CallGraph():
     @property
     def average_out_degree_centrality(self):
         return stat.mean([out_degree_centrality for k, out_degree_centrality in self.get_out_degree_centrality().items()])
-        
+
+    _degree = dict()
+
     def get_degree(self, call=None):
         """
             Returns the degree of a given Call.
@@ -677,10 +699,13 @@ class CallGraph():
                 If call is provided, returns an Int that represents the degree of call. If not, returns
                 a dictionary with every Call in the Call Graph with their respective degree.
         """
+        if not self._degree:
+            self._degree = self.call_graph.degree()
+
         if call:
-            return self.call_graph.degree([call])[call]
+            return self._degree[call]
         else:
-            return self.call_graph.degree()
+            return self._degree
 
     @property
     def median_degree(self):
@@ -689,6 +714,8 @@ class CallGraph():
     @property
     def average_degree(self):
         return stat.mean([degree for k, degree in self.get_degree().items()])
+
+    _in_degree = dict()
 
     def get_in_degree(self, call=None):
         """
@@ -704,10 +731,13 @@ class CallGraph():
                 If call is provided, returns an Int that represents the in degree of call. If not, returns
                 a dictionary with every Call in the Call Graph with their respective in degree.
         """
+        if not self._in_degree:
+            self._in_degree = self.call_graph.in_degree()
+
         if call:
-            return self.call_graph.in_degree([call])[call]
+            return self._in_degree[call]
         else:
-            return self.call_graph.in_degree()
+            return self._in_degree
 
     @property
     def median_in_degree(self):
@@ -716,6 +746,8 @@ class CallGraph():
     @property
     def average_in_degree(self):
         return stat.mean([in_degree for k, in_degree in self.get_in_degree().items()])
+
+    _out_degree = dict()
 
     def get_out_degree(self, call=None):
         """
@@ -731,10 +763,13 @@ class CallGraph():
                 If call is provided, returns an Int that represents the out degree of call. If not, returns
                 a dictionary with every Call in the Call Graph with their respective out degree.
         """
+        if not self._out_degree:
+            self._out_degree = self.call_graph.out_degree()
+
         if call:
-            return self.call_graph.out_degree([call])[call]
+            return self._out_degree[call]
         else:
-            return self.call_graph.out_degree()
+            return self._out_degree
 
     @property
     def median_out_degree(self):
