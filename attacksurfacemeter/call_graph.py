@@ -1131,6 +1131,7 @@ class CallGraph():
 
         return {'points': exit_points, 'proximity': proximity_to_exit, 'surface_coupling': surface_coupling_with_exit}
 
+    _entry_page_rank = dict()
 
     def get_entry_page_rank(self, call=None, primary=10000, secondary=1):
         """
@@ -1156,12 +1157,22 @@ class CallGraph():
             for n in self.nodes
         }
 
-        if not call:
-            return nx.pagerank(self.call_graph, weight='weight', 
-                personalization=per)
+        # if not call:
+        #     return nx.pagerank(self.call_graph, weight='weight',
+        #         personalization=per)
+        # else:
+        #     return nx.pagerank(self.call_graph, weight='weight',
+        #         personalization=per)[call]
+
+        if not self._entry_page_rank:
+            self._entry_page_rank = nx.pagerank(self.call_graph, weight='weight', personalization=per)
+
+        if call:
+            return self._entry_page_rank[call]
         else:
-            return nx.pagerank(self.call_graph, weight='weight',
-                personalization=per)[call]
+            return self._entry_page_rank
+
+    _exit_page_rank = dict()
 
     def get_exit_page_rank(self, call=None, primary=10000, secondary=1):
         """
@@ -1187,12 +1198,22 @@ class CallGraph():
             for n in self.nodes
         }
 
-        if not call:
-            return nx.pagerank(self.call_graph, weight='weight', 
-                personalization=per)
+        # if not call:
+        #     return nx.pagerank(self.call_graph, weight='weight',
+        #         personalization=per)
+        # else:
+        #     return nx.pagerank(self.call_graph, weight='weight',
+        #         personalization=per)[call]
+
+        if not self._exit_page_rank:
+            self._exit_page_rank = nx.pagerank(self.call_graph, weight='weight', personalization=per)
+
+        if call:
+            return self._exit_page_rank[call]
         else:
-            return nx.pagerank(self.call_graph, weight='weight', 
-                personalization=per)[call]
+            return self._exit_page_rank
+
+    _page_rank = dict()
 
     def get_page_rank(self, call=None, primary=10000, secondary=1):
         """
@@ -1218,12 +1239,20 @@ class CallGraph():
             for n in self.nodes
         }
 
-        if not call:
-            return nx.pagerank(self.call_graph, weight='weight', 
-                personalization=per)
+        # if not call:
+        #     return nx.pagerank(self.call_graph, weight='weight',
+        #         personalization=per)
+        # else:
+        #     return nx.pagerank(self.call_graph, weight='weight',
+        #         personalization=per)[call]
+
+        if not self._page_rank:
+            self._page_rank = nx.pagerank(self.call_graph, weight='weight', personalization=per)
+
+        if call:
+            return self._page_rank[call]
         else:
-            return nx.pagerank(self.call_graph, weight='weight', 
-                personalization=per)[call]
+            return self._page_rank
 
     def assign_page_rank(self, primary=10000, secondary=1, name='page_rank'):
         """
