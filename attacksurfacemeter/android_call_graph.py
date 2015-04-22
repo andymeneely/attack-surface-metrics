@@ -131,8 +131,6 @@ class AndroidCallGraph(CallGraph):
             collapsing. Also, this way we ignore any input/output method that appears in the black listed
             nodes so that they don't appear in the metrics.
         """
-        import sys
-
         get_hash = lambda edge_to_hash: str(hash(edge_to_hash[0])) + str(hash(edge_to_hash[1]))
 
         black_listed_edges = AndroidCallGraph._get_android_edge_black_list()
@@ -145,13 +143,7 @@ class AndroidCallGraph(CallGraph):
 
         black_list_nodes = dict()
 
-        i = 0
-
-        print('looping through edges...')
         for edge in self.call_graph.edges():
-            sys.stdout.write(str(i) + " - ")
-            i += 1
-
             caller, callee = edge
 
             caller_id = hash(caller)
@@ -194,18 +186,10 @@ class AndroidCallGraph(CallGraph):
                 if not edge_is_in_black_list:
                     black_list_nodes[callee_id]['all_edges_black_list'] = False
 
-        i = 0
-        print('')
-        print('looping through nodes...')
         for node_id, black_list_node in black_list_nodes.items():
-            sys.stdout.write(str(i) + " - ")
-            i += 1
-
             if black_list_node['all_edges_black_list']:
                 nodes_to_remove.add(black_list_node['node'])
 
-        print('')
-        print('altering graph...')
         self.call_graph.remove_edges_from(edges_to_remove)
         self.call_graph.remove_nodes_from(nodes_to_remove)
 
