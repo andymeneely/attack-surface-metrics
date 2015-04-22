@@ -7,7 +7,6 @@ import os
 
 from attacksurfacemeter.call import Call
 from attacksurfacemeter.environments import Environments
-from attacksurfacemeter.loaders.javacg_loader import JavaCGLoader
 
 
 class CallGraph():
@@ -39,17 +38,23 @@ class CallGraph():
         self.call_graph = graph
         self.errors = generation_errors
 
-        self._entry_points = set()
-        self._exit_points = set()
+        # self._entry_points = set()
+        # self._exit_points = set()
 
         self._execution_paths = list()
 
         # Calculating the entry and exit points
-        self._entry_points = self._select_nodes(lambda n: any([s.is_input_function() for s
-                                                                   in self.call_graph.successors(n)]))
+        # self._entry_points = self._select_nodes(lambda n: any([s.is_input_function() for s
+        #                                                            in self.call_graph.successors(n)]))
 
-        self._exit_points = self._select_nodes(lambda n: any([s.is_output_function() for s
-                                                              in self.call_graph.successors(n)]))
+        # self._exit_points = self._select_nodes(lambda n: any([s.is_output_function() for s
+        #                                                       in self.call_graph.successors(n)]))
+
+        self._entry_points = {n: n for n in self.call_graph.nodes()
+                              if any([s.is_input_function() for s in self.call_graph.successors(n)])}
+
+        self._exit_points = {n: n for n in self.call_graph.nodes()
+                             if any([s.is_output_function() for s in self.call_graph.successors(n)])}
 
         # Sub-graphing only those nodes connected to the attack surface
         attack_surface_nodes = set()
@@ -259,7 +264,7 @@ class CallGraph():
             vfscanf, vscanf
             
         """
-        return self._entry_points
+        return self._entry_points.values()
 
     @property
     def exit_points(self):
@@ -276,7 +281,31 @@ class CallGraph():
             writev
             
         """
-        return self._exit_points
+        return self._exit_points.values()
+
+    def is_entry_point(self, call):
+        """
+            Indicates whether a given call is an entry point
+
+            Args:
+                call: The call to test.
+
+            Returns:
+                A boolean indicating whether the given entry is an exit Point.
+        """
+        return call in self._entry_points
+
+    def is_exit_point(self, call):
+        """
+            Indicates whether a given call is an exit point
+
+            Args:
+                call: The call to test.
+
+            Returns:
+                A boolean indicating whether the given call is an exit Point.
+        """
+        return call in self._exit_points
 
     @property
     def nodes(self):
