@@ -89,23 +89,26 @@ class AndroidCallGraph(CallGraph):
         return AndroidCallGraph._android_black_list_packages
 
     def calculate_entry_and_exit_points(self):
-        self._entry_points = self._select_nodes(lambda n: any([s.is_input_function() for s
-                                                                   in self.call_graph.successors(n)]))
-
-        self._exit_points = self._select_nodes(lambda n: any([s.is_output_function() for s
-                                                              in self.call_graph.successors(n)]))
+        self._calculate_entry_and_exit_points()
 
         override_input_methods = [m.split('.')[-1] for m in AndroidCallGraph._get_android_override_input_methods()]
-        entry_points_to_add = [n for n in self.call_graph.nodes() if n.function_name in override_input_methods]
+        entry_points_to_add = {n: n for n in self.call_graph.nodes() if n.function_name in override_input_methods}
 
-        self._entry_points += entry_points_to_add
-        self._entry_points = list(set(self._entry_points))
+        self._entry_points = AndroidCallGraph._merge_dicts(self._entry_points, entry_points_to_add)
 
         override_output_methods = [m.split('.')[-1] for m in AndroidCallGraph._get_android_override_output_methods()]
-        exit_points_to_add = self._select_nodes(lambda n: n.function_name in override_output_methods)
+        exit_points_to_add = {n: n for n in self.call_graph.nodes() if n.function_name in override_output_methods}
 
-        self._exit_points += exit_points_to_add
-        self._exit_points = list(set(self._exit_points))
+        self._exit_points = AndroidCallGraph._merge_dicts(self._exit_points, exit_points_to_add)
+
+    @staticmethod
+    def _merge_dicts(x, y):
+        '''
+            Given two dicts, merge them into a new dict as a shallow copy.
+        '''
+        z = x.copy()
+        z.update(y)
+        return z
 
     def calculate_attack_surface_nodes(self):
         # Sub-graphing only those nodes connected to the attack surface
