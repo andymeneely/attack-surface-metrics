@@ -85,36 +85,40 @@ class DatabaseFormatter(BaseFormatter):
 
         new_attack_surface_id = self.get_last_inserted_row_id(cursor)
 
-        nodes_to_insert = [(new_attack_surface_id,
-                            c.function_name,
-                            c.function_signature,
-                            self.get_closeness(c),
-                            self.get_betweenness(c),
-                            self.get_degree_centrality(c),
-                            self.get_in_degree_centrality(c),
-                            self.get_out_degree_centrality(c),
-                            self.get_degree(c),
-                            self.get_in_degree(c),
-                            self.get_out_degree(c),
-                            self.get_descendants_entry_point_ratio(c),
-                            self.get_descendants_exit_point_ratio(c),
-                            self.get_ancestors_entry_point_ratio(c),
-                            self.get_ancestors_exit_point_ratio(c),
-                            self.get_descendant_entry_points_count(c),
-                            self.get_descendant_exit_points_count(c),
-                            self.get_ancestor_entry_points_count(c),
-                            self.get_ancestor_exit_points_count(c),
-                            self.call_graph.is_entry_point(c),
-                            self.call_graph.is_exit_point(c),
-                            c in self.call_graph.attack_surface_graph_nodes,
-                            self.call_graph.get_entry_point_reachability(c),
-                            self.call_graph.get_shallow_entry_point_reachability(c),
-                            self.call_graph.get_shallow_entry_point_reachability(c, depth=2),
-                            self.call_graph.get_exit_point_reachability(c),
-                            self.call_graph.get_page_rank(c),
-                            self.call_graph.get_entry_page_rank(c),
-                            self.call_graph.get_exit_page_rank(c))
-                           for c in self.nodes]
+        nodes_to_insert = []
+
+        for c in self.nodes:
+            nodes_to_insert.append(
+                (new_attack_surface_id,
+                 c.function_name,
+                 c.function_signature,
+                 self.get_closeness(c),
+                 self.get_betweenness(c),
+                 self.get_degree_centrality(c),
+                 self.get_in_degree_centrality(c),
+                 self.get_out_degree_centrality(c),
+                 self.get_degree(c),
+                 self.get_in_degree(c),
+                 self.get_out_degree(c),
+                 self.get_descendants_entry_point_ratio(c),
+                 self.get_descendants_exit_point_ratio(c),
+                 self.get_ancestors_entry_point_ratio(c),
+                 self.get_ancestors_exit_point_ratio(c),
+                 self.get_descendant_entry_points_count(c),
+                 self.get_descendant_exit_points_count(c),
+                 self.get_ancestor_entry_points_count(c),
+                 self.get_ancestor_exit_points_count(c),
+                 self.call_graph.is_entry_point(c),
+                 self.call_graph.is_exit_point(c),
+                 c in self.call_graph.attack_surface_graph_nodes,
+                 self.call_graph.get_entry_point_reachability(c),
+                 self.call_graph.get_shallow_entry_point_reachability(c),
+                 self.call_graph.get_shallow_entry_point_reachability(c, depth=2),
+                 self.call_graph.get_exit_point_reachability(c),
+                 self.call_graph.get_page_rank(c),
+                 self.call_graph.get_entry_page_rank(c),
+                 self.call_graph.get_exit_page_rank(c))
+            )
 
         cursor.executemany(self.node_insert_stmt, nodes_to_insert)
 
