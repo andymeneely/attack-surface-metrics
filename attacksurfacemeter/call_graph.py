@@ -1132,30 +1132,32 @@ class CallGraph():
         return {'points': exit_points, 'proximity': proximity_to_exit, 'surface_coupling': surface_coupling_with_exit}
 
     _entry_page_rank = dict()
+    _entry_page_rank_per = dict()
 
     def get_entry_page_rank(self, call=None, primary=10000, secondary=1):
         """
-            Computes the page rank of nodes in the call graph with higher 
+            Computes the page rank of nodes in the call graph with higher
             preference to entry points.
 
             Args:
-                call: A Call object the page rank for which will be returned. 
+                call: A Call object the page rank for which will be returned.
                     Default is None.
-                primary: A non-zero personalization value for a node that 
+                primary: A non-zero personalization value for a node that
                     is an entry point. Default is 10000.
-                secondary: A non-zero personalization value for a node that 
+                secondary: A non-zero personalization value for a node that
                     is not an entry point. Default is 1.
 
             Returns:
-                If call is specified, the page rank corresponding to call is 
-                returned else a dictionary containing the page rank of all 
-                nodes in the call graph is returned with the node being the 
+                If call is specified, the page rank corresponding to call is
+                returned else a dictionary containing the page rank of all
+                nodes in the call graph is returned with the node being the
                 key and the page rank being the value.
         """
-        per = {
-            n: primary if n in self.entry_points else secondary
-            for n in self.nodes
-        }
+        if not self._entry_page_rank_per:
+            self._entry_page_rank_per = {
+                n: primary if n in self.entry_points else secondary
+                for n in self.nodes
+            }
 
         # if not call:
         #     return nx.pagerank(self.call_graph, weight='weight',
@@ -1165,7 +1167,7 @@ class CallGraph():
         #         personalization=per)[call]
 
         if not self._entry_page_rank:
-            self._entry_page_rank = nx.pagerank(self.call_graph, weight='weight', personalization=per)
+            self._entry_page_rank = nx.pagerank(self.call_graph, weight='weight', personalization=self._entry_page_rank_per)
 
         if call:
             return self._entry_page_rank[call]
@@ -1173,30 +1175,32 @@ class CallGraph():
             return self._entry_page_rank
 
     _exit_page_rank = dict()
+    _exit_page_rank_per = dict()
 
     def get_exit_page_rank(self, call=None, primary=10000, secondary=1):
         """
-            Computes the page rank of nodes in the call graph with higher 
+            Computes the page rank of nodes in the call graph with higher
             preference to exit points.
 
             Args:
-                call: A Call object the page rank for which will be returned. 
+                call: A Call object the page rank for which will be returned.
                     Default is None.
-                primary: A non-zero personalization value for a node that 
+                primary: A non-zero personalization value for a node that
                     is an exit point. Default is 10000.
-                secondary: A non-zero personalization value for a node that 
+                secondary: A non-zero personalization value for a node that
                     is not an exit point. Default is 1.
 
             Returns:
-                If call is specified, the page rank corresponding to call is 
-                returned else a dictionary containing the page rank of all 
-                nodes in the call graph is returned with the node being the 
+                If call is specified, the page rank corresponding to call is
+                returned else a dictionary containing the page rank of all
+                nodes in the call graph is returned with the node being the
                 key and the page rank being the value.
         """
-        per = {
-            n: primary if n in self.exit_points else secondary
-            for n in self.nodes
-        }
+        if not self._exit_page_rank_per:
+            self._exit_page_rank_per = {
+                n: primary if n in self.exit_points else secondary
+                for n in self.nodes
+            }
 
         # if not call:
         #     return nx.pagerank(self.call_graph, weight='weight',
@@ -1206,7 +1210,7 @@ class CallGraph():
         #         personalization=per)[call]
 
         if not self._exit_page_rank:
-            self._exit_page_rank = nx.pagerank(self.call_graph, weight='weight', personalization=per)
+            self._exit_page_rank = nx.pagerank(self.call_graph, weight='weight', personalization=self._exit_page_rank_per)
 
         if call:
             return self._exit_page_rank[call]
@@ -1214,30 +1218,32 @@ class CallGraph():
             return self._exit_page_rank
 
     _page_rank = dict()
+    _page_rank_per = dict()
 
     def get_page_rank(self, call=None, primary=10000, secondary=1):
         """
             Computes the page rank of nodes in the call graph.
 
             Args:
-                call: A Call object the page rank for which will be returned. 
+                call: A Call object the page rank for which will be returned.
                     Default is None.
-                primary: A non-zero personalization value for a node that 
+                primary: A non-zero personalization value for a node that
                     is an entry point or an exit point. Default is 10000.
-                secondary: A non-zero personalization value for a node that 
+                secondary: A non-zero personalization value for a node that
                     is not an entry point or an exit point. Default is 1.
 
             Returns:
-                If call is specified, the page rank corresponding to call is 
-                returned else a dictionary containing the page rank of all 
-                nodes in the call graph is returned with the node being the 
+                If call is specified, the page rank corresponding to call is
+                returned else a dictionary containing the page rank of all
+                nodes in the call graph is returned with the node being the
                 key and the page rank being the value.
         """
-        per = {
-            n: primary if n in self.entry_points or n in self.exit_points 
-                else secondary
-            for n in self.nodes
-        }
+        if not self._page_rank_per:
+            self._page_rank_per = {
+                n: primary if n in self.entry_points or n in self.exit_points
+                    else secondary
+                for n in self.nodes
+            }
 
         # if not call:
         #     return nx.pagerank(self.call_graph, weight='weight',
@@ -1247,7 +1253,7 @@ class CallGraph():
         #         personalization=per)[call]
 
         if not self._page_rank:
-            self._page_rank = nx.pagerank(self.call_graph, weight='weight', personalization=per)
+            self._page_rank = nx.pagerank(self.call_graph, weight='weight', personalization=self._page_rank_per)
 
         if call:
             return self._page_rank[call]
