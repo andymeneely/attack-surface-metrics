@@ -75,7 +75,7 @@ class AndroidCallGraph(CallGraph):
     @staticmethod
     def _get_android_edge_black_list():
         if not AndroidCallGraph._android_black_list_edges:
-            file_name = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data", "android_edge_black_list")
+            file_name = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data", "android_edge_black_list_extended")
             black_list_call_graph = AndroidCallGraph.from_loader(JavaCGLoader(file_name))
             AndroidCallGraph._android_black_list_edges = black_list_call_graph.edges
 
