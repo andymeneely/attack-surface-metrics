@@ -1,7 +1,7 @@
 __author__ = 'kevin'
 
 # import statistics as stat
-# import networkx as nx
+import networkx as nx
 import os
 
 from attacksurfacemeter.call import Call
@@ -20,6 +20,11 @@ class AndroidCallGraph(CallGraph):
             source: String that contains where the source code that this Call Graph represents comes from.
             call_graph: networkx.DiGraph. Internal representation of the graph data structure.
     """
+
+    _android_override_input_methods = []
+    _android_override_output_methods = []
+    _android_black_list_packages = []
+    _android_black_list_edges = []
 
     def __init__(self, source, graph, generation_errors=None):
         """
@@ -44,24 +49,6 @@ class AndroidCallGraph(CallGraph):
 
         self._execution_paths = list()
 
-        # Sub-graphing only those nodes connected to the attack surface
-        # attack_surface_nodes = set()
-        # for en in self.entry_points:
-        #     attack_surface_nodes.add(en)
-        #     for des in self.get_descendants(en):
-        #         attack_surface_nodes.add(des)
-        #
-        # for ex in self.exit_points:
-        #     attack_surface_nodes.add(ex)
-        #     for anc in self.get_ancestors(ex):
-        #         attack_surface_nodes.add(anc)
-        #
-        # self.attack_surface_graph = nx.subgraph(self.call_graph, attack_surface_nodes)
-
-    _android_override_input_methods = []
-    _android_override_output_methods = []
-    _android_black_list_packages = []
-
     @staticmethod
     def _load_function_list(function_list_file):
         file_name = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data', function_list_file)
@@ -85,12 +72,14 @@ class AndroidCallGraph(CallGraph):
 
         return AndroidCallGraph._android_override_output_methods
 
-    def _load_android_edge_black_list(self):
-        file_name = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data", "android_edge_black_list")
+    @staticmethod
+    def _get_android_edge_black_list():
+        if not AndroidCallGraph._android_black_list_edges:
+            file_name = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data", "android_edge_black_list_extended")
+            black_list_call_graph = AndroidCallGraph.from_loader(JavaCGLoader(file_name))
+            AndroidCallGraph._android_black_list_edges = black_list_call_graph.edges
 
-        black_list_call_graph = AndroidCallGraph.from_loader(JavaCGLoader(file_name))
-
-        return black_list_call_graph.edges
+        return AndroidCallGraph._android_black_list_edges
 
     @staticmethod
     def _load_android_package_black_list():
@@ -100,23 +89,42 @@ class AndroidCallGraph(CallGraph):
         return AndroidCallGraph._android_black_list_packages
 
     def calculate_entry_and_exit_points(self):
-        self._entry_points = self._select_nodes(lambda n: any([s.is_input_function() for s
-                                                                   in self.call_graph.successors(n)]))
-
-        self._exit_points = self._select_nodes(lambda n: any([s.is_output_function() for s
-                                                              in self.call_graph.successors(n)]))
+        self._calculate_entry_and_exit_points()
 
         override_input_methods = [m.split('.')[-1] for m in AndroidCallGraph._get_android_override_input_methods()]
-        entry_points_to_add = [n for n in self.call_graph.nodes() if n.function_name in override_input_methods]
+        entry_points_to_add = {n: n for n in self.call_graph.nodes() if n.function_name in override_input_methods}
 
-        self._entry_points += entry_points_to_add
-        self._entry_points = list(set(self._entry_points))
+        self._entry_points = AndroidCallGraph._merge_dicts(self._entry_points, entry_points_to_add)
 
         override_output_methods = [m.split('.')[-1] for m in AndroidCallGraph._get_android_override_output_methods()]
-        exit_points_to_add = self._select_nodes(lambda n: n.function_name in override_output_methods)
+        exit_points_to_add = {n: n for n in self.call_graph.nodes() if n.function_name in override_output_methods}
 
-        self._exit_points += exit_points_to_add
-        self._exit_points = list(set(self._exit_points))
+        self._exit_points = AndroidCallGraph._merge_dicts(self._exit_points, exit_points_to_add)
+
+    @staticmethod
+    def _merge_dicts(x, y):
+        """
+            Given two dicts, merge them into a new dict as a shallow copy.
+        """
+        z = x.copy()
+        z.update(y)
+        return z
+
+    def calculate_attack_surface_nodes(self):
+        # Sub-graphing only those nodes connected to the attack surface
+        attack_surface_nodes = set()
+
+        for en in self.entry_points:
+            attack_surface_nodes.add(en)
+            for des in self.get_descendants(en):
+                attack_surface_nodes.add(des)
+
+        for ex in self.exit_points:
+            attack_surface_nodes.add(ex)
+            for anc in self.get_ancestors(ex):
+                attack_surface_nodes.add(anc)
+
+        self.attack_surface_graph = nx.subgraph(self.call_graph, attack_surface_nodes)
 
     def collapse_android_black_listed_edges(self):
         """
@@ -126,11 +134,9 @@ class AndroidCallGraph(CallGraph):
             collapsing. Also, this way we ignore any input/output method that appears in the black listed
             nodes so that they don't appear in the metrics.
         """
-        import sys
-
         get_hash = lambda edge_to_hash: str(hash(edge_to_hash[0])) + str(hash(edge_to_hash[1]))
 
-        black_listed_edges = self._load_android_edge_black_list()
+        black_listed_edges = AndroidCallGraph._get_android_edge_black_list()
 
         black_listed_edges = {get_hash(e): True for e in black_listed_edges}
 
@@ -140,13 +146,7 @@ class AndroidCallGraph(CallGraph):
 
         black_list_nodes = dict()
 
-        i = 0
-
-        print('looping through edges...')
         for edge in self.call_graph.edges():
-            sys.stdout.write(str(i) + " - ")
-            i += 1
-
             caller, callee = edge
 
             caller_id = hash(caller)
@@ -164,7 +164,10 @@ class AndroidCallGraph(CallGraph):
 
                 edges_to_add.append((caller_package_node, callee_package_node))
 
-                # solo puedo eliminar un nodo si todos sus edges estan en el black list
+                # A node can only be removed if all its edges are in the black list.
+                # After the collapse process, nodes whose edges are all in the black
+                # list would be totally disconnected and substituted by their respective
+                # package node. We need to remove those.
 
                 if caller_id not in black_list_nodes:
                     black_list_nodes[caller_id] = {
@@ -186,18 +189,10 @@ class AndroidCallGraph(CallGraph):
                 if not edge_is_in_black_list:
                     black_list_nodes[callee_id]['all_edges_black_list'] = False
 
-        i = 0
-        print('')
-        print('looping through nodes...')
         for node_id, black_list_node in black_list_nodes.items():
-            sys.stdout.write(str(i) + " - ")
-            i += 1
-
             if black_list_node['all_edges_black_list']:
                 nodes_to_remove.add(black_list_node['node'])
 
-        print('')
-        print('altering graph...')
         self.call_graph.remove_edges_from(edges_to_remove)
         self.call_graph.remove_nodes_from(nodes_to_remove)
 

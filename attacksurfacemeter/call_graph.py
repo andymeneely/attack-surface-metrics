@@ -7,7 +7,6 @@ import os
 
 from attacksurfacemeter.call import Call
 from attacksurfacemeter.environments import Environments
-from attacksurfacemeter.loaders.javacg_loader import JavaCGLoader
 
 
 class CallGraph():
@@ -39,17 +38,12 @@ class CallGraph():
         self.call_graph = graph
         self.errors = generation_errors
 
-        self._entry_points = set()
-        self._exit_points = set()
+        # self._entry_points = set()
+        # self._exit_points = set()
 
         self._execution_paths = list()
 
-        # Calculating the entry and exit points
-        self._entry_points = self._select_nodes(lambda n: any([s.is_input_function() for s
-                                                                   in self.call_graph.successors(n)]))
-
-        self._exit_points = self._select_nodes(lambda n: any([s.is_output_function() for s
-                                                              in self.call_graph.successors(n)]))
+        self._calculate_entry_and_exit_points()
 
         # Sub-graphing only those nodes connected to the attack surface
         attack_surface_nodes = set()
@@ -64,6 +58,20 @@ class CallGraph():
                 attack_surface_nodes.add(anc)
 
         self.attack_surface_graph = nx.subgraph(self.call_graph, attack_surface_nodes)
+
+    def _calculate_entry_and_exit_points(self):
+        # Calculating the entry and exit points
+        # self._entry_points = self._select_nodes(lambda n: any([s.is_input_function() for s
+        #                                                            in self.call_graph.successors(n)]))
+
+        # self._exit_points = self._select_nodes(lambda n: any([s.is_output_function() for s
+        #                                                       in self.call_graph.successors(n)]))
+
+        self._entry_points = {n: n for n in self.call_graph.nodes()
+                              if any([s.is_input_function() for s in self.call_graph.successors(n)])}
+
+        self._exit_points = {n: n for n in self.call_graph.nodes()
+                             if any([s.is_output_function() for s in self.call_graph.successors(n)])}
 
     @classmethod
     def from_loader(cls, loader):
@@ -259,7 +267,7 @@ class CallGraph():
             vfscanf, vscanf
             
         """
-        return self._entry_points
+        return self._entry_points.values()
 
     @property
     def exit_points(self):
@@ -276,7 +284,31 @@ class CallGraph():
             writev
             
         """
-        return self._exit_points
+        return self._exit_points.values()
+
+    def is_entry_point(self, call):
+        """
+            Indicates whether a given call is an entry point
+
+            Args:
+                call: The call to test.
+
+            Returns:
+                A boolean indicating whether the given entry is an exit Point.
+        """
+        return call in self._entry_points
+
+    def is_exit_point(self, call):
+        """
+            Indicates whether a given call is an exit point
+
+            Args:
+                call: The call to test.
+
+            Returns:
+                A boolean indicating whether the given call is an exit Point.
+        """
+        return call in self._exit_points
 
     @property
     def nodes(self):
@@ -466,6 +498,8 @@ class CallGraph():
         calculator = lambda c, p: len(p) - p.index(c) - 1
         return self._get_distances(calculator, call, paths)
 
+    _closeness = dict()
+
     def get_closeness(self, call=None):
         """
             Calculates the Closeness of call.
@@ -490,7 +524,13 @@ class CallGraph():
                 If call is provided, returns a Float that represents the Closeness of call. If not, returns a
                 dictionary with every Call in the Call Graph with their respective Closenesses.
         """
-        return nx.closeness_centrality(self.call_graph, call)
+        if not self._closeness:
+            self._closeness = nx.closeness_centrality(self.call_graph)
+
+        if call:
+            return self._closeness[call]
+        else:
+            return self._closeness
 
     @property
     def median_closeness(self):
@@ -499,7 +539,9 @@ class CallGraph():
     @property
     def average_closeness(self):
         return stat.mean([closeness for k, closeness in self.get_closeness().items()])
-    
+
+    _betweenness = dict()
+
     def get_betweenness(self, call=None):
         """
             Calculates the Betweenness of call.
@@ -524,12 +566,13 @@ class CallGraph():
                 If call is provided, returns a Float that represents the Betweenness of call. If not, returns a
                 dictionary with every Call in the Call Graph with their respective Betweennesses.
         """
-        betweennesses = nx.betweenness_centrality(self.call_graph)
+        if not self._betweenness:
+            self._betweenness = nx.betweenness_centrality(self.call_graph)
 
         if call:
-            return betweennesses[call]
+            return self._betweenness[call]
         else:
-            return betweennesses
+            return self._betweenness
 
     @property
     def median_betweenness(self):
@@ -573,7 +616,9 @@ class CallGraph():
                 An Int that represents the average clustering coefficient of the Exit Points.
         """
         return self.average_clustering(self.exit_points)
-    
+
+    _degree_centrality = dict()
+
     def get_degree_centrality(self, call=None):
         """
             Returns the degree centrality of a given Call
@@ -588,12 +633,13 @@ class CallGraph():
                 If call is provided, returns a Float that represents the degree centrality of call. If not, returns a
                 dictionary with every Call in the Call Graph with their respective degree centrality.
         """
-        degrees = nx.degree_centrality(self.call_graph)
+        if not self._degree_centrality:
+            self._degree_centrality = nx.degree_centrality(self.call_graph)
 
         if call:
-            return degrees[call]
+            return self._degree_centrality[call]
         else:
-            return degrees
+            return self._degree_centrality
 
     @property
     def median_degree_centrality(self):
@@ -602,6 +648,8 @@ class CallGraph():
     @property
     def average_degree_centrality(self):
         return stat.mean([degree_centrality for k, degree_centrality in self.get_degree_centrality().items()])
+
+    _in_degree_centrality = dict()
 
     def get_in_degree_centrality(self, call=None):
         """
@@ -618,12 +666,13 @@ class CallGraph():
                 If call is provided, returns a Float that represents the in degree centrality of call. If not, returns
                 a dictionary with every Call in the Call Graph with their respective in degree centrality.
         """
-        degrees = nx.in_degree_centrality(self.call_graph)
+        if not self._in_degree_centrality:
+            self._in_degree_centrality = nx.in_degree_centrality(self.call_graph)
 
         if call:
-            return degrees[call]
+            return self._in_degree_centrality[call]
         else:
-            return degrees
+            return self._in_degree_centrality
 
     @property
     def median_in_degree_centrality(self):
@@ -632,6 +681,8 @@ class CallGraph():
     @property
     def average_in_degree_centrality(self):
         return stat.mean([in_degree_centrality for k, in_degree_centrality in self.get_in_degree_centrality().items()])
+
+    _out_degree_centrality = dict()
 
     def get_out_degree_centrality(self, call=None):
         """
@@ -648,12 +699,13 @@ class CallGraph():
                 If call is provided, returns a Float that represents the out degree centrality of call. If not, returns
                 a dictionary with every Call in the Call Graph with their respective out degree centrality.
         """
-        degrees = nx.out_degree_centrality(self.call_graph)
+        if not self._out_degree_centrality:
+            self._out_degree_centrality = nx.out_degree_centrality(self.call_graph)
 
         if call:
-            return degrees[call]
+            return self._out_degree_centrality[call]
         else:
-            return degrees
+            return self._out_degree_centrality
 
     @property
     def median_out_degree_centrality(self):
@@ -662,7 +714,9 @@ class CallGraph():
     @property
     def average_out_degree_centrality(self):
         return stat.mean([out_degree_centrality for k, out_degree_centrality in self.get_out_degree_centrality().items()])
-        
+
+    _degree = dict()
+
     def get_degree(self, call=None):
         """
             Returns the degree of a given Call.
@@ -677,10 +731,13 @@ class CallGraph():
                 If call is provided, returns an Int that represents the degree of call. If not, returns
                 a dictionary with every Call in the Call Graph with their respective degree.
         """
+        if not self._degree:
+            self._degree = self.call_graph.degree()
+
         if call:
-            return self.call_graph.degree([call])[call]
+            return self._degree[call]
         else:
-            return self.call_graph.degree()
+            return self._degree
 
     @property
     def median_degree(self):
@@ -689,6 +746,8 @@ class CallGraph():
     @property
     def average_degree(self):
         return stat.mean([degree for k, degree in self.get_degree().items()])
+
+    _in_degree = dict()
 
     def get_in_degree(self, call=None):
         """
@@ -704,10 +763,13 @@ class CallGraph():
                 If call is provided, returns an Int that represents the in degree of call. If not, returns
                 a dictionary with every Call in the Call Graph with their respective in degree.
         """
+        if not self._in_degree:
+            self._in_degree = self.call_graph.in_degree()
+
         if call:
-            return self.call_graph.in_degree([call])[call]
+            return self._in_degree[call]
         else:
-            return self.call_graph.in_degree()
+            return self._in_degree
 
     @property
     def median_in_degree(self):
@@ -716,6 +778,8 @@ class CallGraph():
     @property
     def average_in_degree(self):
         return stat.mean([in_degree for k, in_degree in self.get_in_degree().items()])
+
+    _out_degree = dict()
 
     def get_out_degree(self, call=None):
         """
@@ -731,10 +795,13 @@ class CallGraph():
                 If call is provided, returns an Int that represents the out degree of call. If not, returns
                 a dictionary with every Call in the Call Graph with their respective out degree.
         """
+        if not self._out_degree:
+            self._out_degree = self.call_graph.out_degree()
+
         if call:
-            return self.call_graph.out_degree([call])[call]
+            return self._out_degree[call]
         else:
-            return self.call_graph.out_degree()
+            return self._out_degree
 
     @property
     def median_out_degree(self):
@@ -1064,99 +1131,134 @@ class CallGraph():
 
         return {'points': exit_points, 'proximity': proximity_to_exit, 'surface_coupling': surface_coupling_with_exit}
 
+    _entry_page_rank = dict()
+    _entry_page_rank_per = dict()
 
     def get_entry_page_rank(self, call=None, primary=10000, secondary=1):
         """
-            Computes the page rank of nodes in the call graph with higher 
+            Computes the page rank of nodes in the call graph with higher
             preference to entry points.
 
             Args:
-                call: A Call object the page rank for which will be returned. 
+                call: A Call object the page rank for which will be returned.
                     Default is None.
-                primary: A non-zero personalization value for a node that 
+                primary: A non-zero personalization value for a node that
                     is an entry point. Default is 10000.
-                secondary: A non-zero personalization value for a node that 
+                secondary: A non-zero personalization value for a node that
                     is not an entry point. Default is 1.
 
             Returns:
-                If call is specified, the page rank corresponding to call is 
-                returned else a dictionary containing the page rank of all 
-                nodes in the call graph is returned with the node being the 
+                If call is specified, the page rank corresponding to call is
+                returned else a dictionary containing the page rank of all
+                nodes in the call graph is returned with the node being the
                 key and the page rank being the value.
         """
-        per = {
-            n: primary if n in self.entry_points else secondary
-            for n in self.nodes
-        }
+        if not self._entry_page_rank_per:
+            self._entry_page_rank_per = {
+                n: primary if n in self.entry_points else secondary
+                for n in self.nodes
+            }
 
-        if not call:
-            return nx.pagerank(self.call_graph, weight='weight', 
-                personalization=per)
+        # if not call:
+        #     return nx.pagerank(self.call_graph, weight='weight',
+        #         personalization=per)
+        # else:
+        #     return nx.pagerank(self.call_graph, weight='weight',
+        #         personalization=per)[call]
+
+        if not self._entry_page_rank:
+            self._entry_page_rank = nx.pagerank(self.call_graph, weight='weight', personalization=self._entry_page_rank_per)
+
+        if call:
+            return self._entry_page_rank[call]
         else:
-            return nx.pagerank(self.call_graph, weight='weight',
-                personalization=per)[call]
+            return self._entry_page_rank
+
+    _exit_page_rank = dict()
+    _exit_page_rank_per = dict()
 
     def get_exit_page_rank(self, call=None, primary=10000, secondary=1):
         """
-            Computes the page rank of nodes in the call graph with higher 
+            Computes the page rank of nodes in the call graph with higher
             preference to exit points.
 
             Args:
-                call: A Call object the page rank for which will be returned. 
+                call: A Call object the page rank for which will be returned.
                     Default is None.
-                primary: A non-zero personalization value for a node that 
+                primary: A non-zero personalization value for a node that
                     is an exit point. Default is 10000.
-                secondary: A non-zero personalization value for a node that 
+                secondary: A non-zero personalization value for a node that
                     is not an exit point. Default is 1.
 
             Returns:
-                If call is specified, the page rank corresponding to call is 
-                returned else a dictionary containing the page rank of all 
-                nodes in the call graph is returned with the node being the 
+                If call is specified, the page rank corresponding to call is
+                returned else a dictionary containing the page rank of all
+                nodes in the call graph is returned with the node being the
                 key and the page rank being the value.
         """
-        per = {
-            n: primary if n in self.exit_points else secondary
-            for n in self.nodes
-        }
+        if not self._exit_page_rank_per:
+            self._exit_page_rank_per = {
+                n: primary if n in self.exit_points else secondary
+                for n in self.nodes
+            }
 
-        if not call:
-            return nx.pagerank(self.call_graph, weight='weight', 
-                personalization=per)
+        # if not call:
+        #     return nx.pagerank(self.call_graph, weight='weight',
+        #         personalization=per)
+        # else:
+        #     return nx.pagerank(self.call_graph, weight='weight',
+        #         personalization=per)[call]
+
+        if not self._exit_page_rank:
+            self._exit_page_rank = nx.pagerank(self.call_graph, weight='weight', personalization=self._exit_page_rank_per)
+
+        if call:
+            return self._exit_page_rank[call]
         else:
-            return nx.pagerank(self.call_graph, weight='weight', 
-                personalization=per)[call]
+            return self._exit_page_rank
+
+    _page_rank = dict()
+    _page_rank_per = dict()
 
     def get_page_rank(self, call=None, primary=10000, secondary=1):
         """
             Computes the page rank of nodes in the call graph.
 
             Args:
-                call: A Call object the page rank for which will be returned. 
+                call: A Call object the page rank for which will be returned.
                     Default is None.
-                primary: A non-zero personalization value for a node that 
+                primary: A non-zero personalization value for a node that
                     is an entry point or an exit point. Default is 10000.
-                secondary: A non-zero personalization value for a node that 
+                secondary: A non-zero personalization value for a node that
                     is not an entry point or an exit point. Default is 1.
 
             Returns:
-                If call is specified, the page rank corresponding to call is 
-                returned else a dictionary containing the page rank of all 
-                nodes in the call graph is returned with the node being the 
+                If call is specified, the page rank corresponding to call is
+                returned else a dictionary containing the page rank of all
+                nodes in the call graph is returned with the node being the
                 key and the page rank being the value.
         """
-        per = {
-            n: primary if n in self.entry_points or n in self.exit_points 
-                else secondary
-            for n in self.nodes
-        }
+        if not self._page_rank_per:
+            self._page_rank_per = {
+                n: primary if n in self.entry_points or n in self.exit_points
+                    else secondary
+                for n in self.nodes
+            }
 
-        if not call:
-            return nx.pagerank(self.call_graph, weight='weight', 
-                personalization=per)
+        # if not call:
+        #     return nx.pagerank(self.call_graph, weight='weight',
+        #         personalization=per)
+        # else:
+        #     return nx.pagerank(self.call_graph, weight='weight',
+        #         personalization=per)[call]
+
+        if not self._page_rank:
+            self._page_rank = nx.pagerank(self.call_graph, weight='weight', personalization=self._page_rank_per)
+
+        if call:
+            return self._page_rank[call]
         else:
-            return nx.pagerank(self.call_graph, weight='weight', 
-                personalization=per)[call]
+            return self._page_rank
 
     def assign_page_rank(self, cflow_edge_weight, gprof_edge_weight, 
         primary, secondary, name='page_rank'):
