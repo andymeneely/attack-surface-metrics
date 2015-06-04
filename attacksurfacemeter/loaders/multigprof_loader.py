@@ -34,9 +34,8 @@ class MultigprofLoader(BaseLoader):
             _gprof_call_graph = _gprof_loader.load_call_graph()
 
             if call_graph:
-                call_graph.add_edges_from(
-                    _gprof_call_graph.edges()
-                )
+                call_graph.add_nodes_from(_gprof_call_graph.nodes(data=True))
+                call_graph.add_edges_from(_gprof_call_graph.edges(data=True))
             else:
                 call_graph = _gprof_call_graph
 

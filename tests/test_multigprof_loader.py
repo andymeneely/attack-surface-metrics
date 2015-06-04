@@ -19,7 +19,7 @@ class MultigprofLoaderTestCase(unittest.TestCase):
         # Act
         test_graph = test_loader.load_call_graph()
 
-        # Nodes
+        # Nodes and node attributes
         expected_content = ["main multigprof.c",
             "fibonacci multigprof.c",
             "factorial multigprof.c"
@@ -31,8 +31,10 @@ class MultigprofLoaderTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(3, len(nodes))
         self.assertTrue(all_nodes_found)
+        for (node,attrs) in test_graph.nodes(data=True):
+            self.assertTrue('tested' in attrs and attrs['tested'])
 
-        # Edges
+        # Edges and edge attributes
         expected_content = [
             (
                 Call.from_gprof("                0.00    0.00       1/10          main (multigprof.c:35 @ 804861e) [25]"), 
@@ -55,6 +57,8 @@ class MultigprofLoaderTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(3, len(edges))
         self.assertTrue(all_calls_found)
+        for (u,v,attrs) in test_graph.edges(data=True):
+            self.assertTrue('gprof' in attrs and attrs['gprof'] == 'gprof')
 
 if __name__ == '__main__':
     unittest.main()
