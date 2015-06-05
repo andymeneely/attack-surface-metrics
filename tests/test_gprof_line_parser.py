@@ -135,5 +135,19 @@ class GprofLineParserTestCase(unittest.TestCase):
         # Assert
         self.assertEqual("/usr/include/stdlib.h", test_function_signature)
 
+    def test_load_recursive_call_line(self):
+        # Arrange
+        test_line_parser = GprofLineParser.get_instance(
+            "[86901   0.0    0.00    0.00      12+12      _init [869011]"
+        )
+
+        # Act
+        test_function_name = test_line_parser.get_function_name()
+        test_function_signature = test_line_parser.get_function_signature()
+
+        # Assert
+        self.assertEqual("_init", test_function_name)
+        self.assertEqual("", test_function_signature)
+
 if __name__ == '__main__':
     unittest.main()

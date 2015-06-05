@@ -27,7 +27,7 @@ class GprofLineParser(BaseLineParser):
         match = re.search(r"(\[\d+\])( +)((\d+\.\d+)( +)){3}(\d*\+*\d*)( +)([\w.]+)( +)(.*)", gprof_line)
 
         if not match:
-            match = re.search(r"(\[\d+)( +)((\d+\.\d+)( +)){3}(\d*)( +)([\w.]+)( +)(.*)", gprof_line)
+            match = re.search(r"(\[\d+)( +)((\d+\.\d+)( +)){3}([\d\+]*)( +)([\w.]+)( +)(.*)", gprof_line)
 
         if match:
             self._function_name = match.group(8)
