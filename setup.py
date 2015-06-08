@@ -7,7 +7,7 @@ except ImportError:
 
 setup(
     name='attacksurfacemeter',
-    version='0.8.2',
+    version='0.8.3',
     packages=[
         'attacksurfacemeter',
         'attacksurfacemeter.loaders',
