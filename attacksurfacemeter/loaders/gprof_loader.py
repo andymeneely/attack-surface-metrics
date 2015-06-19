@@ -25,21 +25,20 @@ class GprofLoader(BaseLoader):
 
     def is_entry_line(self, line):
         return line.startswith("[")
-        # return re.search(r"^\[\d+.*", line)
 
     def load_call_graph(self):
-        """
-            Generates the Call Graph as a networkx.DiGraph object.
+        """Generates the Call Graph as a networkx.DiGraph object.
 
-            Invokes the call grap generation software (cflow) and creates a networkx.DiGraph instance that represents
-            the analyzed source code's Call Graph.
+        Invokes the call grap generation software (cflow) and creates a
+        networkx.DiGraph instance that represents the analyzed source code's
+        Call Graph.
 
-            Args:
-                is_reverse: Boolean specifying whether the graph generation software (cflow) should use the reverse
-                    algorithm.
+        Args:
+            is_reverse: Boolean specifying whether the graph generation software
+            (cflow) should use the reverse algorithm.
 
-            Returns:
-                None
+        Returns:
+            None
         """
         call_graph = nx.DiGraph()
 
@@ -51,20 +50,12 @@ class GprofLoader(BaseLoader):
         callers = list()
         callees = list()
 
-        # line_count = 0
-
         with open(self.source) as raw_call_graph:
-            while True:
-                line = raw_call_graph.readline()
-                # line_count += 1
-                # print(line_count)
-                # print(line)
-
+            for line in raw_call_graph:
                 if not header_passed:
                     if line == GprofLoader.header:
                         header_passed = True
                     continue
-
                 else:  # if header_passed:
                     if self.is_entry_line(line):
                         try:
@@ -74,7 +65,6 @@ class GprofLoader(BaseLoader):
 
                         call_graph.add_node(entry, {'tested': False})
                         is_caller = False
-
                     elif line == GprofLoader.separator:
                         if len(callers) > 0 or len(callees) > 0:
                             call_graph.node[entry]['tested'] = True
@@ -92,10 +82,8 @@ class GprofLoader(BaseLoader):
                         callees.clear()
 
                         is_caller = True
-
                     elif line == GprofLoader.eof:
                         break
-
                     else:
                         try:
                             if is_caller:
@@ -103,6 +91,9 @@ class GprofLoader(BaseLoader):
                             else:
                                 callees.append(Call.from_gprof(line))
                         except ValueError as e:
-                            self._error_messages.append("Error: " + str(e) + " Input line: " + line)
+                            self._error_messages.append(
+                                "Error: " + str(e) + " Input line: " + line
+                            )
 
         return call_graph
+
