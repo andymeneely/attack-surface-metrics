@@ -8,8 +8,10 @@ from attacksurfacemeter.loaders.multigprof_loader import MultigprofLoader
 class MultigprofLoaderTestCase(unittest.TestCase):
     def test_load_call_graph(self):
         # Arrange
-        sources = ["multigprof/multigprof.one.callgraph.txt", 
-            "multigprof/multigprof.two.callgraph.txt"]
+        sources = [
+            "multigprof/multigprof.one.callgraph.txt", 
+            "multigprof/multigprof.two.callgraph.txt"
+        ]
         sources = [os.path.join(
             os.path.dirname(os.path.realpath(__file__)), 
             source
@@ -18,6 +20,11 @@ class MultigprofLoaderTestCase(unittest.TestCase):
 
         # Act
         test_graph = test_loader.load_call_graph()
+
+        # Loader Errors
+
+        # Assert
+        self.assertEqual(0, len(test_loader.error_messages))
 
         # Nodes and node attributes
         expected_content = ["main multigprof.c",
@@ -37,16 +44,34 @@ class MultigprofLoaderTestCase(unittest.TestCase):
         # Edges and edge attributes
         expected_content = [
             (
-                Call.from_gprof("                0.00    0.00       1/10          main (multigprof.c:35 @ 804861e) [25]"), 
-                Call.from_gprof("                0.00    0.00       9/10          factorial (multigprof.c:7 @ 8048563) [7]")
+                Call.from_gprof(
+                    "                0.00    0.00       1/10      "
+                    "    main (multigprof.c:35 @ 804861e) [25]"
+                ),
+                Call.from_gprof(
+                    "                0.00    0.00       9/10      "
+                    "    factorial (multigprof.c:7 @ 8048563) [7]"
+                )
             ),
             (
-                Call.from_gprof("                0.00    0.00       9/10          factorial (multigprof.c:7 @ 8048563) [7]"),
-                Call.from_gprof("[1]      0.0    0.00    0.00      10         factorial (multigprof.c:4 @ 804854d) [1]"), 
+                Call.from_gprof(
+                    "                0.00    0.00       9/10      "
+                    "    factorial (multigprof.c:7 @ 8048563) [7]"
+                ),
+                Call.from_gprof(
+                    "[1]      0.0    0.00    0.00      10         "
+                    "factorial (multigprof.c:4 @ 804854d) [1]"
+                ),
             ),
             (
-                Call.from_gprof("                0.00    0.00       1/1           main (multigprof.c:41 @ 8048674) [28]"), 
-                Call.from_gprof("[1]      0.0    0.00    0.00       1         fibonacci (multigprof.c:11 @ 8048577) [1]")
+                Call.from_gprof(
+                    "                0.00    0.00       1/1       "
+                    "    main (multigprof.c:41 @ 8048674) [28]"
+                ),
+                Call.from_gprof(
+                    "[1]      0.0    0.00    0.00       1         "
+                    "fibonacci (multigprof.c:11 @ 8048577) [1]"
+                )
             ),
         ]
 
