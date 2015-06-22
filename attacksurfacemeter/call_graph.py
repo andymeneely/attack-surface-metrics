@@ -114,28 +114,12 @@ class CallGraph():
         #   expected to have the edge weights match those from gprof.
 
         # Load nodes including any attributes that may be associated with them
-        graph.add_nodes_from(
-            [
-                (n, cflow_call_graph.call_graph.node[n]) 
-                    for n in cflow_call_graph.nodes
-            ]
-        )
-        graph.add_nodes_from(
-            [
-                (n, gprof_call_graph.call_graph.node[n]) 
-                    for n in gprof_call_graph.nodes
-            ]
-        )
+        graph.add_nodes_from(cflow_call_graph.call_graph.nodes(data=True))
+        graph.add_nodes_from(gprof_call_graph.call_graph.nodes(data=True))
 
         # Load edges including any attributes that may be associated with them
-        graph.add_edges_from([
-            (u, v, d) 
-                for (u, v, d) in cflow_call_graph.call_graph.edges(data=True)
-        ])
-        graph.add_edges_from([
-            (u, v, d) 
-                for (u, v, d) in gprof_call_graph.call_graph.edges(data=True)
-        ])
+        graph.add_edges_from(cflow_call_graph.call_graph.edges(data=True))
+        graph.add_edges_from(gprof_call_graph.call_graph.edges(data=True))
 
         # Could come in handy!
         # nodes = gprof_call_graph.nodes
