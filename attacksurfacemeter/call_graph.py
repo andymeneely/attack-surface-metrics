@@ -988,8 +988,25 @@ class CallGraph():
     def is_connected(self):
         return nx.is_connected(self.call_graph.to_undirected())
 
-    def get_clusters(self):
-        return nx.connected_components(self.call_graph.to_undirected())
+    def get_components(self):
+        """Returns connected components in the call graph as subgraphs.
+        
+        Parameters
+        ----------
+        None
+
+        Return
+        ------
+        components : list
+            A list of undirected graphs each of which is a subgraph of the call
+            graph and represents a component of the call graph that is not
+            connected to other components.
+        """
+        components = list(
+            nx.connected_component_subgraphs(self.call_graph.to_undirected())
+        )
+
+        return components
 
     def get_entry_point_reachability(self, call):
         """

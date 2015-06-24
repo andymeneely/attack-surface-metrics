@@ -935,6 +935,17 @@ class CallGraphTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(expected_value, ratio)
 
+    def test_get_components(self):
+        # Arrange
+        expected_value = 1
+
+        # Act
+        components = self.call_graph.get_components()
+
+        # Assert
+        self.assertEqual(expected_value, len(components))
+        self.assertEqual(len(self.call_graph.nodes), len(components[0].nodes()))
+
     def test_entry_point_reachability(self):
         # Arrange
         call = Call.from_cflow("greet_b() <void greet_b (int i) at ./src/helloworld.c:82>:")
