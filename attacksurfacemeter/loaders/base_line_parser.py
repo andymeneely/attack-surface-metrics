@@ -1,6 +1,3 @@
-__author__ = 'kevin'
-
-
 class BaseLineParser(object):
     """"""
     @staticmethod
@@ -13,7 +10,7 @@ class BaseLineParser(object):
         self._function_signature = ""
 
     def load(self, line):
-        pass
+        raise NotImplementedError()
 
     def get_function_name(self, line=None):
         self._load_if_new(line)
