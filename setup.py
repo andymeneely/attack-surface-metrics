@@ -23,7 +23,8 @@ setup(
             'data/android_package_black_list',
             'data/c_std_lib_functions',
             'data/c_input_functions',
-            'data/c_output_functions'
+            'data/c_output_functions',
+            'data/c_dangerous_sys_functions'
         ],
         'attacksurfacemeter.loaders': [
             'run_cflow.sh',

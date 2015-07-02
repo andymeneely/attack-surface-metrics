@@ -1,111 +1,123 @@
-__author__ = 'kevin'
-
 import unittest
+
 from attacksurfacemeter.call import Call
 
 
 class CallTestCase(unittest.TestCase):
-
     def test_identity_function_name(self):
         # Arrange
-        cflow_line = "printf()"
+        cflow_line = 'printf()'
         test_call = Call.from_cflow(cflow_line)
 
         # Assert
-        self.assertEqual("printf", test_call.identity)
+        self.assertEqual('printf', test_call.identity)
 
     def test_identity_full(self):
         # Arrange
-        cflow_line = "xstrdup() <char *xstrdup (const char *str) at ./cyrus/lib/xmalloc.c:89> (R):"
+        cflow_line = (
+            'xstrdup() <char *xstrdup (const char *str) at ./cyrus/lib/xmalloc'
+            '.c:89> (R):'
+        )
         test_call = Call.from_cflow(cflow_line)
 
         # Assert
-        self.assertEqual("xstrdup ./cyrus/lib/xmalloc.c", test_call.identity)
+        self.assertEqual('xstrdup ./cyrus/lib/xmalloc.c', test_call.identity)
 
     def test_function_name_only_name(self):
         # Arrange
-        cflow_line = "printf()"
+        cflow_line = 'printf()'
         test_call = Call.from_cflow(cflow_line)
 
         # Assert
-        self.assertEqual("printf", test_call.function_name)
+        self.assertEqual('printf', test_call.function_name)
 
     def test_function_name_full(self):
         # Arrange
-        cflow_line = "xstrdup() <char *xstrdup (const char *str) at ./cyrus/lib/xmalloc.c:89> (R):"
+        cflow_line = (
+            'xstrdup() <char *xstrdup (const char *str) at ./cyrus/lib/xmalloc'
+            '.c:89> (R):'
+        )
         test_call = Call.from_cflow(cflow_line)
 
         # Assert
-        self.assertEqual("xstrdup", test_call.function_name)
+        self.assertEqual('xstrdup', test_call.function_name)
 
     def test_function_signature_only_name(self):
         # Arrange
-        cflow_line = "printf()"
+        cflow_line = 'printf()'
         test_call = Call.from_cflow(cflow_line)
 
         # Assert
-        self.assertEqual("", test_call.function_signature)
+        self.assertEqual('', test_call.function_signature)
 
     def test_function_signature_full(self):
         # Arrange
-        cflow_line = "xstrdup() <char *xstrdup (const char *str) at ./cyrus/lib/xmalloc.c:89> (R):"
+        cflow_line = (
+            'xstrdup() <char *xstrdup (const char *str) at ./cyrus/lib/xmalloc'
+            '.c:89> (R):'
+        )
         test_call = Call.from_cflow(cflow_line)
 
         # Assert
-        # self.assertEqual("<char *xstrdup (const char *str) at ./cyrus/lib/xmalloc.c:89>", test_call.function_signature)
-        self.assertEqual("./cyrus/lib/xmalloc.c", test_call.function_signature)
+        self.assertEqual('./cyrus/lib/xmalloc.c', test_call.function_signature)
 
-    def test_is_input_function(self):
+    def test_is_input(self):
         # Arrange
-        cflow_line = "getchar()"
+        cflow_line = 'getchar()'
         test_call = Call.from_cflow(cflow_line)
 
         # Assert
-        self.assertTrue(test_call.is_input_function())
+        self.assertTrue(test_call.is_input())
 
-    def test_is_not_input_function(self):
+    def test_is_not_input(self):
         # Arrange
-        cflow_line = "printf()"
+        cflow_line = 'printf()'
         test_call = Call.from_cflow(cflow_line)
 
         # Assert
-        self.assertFalse(test_call.is_input_function())
+        self.assertFalse(test_call.is_input())
 
-    def test_is_not_input_function_no_leaf(self):
+    def test_is_not_input_no_leaf(self):
         # Arrange
-        cflow_line = "xstrdup() <char *xstrdup (const char *str) at ./cyrus/lib/xmalloc.c:89> (R):"
+        cflow_line = (
+            'xstrdup() <char *xstrdup (const char *str) at ./cyrus/lib/xmalloc'
+            '.c:89> (R):'
+        )
         test_call = Call.from_cflow(cflow_line)
 
         # Assert
-        self.assertFalse(test_call.is_input_function())
+        self.assertFalse(test_call.is_input())
 
-    def test_is_output_function(self):
+    def test_is_output(self):
         # Arrange
-        cflow_line = "printf()"
+        cflow_line = 'printf()'
         test_call = Call.from_cflow(cflow_line)
 
         # Assert
-        self.assertTrue(test_call.is_output_function())
+        self.assertTrue(test_call.is_output())
 
-    def test_is_not_output_function(self):
+    def test_is_not_output(self):
         # Arrange
-        cflow_line = "getchar()"
+        cflow_line = 'getchar()'
         test_call = Call.from_cflow(cflow_line)
 
         # Assert
-        self.assertFalse(test_call.is_output_function())
+        self.assertFalse(test_call.is_output())
 
-    def test_is_not_output_function_no_leaf(self):
+    def test_is_not_output_no_leaf(self):
         # Arrange
-        cflow_line = "xstrdup() <char *xstrdup (const char *str) at ./cyrus/lib/xmalloc.c:89> (R):"
+        cflow_line = (
+            'xstrdup() <char *xstrdup (const char *str) at ./cyrus/lib/xmalloc'
+            '.c:89> (R):'
+        )
         test_call = Call.from_cflow(cflow_line)
 
         # Assert
-        self.assertFalse(test_call.is_output_function())
+        self.assertFalse(test_call.is_output())
 
     def test_equal(self):
         # Arrange
-        cflow_line = "getchar()"
+        cflow_line = 'getchar()'
         test_call_1 = Call.from_cflow(cflow_line)
         test_call_2 = Call.from_cflow(cflow_line)
 
@@ -114,25 +126,28 @@ class CallTestCase(unittest.TestCase):
 
     def test_not_equal(self):
         # Arrange
-        cflow_line_1 = "getchar()"
-        cflow_line_2 = "xstrdup() <char *xstrdup (const char *str) at ./cyrus/lib/xmalloc.c:89> (R):"
+        cflow_line_1 = 'getchar()'
+        cflow_line_2 = (
+            'xstrdup() <char *xstrdup (const char *str) at ./cyrus/lib/xmalloc'
+            '.c:89> (R):'
+        )
         test_call_1 = Call.from_cflow(cflow_line_1)
         test_call_2 = Call.from_cflow(cflow_line_2)
 
         # Assert
         self.assertNotEqual(test_call_1, test_call_2)
 
-    def test_is_standard_library_function(self):
+    def test_in_stdlib(self):
         # Arrange
-        cflow_line = "printf()"
+        cflow_line = 'printf()'
         test_call = Call.from_cflow(cflow_line)
 
         # Assert
-        self.assertTrue(test_call.is_standard_library_function())
+        self.assertTrue(test_call.in_stdlib())
 
     def test_is_function_name_only(self):
         # Arrange
-        cflow_line = "printf()"
+        cflow_line = 'printf()'
         test_call = Call.from_cflow(cflow_line)
 
         # Assert
