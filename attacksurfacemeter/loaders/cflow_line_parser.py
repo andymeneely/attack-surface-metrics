@@ -41,7 +41,3 @@ class CflowLineParser(BaseLineParser):
     def get_level(self, cflow_line=None):
         self._load_if_new(cflow_line)
         return self._level
-
-    def _load_if_new(self, cflow_line):
-        if cflow_line is not None:
-            self.load(cflow_line)
