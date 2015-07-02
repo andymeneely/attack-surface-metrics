@@ -1,118 +1,201 @@
-__author__ = 'kevin'
-
-import multiprocessing
 import os
 import unittest
 
+import networkx as nx
+
+from attacksurfacemeter.call import Call
+from attacksurfacemeter.environments import Environments
 from attacksurfacemeter.loaders.gprof_loader import GprofLoader
 
 
 class GprofLoaderTestCase(unittest.TestCase):
-    def test_load_call_graph(self):
-        # Arrange
-        test_loader = GprofLoader(os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                               "helloworld/gprof.callgraph.txt"),
-                                  False)
-        expected_content = ['GreeterSayHiTo ./src/helloworld.c',
-                            'greet_a ./src/helloworld.c',
-                            'recursive_a ./src/greetings.c',
-                            'addInt ./src/helloworld.c',
-                            'greet_b ./src/helloworld.c',
-                            'recursive_b ./src/greetings.c',
-                            'main ./src/helloworld.c',
-                            'new_Greeter ./src/helloworld.c',
-                            'greet ./src/greetings.c',
-                            'GreeterSayHi ./src/helloworld.c']
-
-        # Act
-        test_graph = test_loader.load_call_graph()
-        nodes = [n.identity for n in test_graph.nodes()]
-        all_nodes_found = all([n in nodes for n in expected_content]) and all([n in expected_content for n in nodes])
-
-        # Assert
-        self.assertEqual(10, len(nodes))
-        self.assertTrue(all_nodes_found)
-
-    def test_load_call_graph_edge_attributes(self):
-        # Arrange
-        test_loader = GprofLoader(
+    def setUp(self):
+        self.target = GprofLoader(
             os.path.join(
                 os.path.dirname(os.path.realpath(__file__)),
-                "helloworld/gprof.callgraph.txt"
+                'helloworld/gprof.callgraph.txt'
             ),
             False
         )
 
+    def test_load_call_graph_errors(self):
         # Act
-        test_graph = test_loader.load_call_graph()
-        
-        # Assert
-        for (u, v, d) in test_graph.edges(data=True):
-            self.assertFalse('gprof' not in d)
+        graph = self.target.load_call_graph()
 
-    def test_load_empty_call_graph(self):
+        # Assert
+        self.assertEqual(0, len(self.target.errors))
+
+    def test_load_call_graph_nodes(self):
         # Arrange
-        test_loader = GprofLoader(
-            os.path.join(
-                os.path.dirname(os.path.realpath(__file__)),
-                "helloworld/empty.gprof.callgraph.txt"
-            ),
-            False
-        )
+        expected = [
+            Call('GreeterSayHiTo', './src/helloworld.c', Environments.C),
+            Call('greet_a', './src/helloworld.c', Environments.C),
+            Call('greet', './src/greetings.c', Environments.C),
+            Call('recursive_b', './src/greetings.c', Environments.C),
+            Call('new_Greeter', './src/helloworld.c', Environments.C),
+            Call('recursive_a', './src/greetings.c', Environments.C),
+            Call('addInt', './src/helloworld.c', Environments.C),
+            Call('greet_b', './src/helloworld.c', Environments.C),
+            Call('main', './src/helloworld.c', Environments.C),
+            Call('GreeterSayHi', './src/helloworld.c', Environments.C)
+        ]
 
         # Act
-
-        # Using a separate process to ensure the loading of an emtpy call graph
-        # completes within a reasonable time (see timeout below).
-        queue = multiprocessing.Queue()
-        process = multiprocessing.Process(
-            name='p.gprof',
-            target=self.__wrapper__,
-            args=(test_loader.load_call_graph, queue)
-        )
-        process.start()
-        timeout = 1
-        process.join(timeout=timeout)
-        is_alive = process.is_alive()
-        if is_alive:
-            process.terminate()
-        self.assertFalse(
-            is_alive,
-            msg=(
-                'Process loading an empty gprof file has not terminated'
-                ' even after {0} second(s).'.format(timeout)
-            )
+        graph = self.target.load_call_graph()
+        actual = graph.nodes()
+        match = (
+            all([i in actual for i in expected]) and
+            all([i in expected for i in actual])
         )
 
         # Assert
-        test_graph = queue.get()
-        self.assertEqual(0, len(test_graph.nodes()))
+        self.assertCountEqual(expected, actual)
+        for (_, attrs) in graph.nodes(data=True):
+            self.assertTrue('tested' in attrs)
+            self.assertTrue('defense' not in attrs)
+            self.assertTrue('dangerous' not in attrs)
+            self.assertTrue('vulnerable' not in attrs)
 
-    def __wrapper__(self, target, queue, args=(), kwargs={}):
-        """Internal method to wrap the call to another function.
+    def test_load_call_graph_entry_nodes(self):
+        # Arrange
+        expected = []
 
-        Using a wrapper enables handling return parameters from a target
-        function without having to modify the function itself.
+        # Act
+        graph = self.target.load_call_graph()
 
-        Parameters
-        ----------
-        target : function object
-            The function to be wrapped.
-        queue : Queue.Queue object
-            Container for the return values from the wrapped function.
-        args : tuple, optional
-            Argument tuple for the wrapped function.
-        kwargs : dictionary, optional
-            Dictionary of keyword arguments for the wrapped function.
-        """
-        if args:
-            if kwargs:
-                queue.put(target(*args, **kwargs))
+        # Assert
+        for (n, attrs) in graph.nodes(data=True):
+            if n in expected:
+                self.assertTrue('entry' in attrs)
             else:
-                queue.put(target(*args))
-        else:
-            queue.put(target())
+                self.assertTrue('entry' not in attrs)
 
+    def test_load_call_graph_exit_nodes(self):
+        # Arrange
+        expected = []
+
+        # Act
+        graph = self.target.load_call_graph()
+
+        # Assert
+        for (n, attrs) in graph.nodes(data=True):
+            if n in expected:
+                self.assertTrue('exit' in attrs)
+            else:
+                self.assertTrue('exit' not in attrs)
+
+    def test_load_call_graph_edges(self):
+        # Arrange
+        expected = [
+            (
+                Call('greet_b', './src/helloworld.c', Environments.C),
+                Call('recursive_b', './src/greetings.c', Environments.C)
+            ),
+            (
+                Call('recursive_b', './src/greetings.c', Environments.C),
+                Call('greet_b', './src/helloworld.c', Environments.C)
+            ),
+            (
+                Call('recursive_a', './src/greetings.c', Environments.C),
+                Call('recursive_b', './src/greetings.c', Environments.C)
+            ),
+            (
+                Call('greet_a', './src/helloworld.c', Environments.C),
+                Call('recursive_a', './src/greetings.c', Environments.C)
+            ),
+            (
+                Call('recursive_a', './src/greetings.c', Environments.C),
+                Call('greet_a', './src/helloworld.c', Environments.C)
+            ),
+            (
+                Call('recursive_b', './src/greetings.c', Environments.C),
+                Call('recursive_a', './src/greetings.c', Environments.C)
+            ),
+            (
+                Call('greet_a', './src/helloworld.c', Environments.C),
+                Call('greet', './src/greetings.c', Environments.C)
+            ),
+            (
+                Call('greet', './src/greetings.c', Environments.C),
+                Call('greet_a', './src/helloworld.c', Environments.C)
+            ),
+            (
+                Call('greet_b', './src/helloworld.c', Environments.C),
+                Call('greet', './src/greetings.c', Environments.C)
+            ),
+            (
+                Call('greet', './src/greetings.c', Environments.C),
+                Call('greet_b', './src/helloworld.c', Environments.C)
+            ),
+            (
+                Call('main', './src/helloworld.c', Environments.C),
+                Call('GreeterSayHi', './src/helloworld.c', Environments.C)
+            ),
+            (
+                Call('GreeterSayHi', './src/helloworld.c', Environments.C),
+                Call('main', './src/helloworld.c', Environments.C)
+            ),
+            (
+                Call('main', './src/helloworld.c', Environments.C),
+                Call('GreeterSayHiTo', './src/helloworld.c', Environments.C)
+            ),
+            (
+                Call('GreeterSayHiTo', './src/helloworld.c', Environments.C),
+                Call('main', './src/helloworld.c', Environments.C)
+            ),
+            (
+                Call('main', './src/helloworld.c', Environments.C),
+                Call('addInt', './src/helloworld.c', Environments.C)
+            ),
+            (
+                Call('addInt', './src/helloworld.c', Environments.C),
+                Call('main', './src/helloworld.c', Environments.C)
+            ),
+            (
+                Call('main', './src/helloworld.c', Environments.C),
+                Call('greet_a', './src/helloworld.c', Environments.C)
+            ),
+            (
+                Call('greet_a', './src/helloworld.c', Environments.C),
+                Call('main', './src/helloworld.c', Environments.C)
+            ),
+            (
+                Call('main', './src/helloworld.c', Environments.C),
+                Call('greet_b', './src/helloworld.c', Environments.C)
+            ),
+            (
+                Call('greet_b', './src/helloworld.c', Environments.C),
+                Call('main', './src/helloworld.c', Environments.C)
+            ),
+            (
+                Call('main', './src/helloworld.c', Environments.C),
+                Call('new_Greeter', './src/helloworld.c', Environments.C)
+            ),
+            (
+                Call('new_Greeter', './src/helloworld.c', Environments.C),
+                Call('main', './src/helloworld.c', Environments.C)
+            )
+        ]
+
+        # Act
+        graph = self.target.load_call_graph()
+        actual = graph.edges()
+
+        # Assert
+        self.assertCountEqual(expected, actual)
+        for (_, _, attrs) in graph.edges(data=True):
+            self.assertTrue('gprof' in attrs)
+            self.assertTrue('cflow' not in attrs)
+            self.assertTrue('call' in attrs or 'return' in attrs)
+
+    def test_load_call_graph_return_edges(self):
+        # Act
+        graph = self.target.load_call_graph()
+
+        # Assert
+        self.assertTrue(nx.is_strongly_connected(graph))
+        for (u, v) in nx.get_edge_attributes(graph, 'call'):
+            self.assertTrue('return' in graph[v][u])
 
 if __name__ == '__main__':
     unittest.main()

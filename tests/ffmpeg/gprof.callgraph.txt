@@ -1,0 +1,24 @@
+			Call graph
+
+
+granularity: each sample hit covers 2 byte(s) for 25.00% of 0.04 seconds
+
+index % time    self  children    called     name
+                0.00    0.00       0/2           opt_progress (./ffmpeg_opt.c:2765 @ 4808e2) [562087]
+                0.00    0.00       0/2           get_preset_file_2 (./ffmpeg_opt.c:1028 @ 4818aa) [408828]
+                0.00    0.00       0/2           get_preset_file_2 (./ffmpeg_opt.c:1033 @ 48190d) [408832]
+                0.00    0.00       0/2           get_preset_file_2 (./ffmpeg_opt.c:1033 @ 4819af) [408840]
+                0.00    0.00       0/2           dump_attachment (./ffmpeg_opt.c:772 @ 484994) [219074]
+                0.00    0.00       0/2           open_output_file (./ffmpeg_opt.c:1983 @ 4868f0) [560574]
+                0.00    0.00       1/2           open_output_file (./ffmpeg_opt.c:2078 @ 4875c9) [560678]
+                0.00    0.00       1/2           init_input (./libavformat/utils.c:351 @ 65510c) [476164]
+[287]    0.0    0.00    0.00       2         avio_open2 (./libavformat/aviobuf.c:889 @ 5643c0) [287]
+                0.00    0.00       2/2           ffurl_open (./libavformat/avio.c:271 @ 562640) [309]
+-----------------------------------------------
+                                                 <spontaneous>
+[11214   0.0    0.00    0.00                 biquad_s16 (./libavfilter/af_biquads.c:228 @ 537bd0) [112145]
+                0.00    0.00       0/108         av_log (./libavutil/log.c:345 @ df2050) [142]
+-----------------------------------------------
+
+Index by function name
+
