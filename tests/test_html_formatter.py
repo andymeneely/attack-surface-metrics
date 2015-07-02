@@ -9,7 +9,7 @@ from attacksurfacemeter.formatters.html_formatter import HtmlFormatter
 
 from tests.test_txt_formatter import TxtFormatterTestCase
 
-
+@unittest.skip('Temporarily skipped.')
 class HtmlFormatterTestCase(TxtFormatterTestCase):
 
     def setUp(self):

@@ -9,6 +9,7 @@ from attacksurfacemeter.loaders.cflow_loader import CflowLoader
 from attacksurfacemeter.formatters.txt_formatter import TxtFormatter
 
 
+@unittest.skip('Temporarily skipped.')
 class TxtFormatterTestCase(unittest.TestCase):
 
     def setUp(self):
