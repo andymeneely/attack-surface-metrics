@@ -26,11 +26,11 @@ class GprofLineParser(BaseLineParser):
         self.__init__()
 
         # The field in the gprof call graph that contains the name of the
-        # function and the file containing the function begins at column 46 
+        # function and the file containing the function begins at column 46
         # (deduced from gprof source code)
         name = gprof_line[45:]
         match = RE_NAME.match(name.strip())
-        
+
         if match:
             groups = match.groups(default='')
             self._function_name = groups[0]
@@ -39,4 +39,3 @@ class GprofLineParser(BaseLineParser):
             raise ValueError(
                 'Unable to parse gprof line - "{0}"'.format(gprof_line)
             )
-
