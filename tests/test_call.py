@@ -145,14 +145,6 @@ class CallTestCase(unittest.TestCase):
         # Assert
         self.assertTrue(test_call.in_stdlib())
 
-    def test_is_function_name_only(self):
-        # Arrange
-        cflow_line = 'printf()'
-        test_call = Call.from_cflow(cflow_line)
-
-        # Assert
-        self.assertTrue(test_call.is_function_name_only())
-
 
 if __name__ == '__main__':
     unittest.main()

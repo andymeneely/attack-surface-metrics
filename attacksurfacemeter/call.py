@@ -127,7 +127,7 @@ class Call():
             A String representation of the Call.
         """
         if self._environment == Environments.ANDROID:
-            return self.function_signature + '.' + self.function_name
+            return self._function_signature + '.' + self._function_name
         else:
             return self.identity
 
@@ -270,11 +270,14 @@ class Call():
 
         if self._environment == Environments.C:
             input_functions = Call._get_c_input_functions()
-            is_input = self.function_name in input_functions
+            is_input = (
+                not self._function_signature and
+                self._function_name in input_functions
+            )
         elif self._environment == Environments.ANDROID:
             input_functions = Call._get_android_input_methods()
             is_input = (
-                self.function_signature + "." + self.function_name
+                self._function_signature + "." + self._function_name
             ) in input_functions
 
         return is_input
@@ -301,11 +304,14 @@ class Call():
 
         if self._environment == Environments.C:
             output_functions = Call._get_c_output_functions()
-            is_output = self.function_name in output_functions
+            is_output = (
+                not self._function_signature and
+                self._function_name in output_functions
+            )
         elif self._environment == Environments.ANDROID:
             output_functions = Call._get_android_output_methods()
             is_output = (
-                self.function_signature + "." + self.function_name
+                self._function_signature + "." + self._function_name
             ) in output_functions
 
         return is_output
@@ -332,7 +338,11 @@ class Call():
             True if the function is dangerous, False otherwise.
         """
         c_dangerous_sys_calls = Call._get_c_dangerous_sys_calls()
-        return self.function_name in c_dangerous_sys_calls
+        is_dangerous = (
+            not self._function_signature and
+            self._function_name in c_dangerous_sys_calls
+        )
+        return is_dangerous
 
     def in_stdlib(self):
         """Return True if the function is part of C library, False otherwise.
@@ -353,21 +363,11 @@ class Call():
             True if function is part of C library, False otherwise.
         """
         c_std_lib_functions = Call._get_c_std_lib_functions()
-        return self.function_name in c_std_lib_functions
-
-    def is_function_name_only(self):
-        """Return True if the function has no signature, False otherwise.
-
-        Parameters
-        ----------
-        None
-
-        Returns
-        -------
-        is_name : bool
-            True if function has no signature, False otherwise.
-        """
-        return False if self._function_signature else True
+        in_stdlib = (
+            not self._function_signature and
+            self._function_name in c_std_lib_functions
+        )
+        return in_stdlib
 
     @property
     def identity(self):
@@ -382,10 +382,10 @@ class Call():
         identity : str
             The unique representation of this object.
         """
-        identity = self.function_name
+        identity = self._function_name
 
-        if self.function_signature:
-            identity += ' ' + self.function_signature
+        if self._function_signature:
+            identity += ' ' + self._function_signature
 
         return identity
 
