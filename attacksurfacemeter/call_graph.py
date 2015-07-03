@@ -16,7 +16,7 @@ class CallGraph():
     call and an edge between nodes represents a caller - callee relationship.
     """
 
-    def __init__(self, source, graph, load_errors=None):
+    def __init__(self, source, graph, load_errors=None, fragmentize=False):
         """CallGraph constructor.
 
         The call graph is split into strongly connected component subgraphs
@@ -39,17 +39,21 @@ class CallGraph():
         callgraph : CallGraph
             An instance of CallGraph.
         """
-        fragments = utilities.get_fragments(graph)
-        fragment = utilities.get_largest_fragment(fragments)
-
-        self.num_fragments = len(fragments)
-        self.monolithicity = len(fragment.nodes()) / len(graph.nodes())
-
         self.source = source
-        self.call_graph = fragment
+        self.call_graph = graph
         self.load_errors = load_errors
+        self.num_fragments = None
+        self.monolithicity = None
 
         self._init()
+
+        if fragmentize:
+            fragments = utilities.get_fragments(graph)
+            fragment = utilities.get_largest_fragment(fragments)
+
+            self.num_fragments = len(fragments)
+            self.monolithicity = len(fragment.nodes()) / len(graph.nodes())
+            self.call_graph = fragment
 
     def _init(self):
         """Initialize private instance variables."""
@@ -59,7 +63,7 @@ class CallGraph():
         self._degree = None
 
     @classmethod
-    def from_loader(cls, loader):
+    def from_loader(cls, loader, fragmentize=False):
         """Construct a CallGraph using the given loader.
 
         Parameters
@@ -76,10 +80,10 @@ class CallGraph():
         graph = loader.load_call_graph()
         load_errors = loader.errors
 
-        return cls(loader.source, graph, load_errors)
+        return cls(loader.source, graph, load_errors, fragmentize)
 
     @classmethod
-    def from_merge(cls, cflow_call_graph, gprof_call_graph):
+    def from_merge(cls, cflow_call_graph, gprof_call_graph, fragmentize=False):
         """Construct a CallGraph by merging cflow and gprof call graphs.
 
         Parameters
@@ -123,7 +127,7 @@ class CallGraph():
             cflow_call_graph.load_errors + gprof_call_graph.load_errors
         )
 
-        return cls(source, graph, load_errors)
+        return cls(source, graph, load_errors, fragmentize)
 
     @property
     def entry_points(self):
