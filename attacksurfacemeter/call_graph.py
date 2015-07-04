@@ -1,3 +1,4 @@
+import json
 import os
 import statistics as stat
 
@@ -435,3 +436,44 @@ class CallGraph():
             name,
             self.get_page_rank(primary=primary, secondary=secondary)
         )
+
+    def assign_weights(self, weights=None):
+        """Assign weights to edges.
+
+        Parameters
+        ----------
+        weights : dict, optional
+            A dictionary of weights that are assigned to edges according to a
+            specfic algorithm. When not specified, a base set of weights (as
+            defined by data/weights.json) is used.
+
+        Returns
+        -------
+        None
+        """
+        if weights is None:
+            fpath = os.path.join(
+                os.path.dirname(__file__), 'data/weights.json'
+            )
+
+            with open(fpath, 'r') as file_:
+                weights = json.load(file_)
+
+        for (caller, callee, attrs) in self.edges:
+            weight = 0
+            if 'call' in attrs:
+                weight = abs(weights['base']['call'])
+            elif 'return' in attrs:
+                weight = abs(weights['base']['return'])
+
+            callee_attrs = self.call_graph.node[callee]
+            if 'dangerous' in callee_attrs:
+                weight += abs(weights['dangerous'])
+            if 'defense' in callee_attrs:
+                weight -= abs(weights['defense'])
+            if 'tested' in callee_attrs:
+                weight -= abs(weights['tested'])
+            if 'vulnerable' in callee_attrs:
+                weight += abs(weights['vulnerable'])
+
+            self.call_graph.edge[caller][callee]['weight'] = weight

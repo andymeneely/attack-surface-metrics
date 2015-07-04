@@ -1,0 +1,10 @@
+{
+    "base": {
+        "call": 100,
+        "return": 50
+    },
+    "dangerous": 25,
+    "defense": 25,
+    "tested": 25,
+    "vulnerable": 25
+}

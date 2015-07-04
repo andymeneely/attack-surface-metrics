@@ -24,7 +24,8 @@ setup(
             'data/c_std_lib_functions',
             'data/c_input_functions',
             'data/c_output_functions',
-            'data/c_dangerous_sys_calls'
+            'data/c_dangerous_sys_calls',
+            'data/weights.json'
         ],
         'attacksurfacemeter.loaders': [
             'run_cflow.sh',

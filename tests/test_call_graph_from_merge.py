@@ -596,5 +596,131 @@ class CallGraphFromMergeTestCase(unittest.TestCase):
         for i in expected:
             self.assertAlmostEqual(expected[i], actual[i])
 
+    def test_assign_weights(self):
+        # Arrange
+        expected = {
+            (
+                Call('new_Greeter', './src/helloworld.c', Environments.C),
+                Call('GreeterSayHi', './src/helloworld.c', Environments.C)
+            ): 75,
+            (
+                Call('GreeterSayHi', './src/helloworld.c', Environments.C),
+                Call('new_Greeter', './src/helloworld.c', Environments.C)
+            ): 25,
+            (
+                Call('main', './src/helloworld.c', Environments.C),
+                Call('new_Greeter', './src/helloworld.c', Environments.C)
+            ): 75,
+            (
+                Call('new_Greeter', './src/helloworld.c', Environments.C),
+                Call('main', './src/helloworld.c', Environments.C)
+            ): 25,
+            (
+                Call('new_Greeter', './src/helloworld.c', Environments.C),
+                Call('GreeterSayHiTo', './src/helloworld.c', Environments.C)
+            ): 75,
+            (
+                Call('GreeterSayHiTo', './src/helloworld.c', Environments.C),
+                Call('new_Greeter', './src/helloworld.c', Environments.C)
+            ): 25,
+            (
+                Call('main', './src/helloworld.c', Environments.C),
+                Call('addInt', './src/helloworld.c', Environments.C)
+            ): 75,
+            (
+                Call('addInt', './src/helloworld.c', Environments.C),
+                Call('main', './src/helloworld.c', Environments.C)
+            ): 25,
+            (
+                Call('main', './src/helloworld.c', Environments.C),
+                Call('functionPtr', './src/helloworld.c', Environments.C)
+            ): 100,
+            (
+                Call('functionPtr', './src/helloworld.c', Environments.C),
+                Call('main', './src/helloworld.c', Environments.C)
+            ): 25,
+            (
+                Call('greet_a', './src/helloworld.c', Environments.C),
+                Call('greet', './src/greetings.c', Environments.C)
+            ): 75,
+            (
+                Call('greet', './src/greetings.c', Environments.C),
+                Call('greet_a', './src/helloworld.c', Environments.C)
+            ): 25,
+            (
+                Call('main', './src/helloworld.c', Environments.C),
+                Call('greet_a', './src/helloworld.c', Environments.C)
+            ): 75,
+            (
+                Call('greet_a', './src/helloworld.c', Environments.C),
+                Call('main', './src/helloworld.c', Environments.C)
+            ): 25,
+            (
+                Call('greet_b', './src/helloworld.c', Environments.C),
+                Call('greet', './src/greetings.c', Environments.C)
+            ): 75,
+            (
+                Call('greet', './src/greetings.c', Environments.C),
+                Call('greet_b', './src/helloworld.c', Environments.C)
+            ): 25,
+            (
+                Call('main', './src/helloworld.c', Environments.C),
+                Call('greet_b', './src/helloworld.c', Environments.C)
+            ): 75,
+            (
+                Call('greet_b', './src/helloworld.c', Environments.C),
+                Call('main', './src/helloworld.c', Environments.C)
+            ): 25,
+            (
+                Call('recursive_b', './src/greetings.c', Environments.C),
+                Call('recursive_a', './src/greetings.c', Environments.C)
+            ): 75,
+            (
+                Call('recursive_a', './src/greetings.c', Environments.C),
+                Call('recursive_b', './src/greetings.c', Environments.C)
+            ): 75,
+            (
+                Call('greet_b', './src/helloworld.c', Environments.C),
+                Call('recursive_b', './src/greetings.c', Environments.C)
+            ): 75,
+            (
+                Call('recursive_b', './src/greetings.c', Environments.C),
+                Call('greet_b', './src/helloworld.c', Environments.C)
+            ): 25,
+            (
+                Call('greet_a', './src/helloworld.c', Environments.C),
+                Call('recursive_a', './src/greetings.c', Environments.C)
+            ): 75,
+            (
+                Call('recursive_a', './src/greetings.c', Environments.C),
+                Call('greet_a', './src/helloworld.c', Environments.C)
+            ): 25,
+            (
+                Call('main', './src/helloworld.c', Environments.C),
+                Call('GreeterSayHi', './src/helloworld.c', Environments.C)
+            ): 75,
+            (
+                Call('GreeterSayHi', './src/helloworld.c', Environments.C),
+                Call('main', './src/helloworld.c', Environments.C)
+            ): 25,
+            (
+                Call('main', './src/helloworld.c', Environments.C),
+                Call('GreeterSayHiTo', './src/helloworld.c', Environments.C)
+            ): 75,
+            (
+                Call('GreeterSayHiTo', './src/helloworld.c', Environments.C),
+                Call('main', './src/helloworld.c', Environments.C)
+            ): 25
+        }
+
+        # Act
+        self.target.assign_weights()
+        actual = nx.get_edge_attributes(self.target.call_graph, 'weight')
+
+        # Assert
+        self.assertCountEqual(expected, actual)
+        for i in expected:
+            self.assertEqual(expected[i], actual[i], msg=i)
+
 if __name__ == '__main__':
     unittest.main()
