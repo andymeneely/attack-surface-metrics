@@ -5,6 +5,7 @@ import networkx as nx
 
 from attacksurfacemeter.call_graph import CallGraph
 
+
 class CallGraphTestCase(unittest.TestCase):
     def test_call_graph_wo_fragmentize(self):
         # Arrange
@@ -156,7 +157,7 @@ class CallGraphTestCase(unittest.TestCase):
 
     def _build_graph(self):
         #######################################################################
-        #     
+        #
         #                             main
         #                               |
         #     +--------------------+----+-----+-----------+------------+
@@ -164,7 +165,7 @@ class CallGraphTestCase(unittest.TestCase):
         #   read--------+        write      parse      analyze     memalloc
         #     |         |          |          |           |
         #  readfile  validate   writefile  parsefile  analyzefile
-        #    
+        #
         #######################################################################
 
         graph = nx.DiGraph()
