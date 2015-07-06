@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<attack_surface source="{{ directory }}">
+    <nodes count="{{ nodes_count }}"/>
+    <edges count="{{ edges_count }}"/>
+    <entry_points count="{{ entry_points_count }}"/>
+    <exit_points count="{{ exit_points_count }}"/>
+    <dangerous_functions count="{{ dangerous_functions_count }}"/>
+</attack_surface>

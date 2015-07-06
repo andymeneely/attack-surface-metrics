@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<attack_surface source="{{ directory }}">
+    <functions count="{{ nodes_count }}">
+        {% for i in nodes %}<function name="{{ i.function_name }}" file="{{ i.function_signature }}" />
+        {% endfor %}</functions>
+    <calls count="{{ edges_count }}">
+        {% for i in edges %}<call caller="{{ i.from }}" callee="{{ i.to }}" />
+        {% endfor %}</calls>
+    <entry_points count="{{ entry_points_count }}">
+        {% for i in entry_points %}<entry_point name="{{ i.function_name }}" file="{{ i.function_signature }}"/>
+        {% endfor %}</entry_points>
+    <exit_points count="{{ exit_points_count }}">
+        {% for i in exit_points %}<exit_point name="{{ i.function_name }}" file="{{ i.function_signature }}"/>
+        {% endfor %}</exit_points>
+    <dangerous_functions count="{{ dangerous_functions_count }}">
+        {% for i in dangerous_functions %}<dangerous_function name="{{ i.function_name }}" file="{{ i.function_signature }}"/>
+        {% endfor %}</dangerous_functions>
+</attack_surface>

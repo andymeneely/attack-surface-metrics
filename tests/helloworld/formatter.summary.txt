@@ -1,37 +1,10 @@
-Attack Surface Report
-(Summary)
-=====================
-Source: tests/helloworld/callgraph.txt
+Attack Surface Report (Summary)
+==============================
 
-Nodes Count: 15
-Edges Count: 22
+Source: /home/nm6061/asm/src/pristine/tests/helloworld
 
-Entry Points Count: 1
-Exit Points Count: 6
-
-Execution Paths Count: 3
-Execution Paths Average: 2.3333333333333335
-Execution Paths Median: 2
-
-Average Closeness: 0.12694444444444444
-Median Closeness: 0.07142857142857142
-
-Average Betweenness: 0.005128205128205128
-Median Betweenness: 0.0027472527472527475
-
-Entry Points Clustering: 0.0
-Exit Points Clustering: 0.1111111111111111
-
-Average Degree Centrality: 0.20952380952380953
-Median Degree Centrality: 0.21428571428571427
-Average In Degree Centrality: 0.10476190476190476
-Median In Degree Centrality: 0.07142857142857142
-Average Out Degree Centrality: 0.10476190476190476
-Median Out Degree Centrality: 0.07142857142857142
-
-Average Degree: 2.933333333333333
-Median Degree: 3
-Average In Degree: 1.4666666666666666
-Median In Degree: 1
-Average Out Degree: 1.4666666666666666
-Median Out Degree: 1
+Functions Count:            11
+Calls Count:                24
+Entry Points Count:         1
+Exit Points Count:          6
+Dangerous Functions Count:  0

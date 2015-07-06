@@ -6,901 +6,237 @@
 </head>
 <body>
 
-    <h1>Attack Surface</h1>
-    <label>Directory: </label><span></span>
-
-    <h2>Calls</h2>
-    <label>Count: </label><span>15</span>
-    <ul>
-
-            <li>
-                <h3>main</h3>
-
-                <label>Closeness: </label><span>0.6666666666666666</span>
-                <label>Betweenness: </label><span>0.0</span>
-                <label>Degree Centrality: </label><span>0.5</span>
-                <label>In Degree Centrality: </label><span>0.0</span>
-                <label>Out Degree Centrality: </label><span>0.5</span>
-                <label>Degree: </label><span>7</span>
-                <label>In Degree: </label><span>0</span>
-                <label>Out Degree: </label><span>7</span>
-                <label>Descendant Entry Points Ratio: </label><span>0.07142857142857142</span>
-                <label>Descendant Exit Points Ratio: </label><span>0.35714285714285715</span>
-                <label>Ancestor Entry Points Ratio: </label><span>0.0</span>
-                <label>Ancestor Exit Points Ratio: </label><span>0.0</span>
-
-
-                    <h2>Descendant Entry Points</h2>
-                    <label>Count: </label><span>1</span>
-                    <ul>
-
-                        <li>
-                            <span>greet_b</span>
-                        </li>
-
-                    </ul>
-
-
-
-                    <h2>Descendant Exit Points</h2>
-                    <label>Count: </label><span>5</span>
-                    <ul>
-
-                        <li>
-                            <span>recursive_b</span>
-                        </li>
-
-                        <li>
-                            <span>recursive_a</span>
-                        </li>
-
-                        <li>
-                            <span>GreeterSayHi</span>
-                        </li>
-
-                        <li>
-                            <span>GreeterSayHiTo</span>
-                        </li>
-
-                        <li>
-                            <span>greet</span>
-                        </li>
-
-                    </ul>
-
-
-
-
-
-
-            </li>
-
-            <li>
-                <h3>GreeterSayHiTo</h3>
-
-                <label>Closeness: </label><span>0.07142857142857142</span>
-                <label>Betweenness: </label><span>0.0027472527472527475</span>
-                <label>Degree Centrality: </label><span>0.14285714285714285</span>
-                <label>In Degree Centrality: </label><span>0.07142857142857142</span>
-                <label>Out Degree Centrality: </label><span>0.07142857142857142</span>
-                <label>Degree: </label><span>2</span>
-                <label>In Degree: </label><span>1</span>
-                <label>Out Degree: </label><span>1</span>
-                <label>Descendant Entry Points Ratio: </label><span>0.0</span>
-                <label>Descendant Exit Points Ratio: </label><span>0.0</span>
-                <label>Ancestor Entry Points Ratio: </label><span>0.0</span>
-                <label>Ancestor Exit Points Ratio: </label><span>0.5</span>
-
-
-
-
-
-
-
-
-                    <h2>Ancestor Exit Points</h2>
-                    <label>Count: </label><span>1</span>
-                    <ul>
-
-                        <li>
-                            <span>main</span>
-                        </li>
-
-                    </ul>
-
-
-            </li>
-
-            <li>
-                <h3>recursive_b</h3>
-
-                <label>Closeness: </label><span>0.14285714285714285</span>
-                <label>Betweenness: </label><span>0.01098901098901099</span>
-                <label>Degree Centrality: </label><span>0.2857142857142857</span>
-                <label>In Degree Centrality: </label><span>0.14285714285714285</span>
-                <label>Out Degree Centrality: </label><span>0.14285714285714285</span>
-                <label>Degree: </label><span>4</span>
-                <label>In Degree: </label><span>2</span>
-                <label>Out Degree: </label><span>2</span>
-                <label>Descendant Entry Points Ratio: </label><span>0.0</span>
-                <label>Descendant Exit Points Ratio: </label><span>0.5</span>
-                <label>Ancestor Entry Points Ratio: </label><span>0.25</span>
-                <label>Ancestor Exit Points Ratio: </label><span>0.5</span>
-
-
-
-
-                    <h2>Descendant Exit Points</h2>
-                    <label>Count: </label><span>1</span>
-                    <ul>
-
-                        <li>
-                            <span>recursive_a</span>
-                        </li>
-
-                    </ul>
-
-
-
-
-
-                    <h2>Ancestor Exit Points</h2>
-                    <label>Count: </label><span>2</span>
-                    <ul>
-
-                        <li>
-                            <span>main</span>
-                        </li>
-
-                        <li>
-                            <span>recursive_a</span>
-                        </li>
-
-                    </ul>
-
-
-            </li>
-
-            <li>
-                <h3>addInt</h3>
-
-                <label>Closeness: </label><span>0.0</span>
-                <label>Betweenness: </label><span>0.0</span>
-                <label>Degree Centrality: </label><span>0.07142857142857142</span>
-                <label>In Degree Centrality: </label><span>0.07142857142857142</span>
-                <label>Out Degree Centrality: </label><span>0.0</span>
-                <label>Degree: </label><span>1</span>
-                <label>In Degree: </label><span>1</span>
-                <label>Out Degree: </label><span>0</span>
-                <label>Descendant Entry Points Ratio: </label><span>0.0</span>
-                <label>Descendant Exit Points Ratio: </label><span>0.0</span>
-                <label>Ancestor Entry Points Ratio: </label><span>0.0</span>
-                <label>Ancestor Exit Points Ratio: </label><span>1.0</span>
-
-
-
-
-
-
-
-
-                    <h2>Ancestor Exit Points</h2>
-                    <label>Count: </label><span>1</span>
-                    <ul>
-
-                        <li>
-                            <span>main</span>
-                        </li>
-
-                    </ul>
-
-
-            </li>
-
-            <li>
-                <h3>new_Greeter</h3>
-
-                <label>Closeness: </label><span>0.22857142857142856</span>
-                <label>Betweenness: </label><span>0.016483516483516484</span>
-                <label>Degree Centrality: </label><span>0.2857142857142857</span>
-                <label>In Degree Centrality: </label><span>0.07142857142857142</span>
-                <label>Out Degree Centrality: </label><span>0.21428571428571427</span>
-                <label>Degree: </label><span>4</span>
-                <label>In Degree: </label><span>1</span>
-                <label>Out Degree: </label><span>3</span>
-                <label>Descendant Entry Points Ratio: </label><span>0.0</span>
-                <label>Descendant Exit Points Ratio: </label><span>0.5</span>
-                <label>Ancestor Entry Points Ratio: </label><span>0.0</span>
-                <label>Ancestor Exit Points Ratio: </label><span>1.0</span>
-
-
-
-
-                    <h2>Descendant Exit Points</h2>
-                    <label>Count: </label><span>2</span>
-                    <ul>
-
-                        <li>
-                            <span>GreeterSayHiTo</span>
-                        </li>
-
-                        <li>
-                            <span>GreeterSayHi</span>
-                        </li>
-
-                    </ul>
-
-
-
-
-
-                    <h2>Ancestor Exit Points</h2>
-                    <label>Count: </label><span>1</span>
-                    <ul>
-
-                        <li>
-                            <span>main</span>
-                        </li>
-
-                    </ul>
-
-
-            </li>
-
-            <li>
-                <h3>recursive_a</h3>
-
-                <label>Closeness: </label><span>0.14285714285714285</span>
-                <label>Betweenness: </label><span>0.01098901098901099</span>
-                <label>Degree Centrality: </label><span>0.2857142857142857</span>
-                <label>In Degree Centrality: </label><span>0.14285714285714285</span>
-                <label>Out Degree Centrality: </label><span>0.14285714285714285</span>
-                <label>Degree: </label><span>4</span>
-                <label>In Degree: </label><span>2</span>
-                <label>Out Degree: </label><span>2</span>
-                <label>Descendant Entry Points Ratio: </label><span>0.0</span>
-                <label>Descendant Exit Points Ratio: </label><span>0.5</span>
-                <label>Ancestor Entry Points Ratio: </label><span>0.25</span>
-                <label>Ancestor Exit Points Ratio: </label><span>0.5</span>
-
-
-
-
-                    <h2>Descendant Exit Points</h2>
-                    <label>Count: </label><span>1</span>
-                    <ul>
-
-                        <li>
-                            <span>recursive_b</span>
-                        </li>
-
-                    </ul>
-
-
-
-
-
-                    <h2>Ancestor Exit Points</h2>
-                    <label>Count: </label><span>2</span>
-                    <ul>
-
-                        <li>
-                            <span>main</span>
-                        </li>
-
-                        <li>
-                            <span>recursive_b</span>
-                        </li>
-
-                    </ul>
-
-
-            </li>
-
-            <li>
-                <h3>GreeterSayHi</h3>
-
-                <label>Closeness: </label><span>0.07142857142857142</span>
-                <label>Betweenness: </label><span>0.0027472527472527475</span>
-                <label>Degree Centrality: </label><span>0.14285714285714285</span>
-                <label>In Degree Centrality: </label><span>0.07142857142857142</span>
-                <label>Out Degree Centrality: </label><span>0.07142857142857142</span>
-                <label>Degree: </label><span>2</span>
-                <label>In Degree: </label><span>1</span>
-                <label>Out Degree: </label><span>1</span>
-                <label>Descendant Entry Points Ratio: </label><span>0.0</span>
-                <label>Descendant Exit Points Ratio: </label><span>0.0</span>
-                <label>Ancestor Entry Points Ratio: </label><span>0.0</span>
-                <label>Ancestor Exit Points Ratio: </label><span>0.5</span>
-
-
-
-
-
-
-
-
-                    <h2>Ancestor Exit Points</h2>
-                    <label>Count: </label><span>1</span>
-                    <ul>
-
-                        <li>
-                            <span>main</span>
-                        </li>
-
-                    </ul>
-
-
-            </li>
-
-            <li>
-                <h3>printf</h3>
-
-                <label>Closeness: </label><span>0.0</span>
-                <label>Betweenness: </label><span>0.0</span>
-                <label>Degree Centrality: </label><span>0.3571428571428571</span>
-                <label>In Degree Centrality: </label><span>0.3571428571428571</span>
-                <label>Out Degree Centrality: </label><span>0.0</span>
-                <label>Degree: </label><span>5</span>
-                <label>In Degree: </label><span>5</span>
-                <label>Out Degree: </label><span>0</span>
-                <label>Descendant Entry Points Ratio: </label><span>0.0</span>
-                <label>Descendant Exit Points Ratio: </label><span>0.0</span>
-                <label>Ancestor Entry Points Ratio: </label><span>0.125</span>
-                <label>Ancestor Exit Points Ratio: </label><span>0.625</span>
-
-
-
-
-
-
-
-
-                    <h2>Ancestor Exit Points</h2>
-                    <label>Count: </label><span>5</span>
-                    <ul>
-
-                        <li>
-                            <span>main</span>
-                        </li>
-
-                        <li>
-                            <span>recursive_b</span>
-                        </li>
-
-                        <li>
-                            <span>recursive_a</span>
-                        </li>
-
-                        <li>
-                            <span>GreeterSayHi</span>
-                        </li>
-
-                        <li>
-                            <span>GreeterSayHiTo</span>
-                        </li>
-
-                    </ul>
-
-
-            </li>
-
-            <li>
-                <h3>greet_b</h3>
-
-                <label>Closeness: </label><span>0.2857142857142857</span>
-                <label>Betweenness: </label><span>0.013736263736263738</span>
-                <label>Degree Centrality: </label><span>0.2857142857142857</span>
-                <label>In Degree Centrality: </label><span>0.07142857142857142</span>
-                <label>Out Degree Centrality: </label><span>0.21428571428571427</span>
-                <label>Degree: </label><span>4</span>
-                <label>In Degree: </label><span>1</span>
-                <label>Out Degree: </label><span>3</span>
-                <label>Descendant Entry Points Ratio: </label><span>0.0</span>
-                <label>Descendant Exit Points Ratio: </label><span>0.5</span>
-                <label>Ancestor Entry Points Ratio: </label><span>0.0</span>
-                <label>Ancestor Exit Points Ratio: </label><span>1.0</span>
-
-
-
-
-                    <h2>Descendant Exit Points</h2>
-                    <label>Count: </label><span>3</span>
-                    <ul>
-
-                        <li>
-                            <span>recursive_b</span>
-                        </li>
-
-                        <li>
-                            <span>recursive_a</span>
-                        </li>
-
-                        <li>
-                            <span>greet</span>
-                        </li>
-
-                    </ul>
-
-
-
-
-
-                    <h2>Ancestor Exit Points</h2>
-                    <label>Count: </label><span>1</span>
-                    <ul>
-
-                        <li>
-                            <span>main</span>
-                        </li>
-
-                    </ul>
-
-
-            </li>
-
-            <li>
-                <h3>puts</h3>
-
-                <label>Closeness: </label><span>0.0</span>
-                <label>Betweenness: </label><span>0.0</span>
-                <label>Degree Centrality: </label><span>0.14285714285714285</span>
-                <label>In Degree Centrality: </label><span>0.14285714285714285</span>
-                <label>Out Degree Centrality: </label><span>0.0</span>
-                <label>Degree: </label><span>2</span>
-                <label>In Degree: </label><span>2</span>
-                <label>Out Degree: </label><span>0</span>
-                <label>Descendant Entry Points Ratio: </label><span>0.0</span>
-                <label>Descendant Exit Points Ratio: </label><span>0.0</span>
-                <label>Ancestor Entry Points Ratio: </label><span>0.25</span>
-                <label>Ancestor Exit Points Ratio: </label><span>0.5</span>
-
-
-
-
-
-
-
-
-                    <h2>Ancestor Exit Points</h2>
-                    <label>Count: </label><span>2</span>
-                    <ul>
-
-                        <li>
-                            <span>main</span>
-                        </li>
-
-                        <li>
-                            <span>greet</span>
-                        </li>
-
-                    </ul>
-
-
-            </li>
-
-            <li>
-                <h3>greet</h3>
-
-                <label>Closeness: </label><span>0.07142857142857142</span>
-                <label>Betweenness: </label><span>0.01098901098901099</span>
-                <label>Degree Centrality: </label><span>0.21428571428571427</span>
-                <label>In Degree Centrality: </label><span>0.14285714285714285</span>
-                <label>Out Degree Centrality: </label><span>0.07142857142857142</span>
-                <label>Degree: </label><span>3</span>
-                <label>In Degree: </label><span>2</span>
-                <label>Out Degree: </label><span>1</span>
-                <label>Descendant Entry Points Ratio: </label><span>0.0</span>
-                <label>Descendant Exit Points Ratio: </label><span>0.0</span>
-                <label>Ancestor Entry Points Ratio: </label><span>0.3333333333333333</span>
-                <label>Ancestor Exit Points Ratio: </label><span>0.3333333333333333</span>
-
-
-
-
-
-
-
-
-                    <h2>Ancestor Exit Points</h2>
-                    <label>Count: </label><span>1</span>
-                    <ul>
-
-                        <li>
-                            <span>main</span>
-                        </li>
-
-                    </ul>
-
-
-            </li>
-
-            <li>
-                <h3>functionPtr</h3>
-
-                <label>Closeness: </label><span>0.0</span>
-                <label>Betweenness: </label><span>0.0</span>
-                <label>Degree Centrality: </label><span>0.07142857142857142</span>
-                <label>In Degree Centrality: </label><span>0.07142857142857142</span>
-                <label>Out Degree Centrality: </label><span>0.0</span>
-                <label>Degree: </label><span>1</span>
-                <label>In Degree: </label><span>1</span>
-                <label>Out Degree: </label><span>0</span>
-                <label>Descendant Entry Points Ratio: </label><span>0.0</span>
-                <label>Descendant Exit Points Ratio: </label><span>0.0</span>
-                <label>Ancestor Entry Points Ratio: </label><span>0.0</span>
-                <label>Ancestor Exit Points Ratio: </label><span>1.0</span>
-
-
-
-
-
-
-
-
-                    <h2>Ancestor Exit Points</h2>
-                    <label>Count: </label><span>1</span>
-                    <ul>
-
-                        <li>
-                            <span>main</span>
-                        </li>
-
-                    </ul>
-
-
-            </li>
-
-            <li>
-                <h3>malloc</h3>
-
-                <label>Closeness: </label><span>0.0</span>
-                <label>Betweenness: </label><span>0.0</span>
-                <label>Degree Centrality: </label><span>0.07142857142857142</span>
-                <label>In Degree Centrality: </label><span>0.07142857142857142</span>
-                <label>Out Degree Centrality: </label><span>0.0</span>
-                <label>Degree: </label><span>1</span>
-                <label>In Degree: </label><span>1</span>
-                <label>Out Degree: </label><span>0</span>
-                <label>Descendant Entry Points Ratio: </label><span>0.0</span>
-                <label>Descendant Exit Points Ratio: </label><span>0.0</span>
-                <label>Ancestor Entry Points Ratio: </label><span>0.0</span>
-                <label>Ancestor Exit Points Ratio: </label><span>0.5</span>
-
-
-
-
-
-
-
-
-                    <h2>Ancestor Exit Points</h2>
-                    <label>Count: </label><span>1</span>
-                    <ul>
-
-                        <li>
-                            <span>main</span>
-                        </li>
-
-                    </ul>
-
-
-            </li>
-
-            <li>
-                <h3>greet_a</h3>
-
-                <label>Closeness: </label><span>0.22321428571428573</span>
-                <label>Betweenness: </label><span>0.008241758241758242</span>
-                <label>Degree Centrality: </label><span>0.21428571428571427</span>
-                <label>In Degree Centrality: </label><span>0.07142857142857142</span>
-                <label>Out Degree Centrality: </label><span>0.14285714285714285</span>
-                <label>Degree: </label><span>3</span>
-                <label>In Degree: </label><span>1</span>
-                <label>Out Degree: </label><span>2</span>
-                <label>Descendant Entry Points Ratio: </label><span>0.0</span>
-                <label>Descendant Exit Points Ratio: </label><span>0.6</span>
-                <label>Ancestor Entry Points Ratio: </label><span>0.0</span>
-                <label>Ancestor Exit Points Ratio: </label><span>1.0</span>
-
-
-
-
-                    <h2>Descendant Exit Points</h2>
-                    <label>Count: </label><span>3</span>
-                    <ul>
-
-                        <li>
-                            <span>recursive_b</span>
-                        </li>
-
-                        <li>
-                            <span>recursive_a</span>
-                        </li>
-
-                        <li>
-                            <span>greet</span>
-                        </li>
-
-                    </ul>
-
-
-
-
-
-                    <h2>Ancestor Exit Points</h2>
-                    <label>Count: </label><span>1</span>
-                    <ul>
-
-                        <li>
-                            <span>main</span>
-                        </li>
-
-                    </ul>
-
-
-            </li>
-
-            <li>
-                <h3>gets</h3>
-
-                <label>Closeness: </label><span>0.0</span>
-                <label>Betweenness: </label><span>0.0</span>
-                <label>Degree Centrality: </label><span>0.07142857142857142</span>
-                <label>In Degree Centrality: </label><span>0.07142857142857142</span>
-                <label>Out Degree Centrality: </label><span>0.0</span>
-                <label>Degree: </label><span>1</span>
-                <label>In Degree: </label><span>1</span>
-                <label>Out Degree: </label><span>0</span>
-                <label>Descendant Entry Points Ratio: </label><span>0.0</span>
-                <label>Descendant Exit Points Ratio: </label><span>0.0</span>
-                <label>Ancestor Entry Points Ratio: </label><span>0.5</span>
-                <label>Ancestor Exit Points Ratio: </label><span>0.5</span>
-
-
-
-
-
-
-
-
-                    <h2>Ancestor Exit Points</h2>
-                    <label>Count: </label><span>1</span>
-                    <ul>
-
-                        <li>
-                            <span>main</span>
-                        </li>
-
-                    </ul>
-
-
-            </li>
-
-    </ul>
-
-    <h2>Edges</h2>
-    <label>Count: </label><span>22</span>
-    <ul>
-
-            <li>
-                <label>From: </label><span>main</span>
-                <label>To: </label><span>printf</span>
-            </li>
-
-            <li>
-                <label>From: </label><span>main</span>
-                <label>To: </label><span>greet_b</span>
-            </li>
-
-            <li>
-                <label>From: </label><span>main</span>
-                <label>To: </label><span>addInt</span>
-            </li>
-
-            <li>
-                <label>From: </label><span>main</span>
-                <label>To: </label><span>greet_a</span>
-            </li>
-
-            <li>
-                <label>From: </label><span>main</span>
-                <label>To: </label><span>functionPtr</span>
-            </li>
-
-            <li>
-                <label>From: </label><span>main</span>
-                <label>To: </label><span>new_Greeter</span>
-            </li>
-
-            <li>
-                <label>From: </label><span>main</span>
-                <label>To: </label><span>puts</span>
-            </li>
-
-            <li>
-                <label>From: </label><span>GreeterSayHiTo</span>
-                <label>To: </label><span>printf</span>
-            </li>
-
-            <li>
-                <label>From: </label><span>recursive_b</span>
-                <label>To: </label><span>printf</span>
-            </li>
-
-            <li>
-                <label>From: </label><span>recursive_b</span>
-                <label>To: </label><span>recursive_a</span>
-            </li>
-
-            <li>
-                <label>From: </label><span>new_Greeter</span>
-                <label>To: </label><span>GreeterSayHiTo</span>
-            </li>
-
-            <li>
-                <label>From: </label><span>new_Greeter</span>
-                <label>To: </label><span>malloc</span>
-            </li>
-
-            <li>
-                <label>From: </label><span>new_Greeter</span>
-                <label>To: </label><span>GreeterSayHi</span>
-            </li>
-
-            <li>
-                <label>From: </label><span>recursive_a</span>
-                <label>To: </label><span>printf</span>
-            </li>
-
-            <li>
-                <label>From: </label><span>recursive_a</span>
-                <label>To: </label><span>recursive_b</span>
-            </li>
-
-            <li>
-                <label>From: </label><span>GreeterSayHi</span>
-                <label>To: </label><span>printf</span>
-            </li>
-
-            <li>
-                <label>From: </label><span>greet_b</span>
-                <label>To: </label><span>recursive_b</span>
-            </li>
-
-            <li>
-                <label>From: </label><span>greet_b</span>
-                <label>To: </label><span>greet</span>
-            </li>
-
-            <li>
-                <label>From: </label><span>greet_b</span>
-                <label>To: </label><span>gets</span>
-            </li>
-
-            <li>
-                <label>From: </label><span>greet</span>
-                <label>To: </label><span>puts</span>
-            </li>
-
-            <li>
-                <label>From: </label><span>greet_a</span>
-                <label>To: </label><span>recursive_a</span>
-            </li>
-
-            <li>
-                <label>From: </label><span>greet_a</span>
-                <label>To: </label><span>greet</span>
-            </li>
-
-    </ul>
-
-    <h2>Entry Points</h2>
-    <label>Count: </label><span>1</span>
-    <ul>
-
-            <li>
-                <span>greet_b</span>
-            </li>
-
-    </ul>
-
-    <h2>Exit Points</h2>
-    <label>Count: </label><span>6</span>
-    <ul>
-
-            <li>
-                <span>main</span>
-            </li>
-
-            <li>
-                <span>GreeterSayHiTo</span>
-            </li>
-
-            <li>
-                <span>recursive_b</span>
-            </li>
-
-            <li>
-                <span>recursive_a</span>
-            </li>
-
-            <li>
-                <span>GreeterSayHi</span>
-            </li>
-
-            <li>
-                <span>greet</span>
-            </li>
-
-    </ul>
-
-    <h2>Clustering</h2>
-    <ul>
-        <li>
-            <label>Entry Points Clustering: </label><span>0.0</span>
-        </li>
-        <li>
-            <label>Exit Points Clustering: </label><span>0.1111111111111111</span>
-        </li>
-    </ul>
-
-    <h2>Execution Paths</h2>
-    <label>Count: </label><span>3</span>
-    <label>Average: </label><span>2.3333333333333335</span>
-    <label>Median: </label><span>2</span>
-    <ul>
-
-            <li>
-                <label>Length: </label><span>2</span>
-                <ul>
-
-                        <li>
-                            <span>greet_b</span>
-                        </li>
-
-                        <li>
-                            <span>recursive_b</span>
-                        </li>
-
-                </ul>
-            </li>
-
-            <li>
-                <label>Length: </label><span>3</span>
-                <ul>
-
-                        <li>
-                            <span>greet_b</span>
-                        </li>
-
-                        <li>
-                            <span>recursive_b</span>
-                        </li>
-
-                        <li>
-                            <span>recursive_a</span>
-                        </li>
-
-                </ul>
-            </li>
-
-            <li>
-                <label>Length: </label><span>2</span>
-                <ul>
-
-                        <li>
-                            <span>greet_b</span>
-                        </li>
-
-                        <li>
-                            <span>greet</span>
-                        </li>
-
-                </ul>
-            </li>
-
-    </ul>
-
+    <h1>Attack Surface Meter Report</h1>
+    <div>
+        <label>Source: </label><span>/home/nm6061/asm/src/pristine/tests/helloworld</span>
+    </div>
+    <h2>Functions (11)</h2>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>File</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>greet</td>
+                    <td>./src/greetings.c</td>
+                </tr>
+                <tr>
+                    <td>functionPtr</td>
+                    <td>./src/helloworld.c</td>
+                </tr>
+                <tr>
+                    <td>main</td>
+                    <td>./src/helloworld.c</td>
+                </tr>
+                <tr>
+                    <td>GreeterSayHiTo</td>
+                    <td>./src/helloworld.c</td>
+                </tr>
+                <tr>
+                    <td>greet_a</td>
+                    <td>./src/helloworld.c</td>
+                </tr>
+                <tr>
+                    <td>recursive_a</td>
+                    <td>./src/greetings.c</td>
+                </tr>
+                <tr>
+                    <td>recursive_b</td>
+                    <td>./src/greetings.c</td>
+                </tr>
+                <tr>
+                    <td>greet_b</td>
+                    <td>./src/helloworld.c</td>
+                </tr>
+                <tr>
+                    <td>GreeterSayHi</td>
+                    <td>./src/helloworld.c</td>
+                </tr>
+                <tr>
+                    <td>addInt</td>
+                    <td>./src/helloworld.c</td>
+                </tr>
+                <tr>
+                    <td>new_Greeter</td>
+                    <td>./src/helloworld.c</td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    <h2>Calls (24)</h2>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Caller</th>
+                    <th>Callee</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>greet</td>
+                    <td>greet_b</td>
+                </tr>
+                <tr>
+                    <td>greet</td>
+                    <td>greet_a</td>
+                </tr>
+                <tr>
+                    <td>functionPtr</td>
+                    <td>main</td>
+                </tr>
+                <tr>
+                    <td>main</td>
+                    <td>functionPtr</td>
+                </tr>
+                <tr>
+                    <td>main</td>
+                    <td>greet_b</td>
+                </tr>
+                <tr>
+                    <td>main</td>
+                    <td>addInt</td>
+                </tr>
+                <tr>
+                    <td>main</td>
+                    <td>greet_a</td>
+                </tr>
+                <tr>
+                    <td>main</td>
+                    <td>new_Greeter</td>
+                </tr>
+                <tr>
+                    <td>GreeterSayHiTo</td>
+                    <td>new_Greeter</td>
+                </tr>
+                <tr>
+                    <td>greet_a</td>
+                    <td>greet</td>
+                </tr>
+                <tr>
+                    <td>greet_a</td>
+                    <td>main</td>
+                </tr>
+                <tr>
+                    <td>greet_a</td>
+                    <td>recursive_a</td>
+                </tr>
+                <tr>
+                    <td>recursive_a</td>
+                    <td>recursive_b</td>
+                </tr>
+                <tr>
+                    <td>recursive_a</td>
+                    <td>greet_a</td>
+                </tr>
+                <tr>
+                    <td>recursive_b</td>
+                    <td>greet_b</td>
+                </tr>
+                <tr>
+                    <td>recursive_b</td>
+                    <td>recursive_a</td>
+                </tr>
+                <tr>
+                    <td>greet_b</td>
+                    <td>greet</td>
+                </tr>
+                <tr>
+                    <td>greet_b</td>
+                    <td>recursive_b</td>
+                </tr>
+                <tr>
+                    <td>greet_b</td>
+                    <td>main</td>
+                </tr>
+                <tr>
+                    <td>GreeterSayHi</td>
+                    <td>new_Greeter</td>
+                </tr>
+                <tr>
+                    <td>addInt</td>
+                    <td>main</td>
+                </tr>
+                <tr>
+                    <td>new_Greeter</td>
+                    <td>main</td>
+                </tr>
+                <tr>
+                    <td>new_Greeter</td>
+                    <td>GreeterSayHiTo</td>
+                </tr>
+                <tr>
+                    <td>new_Greeter</td>
+                    <td>GreeterSayHi</td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    <h2>Entry Points (1)</h2>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>File</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>greet_b</td>
+                    <td>./src/helloworld.c</td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    <h2>Exit Points (6)</h2>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>File</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>greet</td>
+                    <td>./src/greetings.c</td>
+                </tr>
+                <tr>
+                    <td>main</td>
+                    <td>./src/helloworld.c</td>
+                </tr>
+                <tr>
+                    <td>GreeterSayHiTo</td>
+                    <td>./src/helloworld.c</td>
+                </tr>
+                <tr>
+                    <td>recursive_a</td>
+                    <td>./src/greetings.c</td>
+                </tr>
+                <tr>
+                    <td>recursive_b</td>
+                    <td>./src/greetings.c</td>
+                </tr>
+                <tr>
+                    <td>GreeterSayHi</td>
+                    <td>./src/helloworld.c</td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    <h2>Dangerous Functions (0)</h2>
+    <div>
+        No dangerous functions to show.
+    </div>
 </body>
 </html>
