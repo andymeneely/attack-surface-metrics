@@ -245,7 +245,27 @@ class CallGraphFromGprofTestCase(unittest.TestCase):
 
         # Assert
         self.assertCountEqual(expected, actual)
-    
+
+    def test_get_nodes(self):
+        # Arrange
+        expected = []
+
+        # Act
+        actual = self.target.get_nodes(attribute='exit')
+
+        # Assert
+        self.assertCountEqual(expected, actual)
+
+    def test_get_nodes_invalid_attribute(self):
+        # Arrange
+        expected = []
+
+        # Act
+        actual = self.target.get_nodes(attribute='foo')
+
+        # Assert
+        self.assertCountEqual(expected, actual)
+
     @unittest.expectedFailure
     def test_get_entry_point_reachability(self):
         # Arrange
@@ -291,6 +311,50 @@ class CallGraphFromGprofTestCase(unittest.TestCase):
             self.target.get_exit_point_reachability,
             call
         )
+
+    def test_get_association_metrics_with_entry(self):
+        # Arrange
+        expected = {}
+        call = Call('new_Greeter', './src/helloworld.c', Environments.C)
+
+        # Act
+        actual = self.target.get_association_metrics(call, 'entry')
+
+        # Assert
+        self.assertEqual(expected, actual)
+
+    def test_get_association_metrics_with_entry_for_entry(self):
+        # Arrange
+        expected = {}
+        call = Call('greet_b', './src/helloworld.c', Environments.C)
+
+        # Act
+        actual = self.target.get_association_metrics(call, 'entry')
+
+        # Assert
+        self.assertEqual(expected, actual)
+
+    def test_get_association_metrics_with_exit(self):
+        # Arrange
+        expected = {}
+        call = Call('new_Greeter', './src/helloworld.c', Environments.C)
+
+        # Act
+        actual = self.target.get_association_metrics(call, 'exit')
+
+        # Assert
+        self.assertEqual(expected, actual)
+
+    def test_get_association_metrics_with_exit_for_exit(self):
+        # Arrange
+        expected = {}
+        call = Call('greet', './src/greetings.c', Environments.C)
+
+        # Act
+        actual = self.target.get_association_metrics(call, 'exit')
+
+        # Assert
+        self.assertEqual(expected, actual)
 
     def test_get_entry_surface_metrics(self):
         # Arrange

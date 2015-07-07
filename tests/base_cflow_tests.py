@@ -1,4 +1,5 @@
 import os
+import statistics as stat
 
 import networkx as nx
 
@@ -255,6 +256,33 @@ class BaseCflowTests(object):
         # Assert
         self.assertCountEqual(expected, actual)
 
+    def test_get_nodes(self):
+        # Arrange
+        expected = [
+            Call('greet', './src/greetings.c', Environments.C),
+            Call('recursive_a', './src/greetings.c', Environments.C),
+            Call('recursive_b', './src/greetings.c', Environments.C),
+            Call('GreeterSayHi', './src/helloworld.c', Environments.C),
+            Call('GreeterSayHiTo', './src/helloworld.c', Environments.C),
+            Call('main', './src/helloworld.c', Environments.C)
+        ]
+
+        # Act
+        actual = self.target.get_nodes(attribute='exit')
+
+        # Assert
+        self.assertCountEqual(expected, actual)
+
+    def test_get_nodes_invalid_attribute(self):
+        # Arrange
+        expected = []
+
+        # Act
+        actual = self.target.get_nodes(attribute='foo')
+
+        # Assert
+        self.assertCountEqual(expected, actual)
+
     def test_get_entry_point_reachability(self):
         # Arrange
         expected = 0.9090909090909091
@@ -298,6 +326,68 @@ class BaseCflowTests(object):
             self.target.get_exit_point_reachability,
             call
         )
+
+    def test_get_association_metrics_with_entry(self):
+        # Arrange
+        expected = {
+            Call('greet_b', './src/helloworld.c', Environments.C): 2
+        }
+        call = Call('functionPtr', './src/helloworld.c', Environments.C)
+
+        # Act
+        actual = self.target.get_association_metrics(call, 'entry')
+
+        # Assert
+        self.assertCountEqual(expected, actual)
+        self.assertAlmostEqual(
+            stat.mean(expected.values()),
+            stat.mean(expected.values()),
+            places=4
+        )
+
+    def test_get_association_metrics_with_entry_for_entry(self):
+        # Arrange
+        expected = {}
+        call = Call('greet_b', './src/helloworld.c', Environments.C)
+
+        # Act
+        actual = self.target.get_association_metrics(call, 'entry')
+
+        # Assert
+        self.assertEqual(expected, actual)
+
+    def test_get_association_metrics_with_exit(self):
+        # Arrange
+        expected = {
+            Call('greet', './src/greetings.c', Environments.C): 3,
+            Call('recursive_a', './src/greetings.c', Environments.C): 3,
+            Call('recursive_b', './src/greetings.c', Environments.C): 3,
+            Call('GreeterSayHi', './src/helloworld.c', Environments.C): 3,
+            Call('GreeterSayHiTo', './src/helloworld.c', Environments.C): 3,
+            Call('main', './src/helloworld.c', Environments.C): 1
+        }
+        call = Call('functionPtr', './src/helloworld.c', Environments.C)
+
+        # Act
+        actual = self.target.get_association_metrics(call, 'exit')
+
+        # Assert
+        self.assertCountEqual(expected, actual)
+        self.assertAlmostEqual(
+            stat.mean(expected.values()),
+            stat.mean(expected.values()), places=4
+        )
+
+    def test_get_association_metrics_with_exit_for_exit(self):
+        # Arrange
+        expected = {}
+        call = Call('greet', './src/greetings.c', Environments.C)
+
+        # Act
+        actual = self.target.get_association_metrics(call, 'exit')
+
+        # Assert
+        self.assertEqual(expected, actual)
 
     def test_get_entry_surface_metrics(self):
         # Arrange

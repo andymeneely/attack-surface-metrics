@@ -144,10 +144,7 @@ class CallGraph():
             A list of Call objects, each representing an entry point.
         """
         if self._entry_points is None:
-            self._entry_points = list(
-                nx.get_node_attributes(self.call_graph, 'entry').keys()
-            )
-
+            self._entry_points = self.get_nodes('entry')
         return self._entry_points
 
     @property
@@ -164,10 +161,7 @@ class CallGraph():
             A list of Call objects, each representing an exit point.
         """
         if self._exit_points is None:
-            self._exit_points = list(
-                nx.get_node_attributes(self.call_graph, 'exit').keys()
-            )
-
+            self._exit_points = self.get_nodes('exit')
         return self._exit_points
 
     @property
@@ -264,6 +258,24 @@ class CallGraph():
         """
         return list(nx.descendants(self.call_graph, call))
 
+    def get_nodes(self, attribute):
+        """Return a list of nodes that have a specific attribute set.
+
+        Parameters
+        ----------
+        attribute : str
+            The name of the attribute.
+            
+        Returns
+        -------
+        nodes : list
+            A list of Call objects, each of which have the specified attribute
+            associated with them. An empty list is returned when there are no
+            nodes that have the specified attribute associated with them.
+        """
+        nodes = list(nx.get_node_attributes(self.call_graph, attribute).keys())
+        return nodes 
+
     def get_entry_point_reachability(self, call):
         """Return the percentage of system accessible from an entry point.
 
@@ -299,6 +311,49 @@ class CallGraph():
             raise Exception('{0} must be an exit point.'.format(call))
 
         return len(self.get_ancestors(call)) / len(self.nodes)
+
+    def get_association_metrics(self, call, attribute):
+        """Return metrics of association collected for a call.
+        
+        The metrics of association are collected w.r.t. to nodes in the call
+        graph that have a specfic attribute associated with them.
+
+        Parameters
+        ----------
+        call : Call
+            An object representing a function call in the call graph.
+        attribute : str
+            The name of the attribute that aids in identifying the nodes w.r.t.
+            which the association metrics are to be collected.
+            
+        Returns
+        -------
+        metrics - dict
+            A dictionary keyed by the node that the given call has a path to
+            and the value is the length of the shortest path between the call
+            and the node. If the given call itself has the specified attribute
+            set or if the given call has no association with any of the nodes
+            taht have the specified attribute set, then an emtpy dictionary is
+            returned.
+
+        Notes
+        -----
+
+        The association metrics currently implemented are:
+          * Proximity
+          * Coupling
+        """
+        metrics = dict()
+
+        nodes = self.get_nodes(attribute)
+        if call not in nodes:
+            for node in self.get_nodes(attribute):
+                if nx.has_path(self.call_graph, source=call, target=node):
+                    metrics[node] = nx.shortest_path_length(
+                        self.call_graph, source=call, target=node
+                    )
+
+        return metrics
 
     def get_entry_surface_metrics(self, call):
         """Return entry surface metrics collected for a particular function.
