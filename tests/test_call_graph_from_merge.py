@@ -394,7 +394,7 @@ class CallGraphFromMergeTestCase(unittest.TestCase):
             call
         )
 
-    def test_get_association_metrics_with_entry(self):
+    def test_get_shortest_path_length_with_entry(self):
         # Arrange
         expected = {
             Call('greet_b', './src/helloworld.c', Environments.C): 2
@@ -402,7 +402,7 @@ class CallGraphFromMergeTestCase(unittest.TestCase):
         call = Call('functionPtr', './src/helloworld.c', Environments.C)
 
         # Act
-        actual = self.target.get_association_metrics(call, 'entry')
+        actual = self.target.get_shortest_path_length(call, 'entry')
 
         # Assert
         self.assertCountEqual(expected, actual)
@@ -411,18 +411,18 @@ class CallGraphFromMergeTestCase(unittest.TestCase):
             stat.mean(expected.values()), places=4
         )
 
-    def test_get_association_metrics_with_entry_for_entry(self):
+    def test_get_shortest_path_length_with_entry_for_entry(self):
         # Arrange
         expected = {}
         call = Call('greet_b', './src/helloworld.c', Environments.C)
 
         # Act
-        actual = self.target.get_association_metrics(call, 'entry')
+        actual = self.target.get_shortest_path_length(call, 'entry')
 
         # Assert
         self.assertEqual(expected, actual)
 
-    def test_get_association_metrics_with_exit(self):
+    def test_get_shortest_path_length_with_exit(self):
         # Arrange
         expected = {
             Call('greet', './src/greetings.c', Environments.C): 3,
@@ -435,7 +435,7 @@ class CallGraphFromMergeTestCase(unittest.TestCase):
         call = Call('functionPtr', './src/helloworld.c', Environments.C)
 
         # Act
-        actual = self.target.get_association_metrics(call, 'exit')
+        actual = self.target.get_shortest_path_length(call, 'exit')
 
         # Assert
         self.assertCountEqual(expected, actual)
@@ -445,13 +445,13 @@ class CallGraphFromMergeTestCase(unittest.TestCase):
             places=4
         )
 
-    def test_get_association_metrics_with_exit_for_exit(self):
+    def test_get_shortest_path_length_with_exit_for_exit(self):
         # Arrange
         expected = {}
         call = Call('greet', './src/greetings.c', Environments.C)
 
         # Act
-        actual = self.target.get_association_metrics(call, 'exit')
+        actual = self.target.get_shortest_path_length(call, 'exit')
 
         # Assert
         self.assertEqual(expected, actual)

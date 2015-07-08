@@ -313,46 +313,46 @@ class CallGraphFromGprofTestCase(unittest.TestCase):
             call
         )
 
-    def test_get_association_metrics_with_entry(self):
+    def test_get_shortest_path_length_with_entry(self):
         # Arrange
-        expected = {}
+        expected = None
         call = Call('new_Greeter', './src/helloworld.c', Environments.C)
 
         # Act
-        actual = self.target.get_association_metrics(call, 'entry')
+        actual = self.target.get_shortest_path_length(call, 'entry')
 
         # Assert
         self.assertEqual(expected, actual)
 
-    def test_get_association_metrics_with_entry_for_entry(self):
+    def test_get_shortest_path_length_with_entry_for_entry(self):
         # Arrange
-        expected = {}
+        expected = None
         call = Call('greet_b', './src/helloworld.c', Environments.C)
 
         # Act
-        actual = self.target.get_association_metrics(call, 'entry')
+        actual = self.target.get_shortest_path_length(call, 'entry')
 
         # Assert
         self.assertEqual(expected, actual)
 
-    def test_get_association_metrics_with_exit(self):
+    def test_get_shortest_path_length_with_exit(self):
         # Arrange
-        expected = {}
+        expected = None
         call = Call('new_Greeter', './src/helloworld.c', Environments.C)
 
         # Act
-        actual = self.target.get_association_metrics(call, 'exit')
+        actual = self.target.get_shortest_path_length(call, 'exit')
 
         # Assert
         self.assertEqual(expected, actual)
 
-    def test_get_association_metrics_with_exit_for_exit(self):
+    def test_get_shortest_path_length_with_exit_for_exit(self):
         # Arrange
-        expected = {}
+        expected = None
         call = Call('greet', './src/greetings.c', Environments.C)
 
         # Act
-        actual = self.target.get_association_metrics(call, 'exit')
+        actual = self.target.get_shortest_path_length(call, 'exit')
 
         # Assert
         self.assertEqual(expected, actual)

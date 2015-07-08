@@ -319,48 +319,44 @@ class CallGraph():
 
         return len(self.get_ancestors(call)) / len(self.nodes)
 
-    def get_association_metrics(self, call, attribute):
-        """Return metrics of association collected for a call.
+    def get_shortest_path_length(self, call, attribute):
+        """Return shortest path from call to all nodes identified by attribute.
         
-        The metrics of association are collected w.r.t. to nodes in the call
-        graph that have a specfic attribute associated with them.
-
         Parameters
         ----------
         call : Call
             An object representing a function call in the call graph.
         attribute : str
-            The name of the attribute that aids in identifying the nodes w.r.t.
-            which the association metrics are to be collected.
+            The name of the attribute that identifies the nodes.
             
         Returns
         -------
-        metrics - dict
+        lengths - dict
             A dictionary keyed by the node that the given call has a path to
-            and the value is the length of the shortest path between the call
-            and the node. If the given call itself has the specified attribute
-            set or if the given call has no association with any of the nodes
-            taht have the specified attribute set, then an emtpy dictionary is
+            and the value is the length of the shortest path from the call to
+            the node. If the given call itself has the specified attribute
+            set, an empty dictionary is returned. If the given call has no
+            path to any of the nodes identified by the attribute or if there
+            are no nodes with the specified attribute defined, then None is
             returned.
-
-        Notes
-        -----
-
-        The association metrics currently implemented are:
-          * Proximity
-          * Coupling
         """
-        metrics = dict()
+        lengths = None
 
         nodes = self.get_nodes(attribute)
-        if call not in nodes:
+        if call in nodes:
+            lengths = dict()
+        else:
+            _lengths = dict()
             for node in self.get_nodes(attribute):
                 if nx.has_path(self.call_graph, source=call, target=node):
-                    metrics[node] = nx.shortest_path_length(
+                    _lengths[node] = nx.shortest_path_length(
                         self.call_graph, source=call, target=node
                     )
 
-        return metrics
+            if _lengths:
+                lengths = _lengths
+
+        return lengths
 
     def get_entry_surface_metrics(self, call):
         """Return entry surface metrics collected for a particular function.
