@@ -358,6 +358,7 @@ class CallGraph():
 
         return lengths
 
+    @utilities.deprecation
     def get_entry_surface_metrics(self, call):
         """Return entry surface metrics collected for a particular function.
 
@@ -394,7 +395,8 @@ class CallGraph():
         metrics['surface_coupling'] = len(points) if points else None
 
         return metrics
-
+    
+    @utilities.deprecation
     def get_exit_surface_metrics(self, call):
         """Return exit surface metrics collected for a particular function.
 

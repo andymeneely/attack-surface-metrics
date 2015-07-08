@@ -1,5 +1,6 @@
 import copy
 import networkx as nx
+import warnings
 
 from attacksurfacemeter.call import Call
 
@@ -179,3 +180,29 @@ def get_node_attrs(source, caller, callee, defenses, vulnerabilities):
     attributes = (caller_attrs, callee_attrs)
 
     return attributes
+
+
+def deprecation(function):
+    """Mark a function as deprecated.
+    
+    Parameters
+    ----------
+    function : object
+        A function object to be marked as deprecated.
+
+    Returns
+    -------
+    function : object
+        A function object that wraps the function being decorated.
+    """
+    def wrapper(*args, **kwargs):
+        warnings.warn(
+            '{0} will soon be deprecated'.format(function.__name__),
+            DeprecationWarning,
+            stacklevel=2
+        )
+        return function(*args, **kwargs)
+    wrapper.__name__ = function.__name__
+    wrapper.__doc__ = function.__doc__
+    wrapper.__dict__ = function.__dict__
+    return wrapper
