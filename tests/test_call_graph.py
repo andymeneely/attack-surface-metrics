@@ -119,8 +119,8 @@ class CallGraphTestCase(unittest.TestCase):
         weights = {
             "base": {"call": 125, "return": 75},
             "dangerous": 35,
-            "defense": 30,
-            "tested": 25,
+            "defense": -30,
+            "tested": -25,
             "vulnerable": 35
         }
         expected = {

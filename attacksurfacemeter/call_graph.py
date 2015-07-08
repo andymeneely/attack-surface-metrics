@@ -517,18 +517,18 @@ class CallGraph():
         for (caller, callee, attrs) in self.edges:
             weight = 0
             if 'call' in attrs:
-                weight = abs(weights['base']['call'])
+                weight = weights['base']['call']
             elif 'return' in attrs:
-                weight = abs(weights['base']['return'])
+                weight = weights['base']['return']
 
             callee_attrs = self.call_graph.node[callee]
             if 'dangerous' in callee_attrs:
-                weight += abs(weights['dangerous'])
+                weight += weights['dangerous']
             if 'defense' in callee_attrs:
-                weight -= abs(weights['defense'])
+                weight += weights['defense']
             if 'tested' in callee_attrs:
-                weight -= abs(weights['tested'])
+                weight += weights['tested']
             if 'vulnerable' in callee_attrs:
-                weight += abs(weights['vulnerable'])
+                weight += weights['vulnerable']
 
             self.call_graph.edge[caller][callee]['weight'] = weight
