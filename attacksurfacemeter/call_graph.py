@@ -62,6 +62,7 @@ class CallGraph():
         self._exit_points = None
 
         self._degree = None
+        self._fan = None
 
     @classmethod
     def from_loader(cls, loader, fragmentize=False):
@@ -199,6 +200,7 @@ class CallGraph():
         """
         return self.call_graph.edges(data=True)
 
+    @utilities.deprecation
     def get_degree(self, call=None):
         """Return the degree of a specific call.
 
@@ -226,6 +228,45 @@ class CallGraph():
         if call:
             return self._degree[call]
         return self._degree
+
+    def get_fan(self, call=None):
+        """Return the fan metrics of a specific call.
+
+        Parameters
+        ----------
+        call : Call, optional
+            An instance of Call the fan metrics of which will be calculated.
+
+        Returns
+        -------
+        degree : 2-tuple or dict
+            A 2-tuple, (fan_in, dan_out), of call (if provided) or a
+            dictionary keyed by call with (fan_in, fan_out) as the value.
+        """
+        if self._fan is None:
+            self._fan = dict()
+            for (i, _) in self.nodes:
+                _fan_in = _fan_out = 0
+
+                # # callers
+                _in_edges = self.call_graph.in_edges_iter(i, data=True)
+                _callers = [
+                    u for (u, _, attrs) in _in_edges if 'call' in attrs
+                ]
+                _fan_in = len(_callers)
+
+                # # callee
+                _out_edges = self.call_graph.out_edges_iter(i, data=True)
+                _callees = [
+                    u for (u, _, attrs) in _out_edges if 'call' in attrs
+                ]
+                _fan_out = len(_callees)
+
+                self._fan[i] = (_fan_in, _fan_out)
+
+        if call:
+            return self._fan[call]
+        return self._fan
 
     def get_ancestors(self, call):
         """Return the list of ancestors of a specific call.

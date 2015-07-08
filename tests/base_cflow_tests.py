@@ -213,6 +213,42 @@ class BaseCflowTests(object):
         # Assert
         self.assertEqual(expected, actual)
 
+    def test_get_fan(self):
+        # Arrange
+        expected = {
+            Call('main', './src/helloworld.c', Environments.C): (0, 5),
+            Call('GreeterSayHi', './src/helloworld.c', Environments.C): (1, 0),
+            Call('new_Greeter', './src/helloworld.c', Environments.C): (1, 2),
+            Call('greet', './src/greetings.c', Environments.C): (2, 0),
+            Call('greet_b', './src/helloworld.c', Environments.C): (1, 2),
+            Call('functionPtr', './src/helloworld.c', Environments.C): (1, 0),
+            Call('recursive_b', './src/greetings.c', Environments.C): (2, 1),
+            Call('addInt', './src/helloworld.c', Environments.C): (1, 0),
+            Call('recursive_a', './src/greetings.c', Environments.C): (2, 1),
+            Call('GreeterSayHiTo', './src/helloworld.c', Environments.C): 
+                (1, 0),
+            Call('greet_a', './src/helloworld.c', Environments.C): (1, 2)
+        }
+
+        # Act
+        actual = self.target.get_fan()
+        match = all([actual[i] == expected[i] for i in actual])
+
+        # Assert
+        self.assertEqual(len(expected), len(actual))
+        self.assertTrue(match)
+
+    def test_get_fan_of_call(self):
+        # Arrange
+        expected = (0, 5)
+        call = Call('main', './src/helloworld.c', Environments.C)
+
+        # Act
+        actual = self.target.get_fan(call)
+
+        # Assert
+        self.assertEqual(expected, actual)
+
     def test_get_descendants(self):
         # Arrange
         expected = [
