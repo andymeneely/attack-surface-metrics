@@ -209,12 +209,19 @@ class CallGraph():
 
         Returns
         -------
-        degree : int or dict
-            The degree of call (if provided) or a dictionary keyed by call with
-            degree as the value.
+        degree : 2-tuple or dict
+            A 2-tuple, (indegree, outdegree), of call (if provided) or a
+            dictionary keyed by call with (indegree, outdegree) as the value.
         """
         if self._degree is None:
-            self._degree = self.call_graph.degree()
+            _in_degree = self.call_graph.in_degree()
+            _out_degree = self.call_graph.out_degree()
+
+            if _in_degree or _out_degree:
+                keys = set(list(_in_degree.keys()) + list(_out_degree.keys()))
+                self._degree = {
+                    k: (_in_degree[k], _out_degree[k]) for k in keys
+                }
 
         if call:
             return self._degree[call]

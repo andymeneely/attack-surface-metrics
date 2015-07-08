@@ -246,17 +246,18 @@ class CallGraphFromMergeTestCase(unittest.TestCase):
     def test_get_degree(self):
         # Arrange
         expected = {
-            Call('main', './src/helloworld.c', Environments.C): 14,
-            Call('GreeterSayHi', './src/helloworld.c', Environments.C): 4,
-            Call('new_Greeter', './src/helloworld.c', Environments.C): 6,
-            Call('greet', './src/greetings.c', Environments.C): 4,
-            Call('greet_b', './src/helloworld.c', Environments.C): 6,
-            Call('functionPtr', './src/helloworld.c', Environments.C): 2,
-            Call('recursive_b', './src/greetings.c', Environments.C): 4,
-            Call('addInt', './src/helloworld.c', Environments.C): 2,
-            Call('recursive_a', './src/greetings.c', Environments.C): 4,
-            Call('GreeterSayHiTo', './src/helloworld.c', Environments.C): 4,
-            Call('greet_a', './src/helloworld.c', Environments.C): 6
+            Call('main', './src/helloworld.c', Environments.C): (7, 7),
+            Call('GreeterSayHi', './src/helloworld.c', Environments.C): (2, 2),
+            Call('new_Greeter', './src/helloworld.c', Environments.C): (3, 3),
+            Call('greet', './src/greetings.c', Environments.C): (2, 2),
+            Call('greet_b', './src/helloworld.c', Environments.C): (3, 3),
+            Call('functionPtr', './src/helloworld.c', Environments.C): (1, 1),
+            Call('recursive_b', './src/greetings.c', Environments.C): (2, 2),
+            Call('addInt', './src/helloworld.c', Environments.C): (1, 1),
+            Call('recursive_a', './src/greetings.c', Environments.C): (2, 2),
+            Call('GreeterSayHiTo', './src/helloworld.c', Environments.C):
+                (2, 2),
+            Call('greet_a', './src/helloworld.c', Environments.C): (3, 3)
         }
 
         # Act
@@ -269,7 +270,7 @@ class CallGraphFromMergeTestCase(unittest.TestCase):
 
     def test_get_degree_of_call(self):
         # Arrange
-        expected = 14
+        expected = (7, 7)
 
         # Act
         call = Call('main', './src/helloworld.c', Environments.C)

@@ -180,17 +180,18 @@ class BaseCflowTests(object):
     def test_get_degree(self):
         # Arrange
         expected = {
-            Call('main', './src/helloworld.c', Environments.C): 10,
-            Call('GreeterSayHi', './src/helloworld.c', Environments.C): 2,
-            Call('new_Greeter', './src/helloworld.c', Environments.C): 6,
-            Call('greet', './src/greetings.c', Environments.C): 4,
-            Call('greet_b', './src/helloworld.c', Environments.C): 6,
-            Call('functionPtr', './src/helloworld.c', Environments.C): 2,
-            Call('recursive_b', './src/greetings.c', Environments.C): 4,
-            Call('addInt', './src/helloworld.c', Environments.C): 2,
-            Call('recursive_a', './src/greetings.c', Environments.C): 4,
-            Call('GreeterSayHiTo', './src/helloworld.c', Environments.C): 2,
-            Call('greet_a', './src/helloworld.c', Environments.C): 6
+            Call('main', './src/helloworld.c', Environments.C): (5, 5),
+            Call('GreeterSayHi', './src/helloworld.c', Environments.C): (1, 1),
+            Call('new_Greeter', './src/helloworld.c', Environments.C): (3, 3),
+            Call('greet', './src/greetings.c', Environments.C): (2, 2),
+            Call('greet_b', './src/helloworld.c', Environments.C): (3, 3),
+            Call('functionPtr', './src/helloworld.c', Environments.C): (1, 1),
+            Call('recursive_b', './src/greetings.c', Environments.C): (2, 2),
+            Call('addInt', './src/helloworld.c', Environments.C): (1, 1),
+            Call('recursive_a', './src/greetings.c', Environments.C): (2, 2),
+            Call('GreeterSayHiTo', './src/helloworld.c', Environments.C): 
+                (1, 1),
+            Call('greet_a', './src/helloworld.c', Environments.C): (3, 3)
         }
 
         # Act
@@ -203,7 +204,7 @@ class BaseCflowTests(object):
 
     def test_get_degree_of_call(self):
         # Arrange
-        expected = 10
+        expected = (5, 5)
 
         # Act
         call = Call('main', './src/helloworld.c', Environments.C)
