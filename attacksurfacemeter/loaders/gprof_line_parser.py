@@ -26,9 +26,13 @@ class GprofLineParser(BaseLineParser):
         self.__init__()
 
         # The field in the gprof call graph that contains the name of the
-        # function and the file containing the function begins at column 46
-        # (deduced from gprof source code)
-        name = gprof_line[45:]
+        #  function and the file containing the function begins at column 46
+        #  for the function in question and at column 50 for its callers and
+        #  callees
+        # Source: Deduced gprof source code
+        name = gprof_line[49:]
+        if gprof_line.startswith('['):
+            name = gprof_line[45:]
         match = RE_NAME.match(name.strip())
 
         if match:
