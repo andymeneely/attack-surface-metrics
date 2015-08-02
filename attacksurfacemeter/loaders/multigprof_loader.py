@@ -68,7 +68,8 @@ class MultigprofLoader(BaseLoader):
                 func=self._load_call_graph,
                 iterable=[
                     (index, sync_queue) for index in range(len(self.sources))
-                ]
+                ],
+                chunksize=1
             )
 
         process.join()
