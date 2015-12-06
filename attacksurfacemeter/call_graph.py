@@ -313,7 +313,7 @@ class CallGraph():
         ----------
         attribute : str
             The name of the attribute.
-            
+
         Returns
         -------
         nodes : list
@@ -322,7 +322,7 @@ class CallGraph():
             nodes that have the specified attribute associated with them.
         """
         nodes = list(nx.get_node_attributes(self.call_graph, attribute).keys())
-        return nodes 
+        return nodes
 
     def get_entry_point_reachability(self, call):
         """Return the percentage of system accessible from an entry point.
@@ -362,14 +362,14 @@ class CallGraph():
 
     def get_shortest_path_length(self, call, attribute):
         """Return shortest path from call to all nodes identified by attribute.
-        
+
         Parameters
         ----------
         call : Call
             An object representing a function call in the call graph.
         attribute : str
             The name of the attribute that identifies the nodes.
-            
+
         Returns
         -------
         lengths - dict
@@ -436,7 +436,7 @@ class CallGraph():
         metrics['surface_coupling'] = len(points) if points else None
 
         return metrics
-    
+
     @utilities.deprecation
     def get_exit_surface_metrics(self, call):
         """Return exit surface metrics collected for a particular function.
@@ -475,19 +475,23 @@ class CallGraph():
 
         return metrics
 
-    def get_page_rank(self, call=None, primary=10000, secondary=1):
+    def get_page_rank(self, call=None, damping=0.85, entry=10000, exit=10000,
+                      other=1):
         """Compute the page rank of nodes in the call graph.
 
         Parameters
         ----------
         call : Call, optional
             An instance of Call the page rank for which will be returned.
-        primary : int, optional
-            A non-zero personalization value for a node that is an entry point
-            or an exit point.
-        secondary : int, optional
-            A non-zero personalization value for a node that is not an entry
-            point or an exit point.
+        damping : float, optional
+            The damping parameter used in the Page Rank algorithm
+        entry : int, optional
+            A non-zero personalization value for a node that is an entry point.
+        exit : int, optional
+            A non-zero personalization value for a node that is an exit point.
+        other : int, optional
+            A non-zero personalization value for a node that is neither an
+            entry point nor an exit point.
 
         Returns
         -------
@@ -497,15 +501,20 @@ class CallGraph():
             the call graph is returned with the node being the key and the
             page rank being the value.
         """
-        personalization = {
-            n: primary
-            if n in self.entry_points or n in self.exit_points
-            else secondary
-            for (n, _) in self.nodes
-        }
+        personalization = dict()
+        personalization.update({n: other for (n, _) in self.nodes})
+        personalization.update({n: entry for n in self.entry_points})
+        personalization.update({n: exit for n in self.exit_points})
+        personalization.update(
+            {
+                n: (entry + exit)
+                for n in set(self.entry_points).intersection(self.exit_points)
+            }
+        )
 
         page_rank = nx.pagerank(
             self.call_graph,
+            alpha=damping,
             weight='weight',
             personalization=personalization
         )
@@ -514,17 +523,21 @@ class CallGraph():
             return page_rank[call]
         return page_rank
 
-    def assign_page_rank(self, primary=10000, secondary=1, name='page_rank'):
+    def assign_page_rank(self, damping=0.85, entry=10000, exit=10000, other=1,
+                         name='page_rank'):
         """Assign the page rank as an attribute of the node.
 
         Parameters
         ----------
-        primary : int, optional
-            A non-zero personalization value for a node that is an entry point
-            or an exit point.
-        secondary : int, optional
-            A non-zero personalization value for a node that is not an entry
-            point or an exit point.
+        damping : float, optional
+            The damping parameter used in the Page Rank algorithm
+        entry : int, optional
+            A non-zero personalization value for a node that is an entry point.
+        exit : int, optional
+            A non-zero personalization value for a node that is an exit point.
+        other : int, optional
+            A non-zero personalization value for a node that is neither an
+            entry point nor an exit point.
         name : str, optional
             The name of the attribute that the page rank should be assigned to.
 
@@ -535,7 +548,9 @@ class CallGraph():
         nx.set_node_attributes(
             self.call_graph,
             name,
-            self.get_page_rank(primary=primary, secondary=secondary)
+            self.get_page_rank(
+                damping=damping, entry=entry, exit=exit, other=other
+            )
         )
 
     def assign_weights(self, weights=None):
