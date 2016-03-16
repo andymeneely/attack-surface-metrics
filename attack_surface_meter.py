@@ -1,114 +1,176 @@
-__author__ = 'kevin'
-
 import argparse
+import os
+import sys
 
 from attacksurfacemeter.call_graph import CallGraph
-from loaders.cflow_loader import CflowLoader
-from loaders.gprof_loader import GprofLoader
-from loaders.javacg_loader import JavaCGLoader
-from formatters.txt_formatter import TxtFormatter
-from formatters.xml_formatter import XmlFormatter
-from formatters.json_formatter import JsonFormatter
-from formatters.html_formatter import HtmlFormatter
+from attacksurfacemeter.loaders.cflow_loader import CflowLoader
+from attacksurfacemeter.loaders.gprof_loader import GprofLoader
+from attacksurfacemeter.loaders.multigprof_loader import MultigprofLoader
+from attacksurfacemeter.loaders.javacg_loader import JavaCGLoader
+from attacksurfacemeter.formatters.txt_formatter import TxtFormatter
+from attacksurfacemeter.formatters.xml_formatter import XmlFormatter
+from attacksurfacemeter.formatters.html_formatter import HtmlFormatter
 
-# TODO: This way of setting up the call graph and metrics calculations is becoming
-# too complex. Better find another way to set all of this up. Creating classes for
-# managing the set up of each "class chain" seems like a good idea.
+
+FORMATTERS = {
+    'txt': TxtFormatter, 'xml': XmlFormatter, 'html': HtmlFormatter
+}
+
+
 def main():
-
-    formatters = {
-        'txt': TxtFormatter,
-        'xml': XmlFormatter,
-        'json': JsonFormatter,
-        'html': HtmlFormatter
-    }
-
-    loaders = {
-        'cflow': CflowLoader,
-        'gprof': GprofLoader,
-        'javacg': JavaCGLoader
-    }
-
     args = parse_args()
 
-    if args.tool == "all":
-        # TODO: Maybe it would be useful to have some sort of factory method here because
-        # of different constructor signatures for different loaders. I.e. gprof doesn't
-        # support a reverse option so its not necessary to send it as a parameter.
-        cflow_loader = loaders['cflow'](args.cflowfile, args.reverse)
-        gprof_loader = loaders['gprof'](args.gproffile, args.reverse)
-
-        call_graph = CallGraph.from_merge(CallGraph.from_loader(cflow_loader),
-                                          CallGraph.from_loader(gprof_loader))
-    else:
-        if_not_none = lambda file: file if file is not None else args.source
-
-        input_file = {
-            'cflow': if_not_none(args.cflowfile),
-            'gprof': if_not_none(args.gproffile),
-            'javacg': if_not_none(args.javacgfile)
-        }
-
-        if args.tool == "javacg":
-            loader = loaders[args.tool](input_file[args.tool], args.apppackages)
-        else:
-            loader = loaders[args.tool](input_file[args.tool], args.reverse)
-
+    call_graph = None
+    if args.javacg:
+        loader = JavaCGLoader(
+            args.javacg, args.apppackages
+        )
         call_graph = CallGraph.from_loader(loader)
-
-    formatter = formatters[args.format](call_graph)
-
-    if args.summary:
-        print(formatter.write_summary())
     else:
-        print(formatter.write_output())
+        cflow_loader = None
+        gprof_loader = None
+        if args.cflow:
+            if not os.path.exists(args.cflow):
+                raise Exception('{} not found.'.format(args.cflow))
+            else:
+                cflow_loader = CflowLoader(args.cflow, reverse=args.reverse)
 
-    if args.show_errors:
-        for m in call_graph.errors:
-            print(m)
+        if args.gprof:
+            if not os.path.exists(args.gprof):
+                raise Exception('{} not found.'.format(args.gprof))
+            else:
+                if os.path.isdir(args.gprof):
+                    sources = [
+                        os.path.join(args.gprof, filename)
+                        for filename in os.listdir(args.gprof)
+                        if os.path.isfile(os.path.join(args.gprof, filename))
+                    ]
+                    gprof_loader = MultigprofLoader(
+                        sources, processes=args.processes
+                    )
+                else:
+                    gprof_loader = GprofLoader(
+                        args.gprof
+                    )
+
+        if cflow_loader and gprof_loader:
+            call_graph = CallGraph.from_merge(
+                CallGraph.from_loader(cflow_loader),
+                CallGraph.from_loader(gprof_loader)
+            )
+        elif cflow_loader:
+            call_graph = CallGraph.from_loader(cflow_loader)
+        elif gprof_loader:
+            call_graph = CallGraph.from_loader(gprof_loader)
+
+    if args.output:
+        (name, extension) = os.path.splitext(args.output)
+        output_format = extension.replace('.', '')
+        if output_format not in FORMATTERS:
+            output_format = 'txt'
+        formatter = FORMATTERS[output_format](call_graph)
+        with open(args.output, 'w') as file_:
+            if args.verbose:
+                file_.write(formatter.write_output())
+            else:
+                file_.write(formatter.write_summary())
+    else:
+        formatter = FORMATTERS['txt'](call_graph)
+        if args.verbose:
+            sys.stdout.write(formatter.write_output())
+        else:
+            sys.stdout.write(formatter.write_summary())
+
+    if args.showerrors and call_graph.load_errors:
+        sys.stdout.write('Parse Errors\n')
+        sys.stdout.write('============\n')
+        for error in call_graph.load_errors:
+            sys.stdout.write(error)
 
 
 def parse_args():
-    """
-        Provides a command line interface for the attack surface meter.
+    '''Parse command line arguments.
 
-        Defines all the positional and optional arguments along with their respective valid values
-        for the command line interface and returns all the received arguments as an object.
+    Parameters
+    ----------
+    None
 
-        Returns:
-            An object that contains all the provided command line arguments.
-    """
+    Returns
+    -------
+    args : object
+        An object containing the command line arguments are attributes.
+    '''
     parser = argparse.ArgumentParser(
-        description="Analyzes a software's source code and reports various metrics related to it's attack surface.")
-
-    parser.add_argument("-src", "--source",
-                        help="Can be either the root directory of the source code to analyze or the text file that "
-                             "contains the raw call graph information. Use this when specifying only one call graph "
-                             "generation tool with the -t (--tool) option.")
-    parser.add_argument("-cf", "--cflowfile",
-                        help="The file containing cflow's output.")
-    parser.add_argument("-gf", "--gproffile",
-                        help="The file containing gprof's output")
-    parser.add_argument("-jf", "--javacgfile",
-                        help="The file containing java-callgraph's output")
-
-    # TODO: Change this "all" option so that it reflects what it actually is: using both cflow and gprof files.
-    parser.add_argument("-t", "--tool", choices=["cflow", "gprof", "all", "javacg"], default="cflow",
-                        help="The call graph generation software to use. Choose both to use both tools.")
-    parser.add_argument("-r", "--reverse", action="store_true",
-                        help="When using cflow for call graph generation, use the reverse algorithm.")
-    parser.add_argument("-ap", "--apppackages", metavar='P', nargs="*",
-                        help="When using java-callgraph for call graph generation of android apps, "
-                             "specify the fully qualified package name of the method calls that will"
-                             "be included in the call graph. This is generally the name of the java package"
-                             "inside which the app's classes are defined.")
-
-    parser.add_argument("-f", "--format", choices=["txt", "html", "xml", "json"], default="txt",
-                        help="Output format of the calculated metrics report.")
-    parser.add_argument("-s", "--summary", action="store_true",
-                        help="Print only a summary of the report.")
-    parser.add_argument("-e", "--show_errors", action="store_true",
-                        help="Print all parsing error messages at the end of the report")
+        description=(
+            'Collect attack surface metrics from the call graph '
+            ' representation of a software system.'
+        )
+    )
+    parser.add_argument(
+        '-c', dest='cflow',
+        help=(
+            'Absolute path of the file containing the textual representation '
+            'of the call graph generated by GNU cflow or of the directory '
+            'containing the source code of the software system to be analyzed.'
+        )
+    )
+    parser.add_argument(
+        '--reverse', action='store_true',
+        help='cflow call graph was generated with the -r option.'
+    )
+    parser.add_argument(
+        '-g', dest='gprof',
+        help=(
+            'Absolute path of the file containing the textual representation '
+            'of the call graph generated by GNU gprof or of a directory '
+            'containing multiple such text files.'
+        )
+    )
+    parser.add_argument(
+        '-p', dest='processes', type=int, default=2,
+        help=(
+            'Number of processes to spawn when loaded multiple gprof call '
+            'graph files. Default is 2.'
+        )
+    )
+    parser.add_argument(
+        '-j', dest='javacg',
+        help=(
+            'Absolute path of the file containing the textual representation '
+            'of the call graph generated by java-callgraph.'
+        )
+    )
+    parser.add_argument(
+        '-a', dest='apppackages', metavar='P', nargs='*',
+        help=(
+            'When using java-callgraph for call graph generation of android '
+            'apps, specify the fully qualified package name of the method '
+            'calls that will be included in the call graph. This is generally '
+            'the name of the java package inside which the app\'s classes are '
+            'defined.'
+        )
+    )
+    parser.add_argument(
+        '--output',
+        help=(
+            'Absolute path of the file to which the output should be written '
+            'to. The format of output is inferred from the file extension. '
+            'txt, html, and xml are currently supported. In cases when the '
+            'output format cannot be inferred, txt is used. When an output '
+            'path is not specified, standard output is used.'
+        )
+    )
+    parser.add_argument(
+        '--verbose', action='store_true',
+        help=(
+            'Output itemized report including metric values collected for '
+            'each function.'
+        )
+    )
+    parser.add_argument(
+        '--showerrors', action='store_true',
+        help='Display errors encountered when parsing call graph (if any).'
+    )
 
     return parser.parse_args()
 
