@@ -7,7 +7,7 @@ except ImportError:
 
 setup(
     name='attacksurfacemeter',
-    version='0.9.0',
+    version='0.10.0',
     packages=[
         'attacksurfacemeter',
         'attacksurfacemeter.loaders',
@@ -41,7 +41,7 @@ setup(
         ],
     },
     install_requires=['networkx==1.9.1', 'django==1.7.4'],
-    license='The MIT License (MIT) Copyright (c) 2015 Andy Meneely',
+    license='The MIT License (MIT) Copyright (c) 2016 Andy Meneely',
     description='Library for collecting metrics of the attack surface.',
     long_description=open('README.md').read(),
     author='Andy Meneely',
