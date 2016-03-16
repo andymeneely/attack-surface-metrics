@@ -10,7 +10,7 @@ class JavaCGLoader(BaseLoader):
     """"""
     def __init__(self, source, app_packages=[]):
         """Constructor for JavaCGLoader"""
-        self.source = source
+        super(JavaCGLoader, self).__init__(source)
         self.app_packages = app_packages
 
     def load_call_graph(self):
