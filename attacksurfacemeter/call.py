@@ -1,6 +1,7 @@
 import os
 
 from attacksurfacemeter.environments import Environments
+from attacksurfacemeter.granularity import Granularity
 from attacksurfacemeter.loaders.cflow_line_parser import CflowLineParser
 from attacksurfacemeter.loaders.gprof_line_parser import GprofLineParser
 from attacksurfacemeter.loaders.javacg_line_parser import JavaCGLineParser
@@ -18,7 +19,8 @@ class Call():
     _c_output_functions = []
     _c_dangerous_sys_calls = []
 
-    def __init__(self, name, signature, environment):
+    def __init__(self, name, signature, environment,
+                 granularity=Granularity.FUNC):
         """Call constructor.
 
         Parameters
@@ -32,6 +34,10 @@ class Call():
         environment : str
             The environment of the function. See
             attacksurfacemeter.environments.Environments for available choices.
+        granularity : str
+            The granularity of the call graph into which the instance of Call
+            will be added to. See attacksurfacemeter.granularity.Granularity
+            for available choices.
 
         Returns
         -------
@@ -41,15 +47,22 @@ class Call():
         self._function_name = name
         self._function_signature = signature
         self._environment = environment
+        if granularity not in [Granularity.FILE, Granularity.FUNC]:
+            raise Exception('Unsupported granularity {}'.format(granularity))
+        self._granularity = granularity
 
     @classmethod
-    def from_cflow(cls, cflow_line):
+    def from_cflow(cls, cflow_line, granularity=Granularity.FUNC):
         """Instantiate Call by parsing a line from cflow call graph.
 
         Parameters
         ----------
         cflow_line : str
             A line of string from the cflow call graph.
+        granularity : str
+            The granularity of the call graph into which the instance of Call
+            will be added to. See attacksurfacemeter.granularity.Granularity
+            for available choices.
 
         Returns
         -------
@@ -61,20 +74,25 @@ class Call():
         new_instance = cls(
             cflow_line_parser.get_function_name(),
             cflow_line_parser.get_function_signature(),
-            Environments.C
+            Environments.C,
+            granularity
         )
         new_instance.level = cflow_line_parser.get_level()
 
         return new_instance
 
     @classmethod
-    def from_gprof(cls, gprof_line):
+    def from_gprof(cls, gprof_line, granularity=Granularity.FUNC):
         """Instantiate Call by parsing a line from gprof call graph.
 
         Parameters
         ----------
         gprof_line : str
             A line of string from the gprof call graph.
+        granularity : str
+            The granularity of the call graph into which the instance of Call
+            will be added to. See attacksurfacemeter.granularity.Granularity
+            for available choices.
 
         Returns
         -------
@@ -86,19 +104,24 @@ class Call():
         new_instance = cls(
             gprof_line_parser.get_function_name(),
             gprof_line_parser.get_function_signature(),
-            Environments.C
+            Environments.C,
+            granularity
         )
 
         return new_instance
 
     @classmethod
-    def from_javacg(cls, javacg_line):
+    def from_javacg(cls, javacg_line, granularity=Granularity.FUNC):
         """Instantiate Call by parsing a line from Java call graph.
 
         Parameters
         ----------
         javacg_line : str
             A line of string from the Java call graph.
+        granularity : str
+            The granularity of the call graph into which the instance of Call
+            will be added to. See attacksurfacemeter.granularity.Granularity
+            for available choices.
 
         Returns
         -------
@@ -110,7 +133,8 @@ class Call():
         new_instance = cls(
             javacg_line_parser.get_function_name(),
             javacg_line_parser.get_function_signature(),
-            Environments.ANDROID
+            Environments.ANDROID,
+            granularity
         )
 
         new_instance.class_name = javacg_line_parser.get_class()
@@ -382,10 +406,13 @@ class Call():
         identity : str
             The unique representation of this object.
         """
-        identity = self._function_name
-
-        if self._function_signature:
-            identity += ' ' + self._function_signature
+        identity = None
+        if self._granularity == Granularity.FUNC:
+            identity = self._function_name
+            if self._function_signature:
+                identity += ' ' + self._function_signature
+        elif self._granularity == Granularity.FILE:
+            identity = self._function_signature
 
         return identity
 

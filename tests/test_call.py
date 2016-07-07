@@ -1,6 +1,7 @@
 import unittest
 
 from attacksurfacemeter.call import Call
+from attacksurfacemeter.granularity import Granularity
 
 
 class CallTestCase(unittest.TestCase):
@@ -12,6 +13,14 @@ class CallTestCase(unittest.TestCase):
         # Assert
         self.assertEqual('printf', test_call.identity)
 
+    def test_identity_function_name_file_granularity(self):
+        # Arrange
+        cflow_line = 'printf()'
+        test_call = Call.from_cflow(cflow_line, granularity=Granularity.FILE)
+
+        # Assert
+        self.assertEqual('', test_call.identity)
+
     def test_identity_full(self):
         # Arrange
         cflow_line = (
@@ -22,6 +31,17 @@ class CallTestCase(unittest.TestCase):
 
         # Assert
         self.assertEqual('xstrdup ./cyrus/lib/xmalloc.c', test_call.identity)
+
+    def test_identity_full_file_granularity(self):
+        # Arrange
+        cflow_line = (
+            'xstrdup() <char *xstrdup (const char *str) at ./cyrus/lib/xmalloc'
+            '.c:89> (R):'
+        )
+        test_call = Call.from_cflow(cflow_line, granularity=Granularity.FILE)
+
+        # Assert
+        self.assertEqual('./cyrus/lib/xmalloc.c', test_call.identity)
 
     def test_function_name_only_name(self):
         # Arrange
