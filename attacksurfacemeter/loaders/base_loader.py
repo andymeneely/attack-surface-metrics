@@ -1,3 +1,6 @@
+from attacksurfacemeter.granularity import Granularity
+
+
 class BaseLoader(object):
     def __init__(self, source, is_reverse=False, defenses=None,
                  vulnerabilities=None):
@@ -31,7 +34,7 @@ class BaseLoader(object):
         )
         self._errors = list()
 
-    def load_call_graph(self):
+    def load_call_graph(self, granularity=Granularity.FILE):
         raise NotImplementedError()
 
     @property
