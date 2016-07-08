@@ -7,6 +7,7 @@ import networkx as nx
 from attacksurfacemeter import utilities
 from attacksurfacemeter.call import Call
 from attacksurfacemeter.environments import Environments
+from attacksurfacemeter.granularity import Granularity
 
 
 class CallGraph():
@@ -17,7 +18,8 @@ class CallGraph():
     call and an edge between nodes represents a caller - callee relationship.
     """
 
-    def __init__(self, source, graph, load_errors=None, fragmentize=False):
+    def __init__(self, source, graph, load_errors=None, fragmentize=False,
+                 granularity=Granularity.FUNC):
         """CallGraph constructor.
 
         The call graph is split into strongly connected component subgraphs
@@ -34,6 +36,15 @@ class CallGraph():
             call graph for which is to be generated.
         graph : networkx.DiGraph
             Internal representation of the graph data structure.
+        load_errors : list, optional
+            A list of erroneous lines that the call graph loader may have
+            failed to load.
+        fragmentize : bool, optional
+            If true, the call graph is fragmentized such that the largest
+            subgraph becomes the new call graph.
+        granularity : str
+            The granularity at which the call graph was loaded. See
+            attacksurfacemeter.granularity.Granularity for available choices.
 
         Returns
         -------
@@ -45,6 +56,7 @@ class CallGraph():
         self.load_errors = load_errors
         self.num_fragments = None
         self.monolithicity = None
+        self.granularity = granularity
 
         self._init()
 
@@ -65,13 +77,17 @@ class CallGraph():
         self._fan = None
 
     @classmethod
-    def from_loader(cls, loader, fragmentize=False):
+    def from_loader(cls, loader, fragmentize=False,
+                    granularity=Granularity.FUNC):
         """Construct a CallGraph using the given loader.
 
         Parameters
         ----------
         loader : BaseLoader or its derivative
             Loader used to load the call graph.
+        granularity : str
+            The granularity at which the call graph must be loaded. See
+            attacksurfacemeter.granularity.Granularity for available choices.
 
         Returns
         -------
@@ -79,10 +95,10 @@ class CallGraph():
             An instance of CallGraph representing a call graph loaded by the
             specified loader.
         """
-        graph = loader.load_call_graph()
+        graph = loader.load_call_graph(granularity)
         load_errors = loader.errors
 
-        return cls(loader.source, graph, load_errors, fragmentize)
+        return cls(loader.source, graph, load_errors, fragmentize, granularity)
 
     @classmethod
     def from_merge(cls, cflow_call_graph, gprof_call_graph, fragmentize=False):
