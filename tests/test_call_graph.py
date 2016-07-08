@@ -1,9 +1,14 @@
 import copy
+import os
 import unittest
 
 import networkx as nx
 
+from attacksurfacemeter.call import Call
 from attacksurfacemeter.call_graph import CallGraph
+from attacksurfacemeter.environments import Environments as Env
+from attacksurfacemeter.granularity import Granularity as Gran
+from attacksurfacemeter.loaders.cflow_loader import CflowLoader
 
 
 class CallGraphTestCase(unittest.TestCase):
@@ -73,6 +78,58 @@ class CallGraphTestCase(unittest.TestCase):
         self.assertCountEqual(
             expected.edges(), [(i, j) for (i, j, _) in actual.edges]
         )
+
+    def test_sanitize(self):
+        # Arrange
+        expected_nodes = [
+            Call('', './src/helloworld.c', Env.C, Gran.FILE),
+            Call('', './src/greetings.c', Env.C, Gran.FILE),
+        ]
+        expected_edges = [
+            (
+                Call('', './src/helloworld.c', Env.C, Gran.FILE),
+                Call('', './src/helloworld.c', Env.C, Gran.FILE)
+            ),
+            (
+                Call('', './src/greetings.c', Env.C, Gran.FILE),
+                Call('', './src/helloworld.c', Env.C, Gran.FILE)
+            ),
+            (
+                Call('', './src/helloworld.c', Env.C, Gran.FILE),
+                Call('', './src/greetings.c', Env.C, Gran.FILE)
+            ),
+            (
+                Call('', './src/greetings.c', Env.C, Gran.FILE),
+                Call('', './src/greetings.c', Env.C, Gran.FILE)
+            )
+        ]
+
+        # Act
+        graph = CallGraph.from_loader(
+            CflowLoader(
+                os.path.join(
+                    os.path.dirname(os.path.realpath(__file__)),
+                    'helloworld/cflow.callgraph.r.mod.txt'
+                ),
+                True
+            ),
+            granularity=Gran.FILE
+        )
+        edges = [(caller, callee) for (caller, callee, _) in graph.edges]
+        all_edges_found = all([c in edges for c in expected_edges])
+
+        nodes = [n for (n, _) in graph.nodes]
+        all_nodes_found = (
+            all([n in nodes for n in expected_nodes]) and
+            all([n in expected_nodes for n in nodes])
+        )
+
+        # Assert
+        self.assertEqual(len(expected_nodes), len(nodes))
+        self.assertTrue(all_nodes_found)
+
+        self.assertEqual(len(expected_edges), len(edges))
+        self.assertTrue(all_edges_found)
 
     def test_assign_weights_w_defaults(self):
         # Arrange

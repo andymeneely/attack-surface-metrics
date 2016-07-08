@@ -59,6 +59,7 @@ class CallGraph():
         self.granularity = granularity
 
         self._init()
+        self._sanitize()
 
         if fragmentize:
             fragments = utilities.get_fragments(graph)
@@ -75,6 +76,12 @@ class CallGraph():
 
         self._degree = None
         self._fan = None
+
+    def _sanitize(self):
+        """Sanitize the graph by removing empty nodes."""
+        for (node, _) in self.nodes:
+            if not str(node):
+                self.call_graph.remove_node(node)
 
     @classmethod
     def from_loader(cls, loader, fragmentize=False,
