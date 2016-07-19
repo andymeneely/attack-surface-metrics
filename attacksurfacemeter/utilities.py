@@ -170,6 +170,8 @@ def get_node_attrs(source, caller, callee, defenses, vulnerabilities):
                 caller_attrs['exit'] = None
         else:
             callee_attrs = dict()
+
+            callee_attrs['frequency'] = 1
             if 'gprof' in source:
                 callee_attrs['tested'] = None
             if callee in defenses:
@@ -184,7 +186,7 @@ def get_node_attrs(source, caller, callee, defenses, vulnerabilities):
 
 def deprecation(function):
     """Mark a function as deprecated.
-    
+
     Parameters
     ----------
     function : object

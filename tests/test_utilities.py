@@ -143,7 +143,7 @@ class UtilitiesTestCase(unittest.TestCase):
         expected[2] = nx.DiGraph()
         expected[2].add_nodes_from(['h', 'i'])
         expected[2].add_edges_from([('i', 'h'), ('h', 'i')])
-        
+
         expected[3] = nx.DiGraph()
         expected[3].add_nodes_from(['j'])
 
@@ -229,6 +229,7 @@ class UtilitiesTestCase(unittest.TestCase):
         self.assertTrue('dangerous' not in caller_attrs)
         self.assertTrue('entry' not in caller_attrs)
         self.assertTrue('exit' in caller_attrs)
+        self.assertTrue('frequency' not in caller_attrs)
 
         # Callee Attributes
         self.assertIsNone(callee_attrs)
@@ -254,6 +255,7 @@ class UtilitiesTestCase(unittest.TestCase):
         self.assertTrue('dangerous' not in caller_attrs)
         self.assertTrue('entry' not in caller_attrs)
         self.assertTrue('exit' in caller_attrs)
+        self.assertTrue('frequency' not in caller_attrs)
 
         # Callee Attributes
         self.assertIsNone(callee_attrs)
@@ -279,6 +281,7 @@ class UtilitiesTestCase(unittest.TestCase):
         self.assertTrue('dangerous' not in caller_attrs)
         self.assertTrue('entry' not in caller_attrs)
         self.assertTrue('exit' not in caller_attrs)
+        self.assertTrue('frequency' not in caller_attrs)
 
         # Callee Attributes
         self.assertIsNone(callee_attrs)
@@ -306,6 +309,7 @@ class UtilitiesTestCase(unittest.TestCase):
         self.assertTrue('dangerous' not in caller_attrs)
         self.assertTrue('entry' not in caller_attrs)
         self.assertTrue('exit' not in caller_attrs)
+        self.assertTrue('frequency' not in caller_attrs)
 
         # Callee Attributes
         self.assertIsNotNone(callee_attrs)
@@ -315,6 +319,7 @@ class UtilitiesTestCase(unittest.TestCase):
         self.assertTrue('dangerous' not in caller_attrs)
         self.assertTrue('entry' not in caller_attrs)
         self.assertTrue('exit' not in caller_attrs)
+        self.assertEqual(callee_attrs['frequency'], 1)
 
         # Scenario: main -- validate* (cflow)
         #   * Vulnerable
@@ -339,6 +344,7 @@ class UtilitiesTestCase(unittest.TestCase):
         self.assertTrue('dangerous' not in caller_attrs)
         self.assertTrue('entry' not in caller_attrs)
         self.assertTrue('exit' not in caller_attrs)
+        self.assertTrue('frequency' not in caller_attrs)
 
         # Callee Attributes
         self.assertIsNotNone(callee_attrs)
@@ -348,6 +354,7 @@ class UtilitiesTestCase(unittest.TestCase):
         self.assertTrue('dangerous' not in caller_attrs)
         self.assertTrue('entry' not in caller_attrs)
         self.assertTrue('exit' not in caller_attrs)
+        self.assertEqual(callee_attrs['frequency'], 1)
 
         # Scenario: main* -- validate+ (cflow)
         #   * Vulnerable
@@ -377,6 +384,7 @@ class UtilitiesTestCase(unittest.TestCase):
         self.assertTrue('dangerous' not in caller_attrs)
         self.assertTrue('entry' not in caller_attrs)
         self.assertTrue('exit' not in caller_attrs)
+        self.assertTrue('frequency' not in caller_attrs)
 
         # Callee Attributes
         self.assertIsNotNone(callee_attrs)
@@ -386,6 +394,7 @@ class UtilitiesTestCase(unittest.TestCase):
         self.assertTrue('dangerous' not in caller_attrs)
         self.assertTrue('entry' not in caller_attrs)
         self.assertTrue('exit' not in caller_attrs)
+        self.assertEqual(callee_attrs['frequency'], 1)
 
         # Scenario: main* -- validate+ (cflow)
         #   * Designed defense
@@ -418,6 +427,7 @@ class UtilitiesTestCase(unittest.TestCase):
         self.assertTrue('dangerous' not in caller_attrs)
         self.assertTrue('entry' not in caller_attrs)
         self.assertTrue('exit' not in caller_attrs)
+        self.assertTrue('frequency' not in caller_attrs)
 
         # Callee Attributes
         self.assertIsNotNone(callee_attrs)
@@ -427,6 +437,7 @@ class UtilitiesTestCase(unittest.TestCase):
         self.assertTrue('dangerous' not in caller_attrs)
         self.assertTrue('entry' not in caller_attrs)
         self.assertTrue('exit' not in caller_attrs)
+        self.assertEqual(callee_attrs['frequency'], 1)
 
         # Scenario: main -- chown (cflow)
 
@@ -449,6 +460,7 @@ class UtilitiesTestCase(unittest.TestCase):
         self.assertTrue('dangerous' in caller_attrs)
         self.assertTrue('entry' not in caller_attrs)
         self.assertTrue('exit' not in caller_attrs)
+        self.assertTrue('frequency' not in caller_attrs)
 
         # Callee Attributes
         self.assertIsNone(callee_attrs)
