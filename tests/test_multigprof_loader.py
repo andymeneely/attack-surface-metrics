@@ -218,5 +218,27 @@ class MultigprofLoaderTestCase(unittest.TestCase):
         for (u, v) in call_edges:
             self.assertTrue('return' in test_graph[v][u])
 
+    def test_node_attr_frequency(self):
+        # Arrange
+        sources = [
+            'multigprof/multigprof.one.callgraph.txt',
+            'multigprof/multigprof.one.callgraph.txt'
+        ]
+        sources = [
+            os.path.join(os.path.dirname(os.path.realpath(__file__)), source)
+            for source in sources
+        ]
+        self.test_loader = MultigprofLoader(sources, False)
+        expected = {
+            Call('factorial', 'multigprof.c', Env.C): 2
+        }
+
+        # Act
+        test_graph = self.test_loader.load_call_graph()
+        actual = nx.get_node_attributes(test_graph, 'frequency')
+
+        # Assert
+        self.assertEqual(expected, actual)
+
 if __name__ == '__main__':
     unittest.main()

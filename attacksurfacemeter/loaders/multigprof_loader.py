@@ -93,6 +93,7 @@ class MultigprofLoader(BaseLoader):
 
     def _merge_call_graph(self, sync_queue, out_queue):
         call_graph = nx.DiGraph()
+        attributes = dict()
         errors = list()
 
         count = len(self.sources)
@@ -102,8 +103,13 @@ class MultigprofLoader(BaseLoader):
             index += 1
             if 'DEBUG' in os.environ:
                 self._print_status(index, count)
-            call_graph.add_nodes_from(_call_graph.nodes(data=True))
+            for (node, attrs) in _call_graph.nodes(data=True):
+                if 'frequency' in attrs and node in attributes:
+                    attrs['frequency'] = attributes[node] + 1
+                call_graph.add_node(node, **attrs)
             call_graph.add_edges_from(_call_graph.edges(data=True))
+            attributes = nx.get_node_attributes(call_graph, 'frequency')
+
             errors.extend(_errors)
 
         out_queue.put((call_graph, errors), block=True)
