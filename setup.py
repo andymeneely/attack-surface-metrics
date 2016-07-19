@@ -40,7 +40,7 @@ setup(
             'template.txt',
         ],
     },
-    install_requires=['networkx==1.9.1', 'django==1.7.4'],
+    install_requires=['networkx==1.9.1', 'django==1.8'],
     license='The MIT License (MIT) Copyright (c) 2016 Andy Meneely',
     description='Library for collecting metrics of the attack surface.',
     long_description=open('README.md').read(),
@@ -56,6 +56,6 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Operating System :: Unix',
-        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
     ],
 )
