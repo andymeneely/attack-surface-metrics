@@ -3,6 +3,7 @@ import os
 import sys
 
 from attacksurfacemeter.call_graph import CallGraph
+from attacksurfacemeter.granularity import Granularity
 from attacksurfacemeter.loaders.cflow_loader import CflowLoader
 from attacksurfacemeter.loaders.gprof_loader import GprofLoader
 from attacksurfacemeter.loaders.multigprof_loader import MultigprofLoader
@@ -55,13 +56,21 @@ def main():
 
         if cflow_loader and gprof_loader:
             call_graph = CallGraph.from_merge(
-                CallGraph.from_loader(cflow_loader),
-                CallGraph.from_loader(gprof_loader)
+                CallGraph.from_loader(
+                    cflow_loader, granularity=args.granularity
+                ),
+                CallGraph.from_loader(
+                    gprof_loader, granularity=args.granularity
+                )
             )
         elif cflow_loader:
-            call_graph = CallGraph.from_loader(cflow_loader)
+            call_graph = CallGraph.from_loader(
+                    cflow_loader, granularity=args.granularity
+                )
         elif gprof_loader:
-            call_graph = CallGraph.from_loader(gprof_loader)
+            call_graph = CallGraph.from_loader(
+                    gprof_loader, granularity=args.granularity
+                )
 
     if args.output:
         (name, extension) = os.path.splitext(args.output)
@@ -104,6 +113,13 @@ def parse_args():
         description=(
             'Collect attack surface metrics from the call graph '
             ' representation of a software system.'
+        )
+    )
+    parser.add_argument(
+        '-gr', dest='granularity', default=Granularity.FUNC,
+        choices=[Granularity.FUNC, Granularity.FILE],
+        help=(
+            'The granularity at which the call graphs must be processed at.'
         )
     )
     parser.add_argument(
@@ -164,7 +180,7 @@ def parse_args():
         '--verbose', action='store_true',
         help=(
             'Output itemized report including metric values collected for '
-            'each function.'
+            'each function/file.'
         )
     )
     parser.add_argument(
