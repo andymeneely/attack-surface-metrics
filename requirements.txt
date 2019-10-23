@@ -1,3 +1,3 @@
 coverage==3.7.1
-Django==1.8
+Django==1.11.23
 networkx==1.9.1

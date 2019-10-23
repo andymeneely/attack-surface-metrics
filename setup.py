@@ -40,7 +40,7 @@ setup(
             'template.txt',
         ],
     },
-    install_requires=['networkx==1.9.1', 'django==1.8'],
+    install_requires=['networkx==1.9.1', 'django==1.11.23'],
     license='The MIT License (MIT) Copyright (c) 2016 Andy Meneely',
     description='Library for collecting metrics of the attack surface.',
     long_description=open('README.md').read(),
